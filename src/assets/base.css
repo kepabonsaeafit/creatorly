@@ -1,37 +1,43 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* Creatorly brand palette */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --brand-white: #ffffff;
+  --brand-white-soft: #f8f7fb;
+  --brand-white-mute: #f1f0f5;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --brand-black: #14121a;
+  --brand-black-soft: #1e1b26;
+  --brand-black-mute: #26222f;
 
-  --vt-c-indigo: #2c3e50;
+  --brand-primary: #7c3aed;
+  --brand-primary-dark: #a78bfa;
+  --brand-primary-soft: rgba(124, 58, 237, 0.12);
+  --brand-primary-soft-dark: rgba(167, 139, 250, 0.16);
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --brand-divider-light-1: rgba(60, 50, 70, 0.29);
+  --brand-divider-light-2: rgba(60, 50, 70, 0.12);
+  --brand-divider-dark-1: rgba(160, 150, 180, 0.65);
+  --brand-divider-dark-2: rgba(160, 150, 180, 0.48);
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --brand-text-light-1: #2c2340;
+  --brand-text-light-2: rgba(44, 35, 64, 0.66);
+  --brand-text-dark-1: var(--brand-white);
+  --brand-text-dark-2: rgba(237, 233, 245, 0.64);
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: var(--brand-white);
+  --color-background-soft: var(--brand-white-soft);
+  --color-background-mute: var(--brand-white-mute);
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: var(--brand-divider-light-2);
+  --color-border-hover: var(--brand-divider-light-1);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: var(--brand-text-light-1);
+  --color-text: var(--brand-text-light-1);
+
+  --color-primary: var(--brand-primary);
+  --color-primary-soft: var(--brand-primary-soft);
 
   --color-success: #2fae60;
   --color-danger: #e0575b;
@@ -41,15 +47,18 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+    --color-background: var(--brand-black);
+    --color-background-soft: var(--brand-black-soft);
+    --color-background-mute: var(--brand-black-mute);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+    --color-border: var(--brand-divider-dark-2);
+    --color-border-hover: var(--brand-divider-dark-1);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
+    --color-heading: var(--brand-text-dark-1);
+    --color-text: var(--brand-text-dark-2);
+
+    --color-primary: var(--brand-primary-dark);
+    --color-primary-soft: var(--brand-primary-soft-dark);
 
     --color-success: #3dd68c;
     --color-danger: #f28b82;
