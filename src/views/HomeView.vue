@@ -1,11 +1,10 @@
 <script setup>
-import { useDashboardData } from '@/composables/useDashboardData'
 import StatCardGrid from '@/components/StatCardGrid.vue'
-import ActivityList from '@/components/ActivityList.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
-import ChartPlaceholder from '@/components/ChartPlaceholder.vue'
+import ActivityList from '@/components/ActivityList.vue'
+import { useHomeStats } from '@/composables/useHomeStats'
 
-const { stats, activity } = useDashboardData()
+const { stats, recentPedidos } = useHomeStats()
 </script>
 
 <template>
@@ -15,12 +14,15 @@ const { stats, activity } = useDashboardData()
     <StatCardGrid :stats="stats" />
 
     <div class="dashboard__panels">
-      <DashboardCard title="Resumen de Crecimiento">
-        <ChartPlaceholder label="Grafica De Crecimiento Pronto!" />
+      <DashboardCard title="Pedidos recientes">
+        <ActivityList :items="recentPedidos" />
       </DashboardCard>
 
-      <DashboardCard title="Actividad Reciente">
-        <ActivityList :items="activity" />
+      <DashboardCard title="Gráficos del negocio">
+        <p class="dashboard__hint">
+          Los gráficos (pie, barras y línea con Chart.js) viven en la página
+          <RouterLink to="/reportes">Reportes</RouterLink>.
+        </p>
       </DashboardCard>
     </div>
   </main>
@@ -35,6 +37,11 @@ const { stats, activity } = useDashboardData()
   display: grid;
   gap: 1.5rem;
   margin-top: 2rem;
+}
+
+.dashboard__hint {
+  color: var(--color-text);
+  opacity: 0.8;
 }
 
 @media (min-width: 1024px) {
