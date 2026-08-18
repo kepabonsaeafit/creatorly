@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import TrendSparkline from '@/components/TrendSparkline.vue'
 
 const props = defineProps({
   label: {
@@ -18,6 +19,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  trend: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const formattedValue = computed(() => `${props.unit}${props.value.toLocaleString()}`)
@@ -35,6 +40,7 @@ const deltaClass = computed(() => {
     <p v-if="delta !== null" class="stat-card__delta" :class="deltaClass">
       {{ delta >= 0 ? '+' : '' }}{{ delta }}%
     </p>
+    <TrendSparkline v-if="trend.length > 0" class="stat-card__sparkline" :data="trend" />
   </div>
 </template>
 
@@ -70,5 +76,9 @@ const deltaClass = computed(() => {
 
 .stat-card__delta.negative {
   color: var(--color-danger);
+}
+
+.stat-card__sparkline {
+  margin-top: 0.75rem;
 }
 </style>
