@@ -6,13 +6,7 @@ import User from './User'
 /** Estados válidos del ciclo de vida de un Pedido.
  * @type {Array<string>}
  */
-export const ESTADOS = [
-  'solicitado',
-  'asignado',
-  'en_produccion',
-  'entregado',
-  'aprobado',
-]
+export const ESTADOS = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
 /** Estados que consideran el pedido "activo" (aún en curso).
  * @type {Array<string>}
@@ -153,7 +147,10 @@ export default class Pedido {
     const i = list.findIndex((p) => p.id === id)
     if (i === -1) return null
     list[i] = new Pedido({ ...list[i].toPlain(), ...data, updatedAt: new Date().toISOString() })
-    write('pedidos', list.map((p) => p.toPlain()))
+    write(
+      'pedidos',
+      list.map((p) => p.toPlain()),
+    )
     return list[i]
   }
 
@@ -164,7 +161,10 @@ export default class Pedido {
   static remove(id) {
     const list = this.all()
     if (!list.some((p) => p.id === id)) return false
-    write('pedidos', list.filter((p) => p.id !== id).map((p) => p.toPlain()))
+    write(
+      'pedidos',
+      list.filter((p) => p.id !== id).map((p) => p.toPlain()),
+    )
     return true
   }
 }

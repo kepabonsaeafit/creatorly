@@ -132,9 +132,7 @@ export function seed() {
    */
   const pedido = (d) => {
     const createdAt = `${d.fechaSolicitud}T09:00:00.000Z`
-    const updatedAt = FINALES.includes(d.estado)
-      ? `${d.fechaEntrega}T15:00:00.000Z`
-      : createdAt
+    const updatedAt = FINALES.includes(d.estado) ? `${d.fechaEntrega}T15:00:00.000Z` : createdAt
     return new Pedido({ ...d, createdAt, updatedAt })
   }
 
@@ -261,8 +259,20 @@ export function seed() {
     }),
   ]
 
-  write('users', users.map((u) => u.toPlain()))
-  write('creadores', creadores.map((c) => c.toPlain()))
-  write('marcas', marcas.map((m) => m.toPlain()))
-  write('pedidos', pedidos.map((p) => p.toPlain()))
+  write(
+    'users',
+    users.map((u) => u.toPlain()),
+  )
+  write(
+    'creadores',
+    creadores.map((c) => c.toPlain()),
+  )
+  write(
+    'marcas',
+    marcas.map((m) => m.toPlain()),
+  )
+  write(
+    'pedidos',
+    pedidos.map((p) => p.toPlain()),
+  )
 }

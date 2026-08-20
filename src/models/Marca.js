@@ -86,7 +86,10 @@ export default class Marca {
     const i = list.findIndex((m) => m.id === id)
     if (i === -1) return null
     list[i] = new Marca({ ...list[i].toPlain(), ...data, updatedAt: new Date().toISOString() })
-    write('marcas', list.map((m) => m.toPlain()))
+    write(
+      'marcas',
+      list.map((m) => m.toPlain()),
+    )
     return list[i]
   }
 
@@ -97,7 +100,10 @@ export default class Marca {
   static remove(id) {
     const list = this.all()
     if (!list.some((m) => m.id === id)) return false
-    write('marcas', list.filter((m) => m.id !== id).map((m) => m.toPlain()))
+    write(
+      'marcas',
+      list.filter((m) => m.id !== id).map((m) => m.toPlain()),
+    )
     return true
   }
 }
