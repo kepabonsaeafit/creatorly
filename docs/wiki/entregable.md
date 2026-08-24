@@ -4,7 +4,18 @@
 
 ## 1. Logo del equipo
 
-> ⚠️ **PENDIENTE:** el equipo aún no ha diseñado el logo. Espacio reservado — subir aquí la imagen cuando exista.
+El logotipo de **Creatorly** utiliza el concepto *Monogram + Meaning* combinado con *Negative Space*:
+- **Concepto:** Representa un monograma de la **C** de Creatorly cuyos dos extremos simbolizan a las dos partes involucradas (**Marca** arriba y **Creador** abajo). En el espacio negativo de apertura se ubica un **rombo (nodo a 45°)** que representa el **Pedido** como el conector indispensable gestionado por la agencia.
+- **Tipografía Wordmark:** `Unbounded 600`.
+- **Colores:** Trazo en `--color-primary` (`#7c3aed`) y nodo central en blanco (`#ffffff`).
+- **Especificación técnica y SVG:** Ver detalle completo en [Identidad de Marca y Sistema de Diseño](./identidad-de-marca.md).
+
+```xml
+<svg viewBox="0 0 120 120" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3" stroke="#7c3aed" stroke-width="15" stroke-linecap="round"/>
+  <rect x="76" y="51" width="24" height="24" rx="2" transform="rotate(45 88 63)" fill="#ffffff"/>
+</svg>
+```
 
 ## 2. Modelo verbal definitivo
 
