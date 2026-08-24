@@ -78,7 +78,9 @@ export default class User {
    * @returns {User | null}
    */
   static findByCredentials(email, password) {
-    const normalizado = String(email ?? '').trim().toLowerCase()
+    const normalizado = String(email ?? '')
+      .trim()
+      .toLowerCase()
     return this.all().find((u) => u.email === normalizado && u.password === password) ?? null
   }
 
@@ -102,7 +104,10 @@ export default class User {
     const i = list.findIndex((u) => u.id === id)
     if (i === -1) return null
     list[i] = new User({ ...list[i].toPlain(), ...data, updatedAt: new Date().toISOString() })
-    write('users', list.map((u) => u.toPlain()))
+    write(
+      'users',
+      list.map((u) => u.toPlain()),
+    )
     return list[i]
   }
 
@@ -113,7 +118,10 @@ export default class User {
   static remove(id) {
     const list = this.all()
     if (!list.some((u) => u.id === id)) return false
-    write('users', list.filter((u) => u.id !== id).map((u) => u.toPlain()))
+    write(
+      'users',
+      list.filter((u) => u.id !== id).map((u) => u.toPlain()),
+    )
     return true
   }
 }

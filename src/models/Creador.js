@@ -97,7 +97,10 @@ export default class Creador {
     const i = list.findIndex((c) => c.id === id)
     if (i === -1) return null
     list[i] = new Creador({ ...list[i].toPlain(), ...data, updatedAt: new Date().toISOString() })
-    write('creadores', list.map((c) => c.toPlain()))
+    write(
+      'creadores',
+      list.map((c) => c.toPlain()),
+    )
     return list[i]
   }
 
@@ -108,7 +111,10 @@ export default class Creador {
   static remove(id) {
     const list = this.all()
     if (!list.some((c) => c.id === id)) return false
-    write('creadores', list.filter((c) => c.id !== id).map((c) => c.toPlain()))
+    write(
+      'creadores',
+      list.filter((c) => c.id !== id).map((c) => c.toPlain()),
+    )
     return true
   }
 }
