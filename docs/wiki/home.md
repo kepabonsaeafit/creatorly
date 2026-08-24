@@ -13,6 +13,7 @@
 ## Páginas de este wiki
 
 - [Entregable 1 Parte 1](./entregable.md) — logo, modelo verbal, diagrama de clases y de arquitectura
+- [Identidad de Marca y Sistema de Diseño](./identidad-de-marca.md) — brand kit, logo SVG, tokens y guía de UI
 - [Guía de estilo de programación](./guia-de-estilo.md) — linter + convenciones manuales
 - [Reglas de programación](./reglas-de-programacion.md) — reglas por categorías
 - [Pantallazos](./pantallazos.md) — capturas de las secciones más importantes

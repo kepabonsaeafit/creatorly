@@ -21,21 +21,23 @@ export function useHomeStats() {
     const mismoMes = (isoDate) => {
       const fecha = new Date(isoDate)
       return (
-        fecha.getUTCFullYear() === hoy.getUTCFullYear() &&
-        fecha.getUTCMonth() === hoy.getUTCMonth()
+        fecha.getUTCFullYear() === hoy.getUTCFullYear() && fecha.getUTCMonth() === hoy.getUTCMonth()
       )
     }
     const entregasDelMes = list.filter(
       (p) =>
-        ['entregado', 'aprobado'].includes(p.estado) &&
-        p.fechaEntrega &&
-        mismoMes(p.fechaEntrega),
+        ['entregado', 'aprobado'].includes(p.estado) && p.fechaEntrega && mismoMes(p.fechaEntrega),
     ).length
 
     return [
       { id: 'total', label: 'Pedidos totales', value: list.length, unit: '' },
       { id: 'activos', label: 'Pedidos activos', value: activos.length, unit: '' },
-      { id: 'presupuesto', label: 'Presupuesto comprometido', value: presupuestoComprometido, unit: '$' },
+      {
+        id: 'presupuesto',
+        label: 'Presupuesto comprometido',
+        value: presupuestoComprometido,
+        unit: '$',
+      },
       { id: 'entregas', label: 'Entregas del mes', value: entregasDelMes, unit: '' },
     ]
   })
