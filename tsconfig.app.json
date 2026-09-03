@@ -1,0 +1,18 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "src/**/*.js"],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    // Alias de importación, espejo del alias de vite.config.ts.
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    // Coexistencia JS/TS durante la migración (PLAN_MIGRACION_TS.md).
+    // El JavaScript heredado compila pero no se verifica; ambas opciones
+    // se eliminan en el paso 7, cuando ya no quede ningún .js en src/.
+    "allowJs": true,
+    "checkJs": false
+  }
+}
