@@ -1,12 +1,11 @@
-<script setup>
-import ActivityItem from '@/components/ActivityItem.vue'
+<script setup lang="ts">
+// Kevin Pabón
 
-defineProps({
-  items: {
-    type: Array,
-    required: true,
-  },
-})
+// internal imports
+import ActivityItem from '@/components/ActivityItem.vue'
+import type { PedidoActivity } from '@/services/PedidoService'
+
+defineProps<{ items: PedidoActivity[] }>()
 </script>
 
 <template>

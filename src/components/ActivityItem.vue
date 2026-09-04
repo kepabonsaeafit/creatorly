@@ -1,19 +1,17 @@
-<script setup>
+<script setup lang="ts">
+// Kevin Pabón
+
+// external imports
 import { computed } from 'vue'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  timestamp: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: 'default',
-  },
+interface Props {
+  title: string
+  timestamp: string
+  type?: 'default' | 'milestone' | 'payment'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: 'default',
 })
 
 const formattedTimestamp = computed(() =>
