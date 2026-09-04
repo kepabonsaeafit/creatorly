@@ -6,7 +6,10 @@ import type { Ref } from 'vue'
 import { watch } from 'vue'
 
 // internal imports
-import { seed } from '@/services/seed'
+import { seedCreadores } from '@/seeders/CreadorSeeder'
+import { seedMarcas } from '@/seeders/MarcaSeeder'
+import { seedPedidos } from '@/seeders/PedidoSeeder'
+import { seedUsers } from '@/seeders/UserSeeder'
 import type { CollectionName } from '@/services/StorageService'
 import { StorageService } from '@/services/StorageService'
 import { useCreadorStore } from '@/stores/CreadorStore'
@@ -18,12 +21,17 @@ import { useUserStore } from '@/stores/UserStore'
  * Siembra si la "base de datos" está vacía. Calco del guard de
  * services/seed.js (hasData('users') || hasData('pedidos')) invertido
  * para usarse como condición de entrada en vez de salida.
- * El paso 5 reemplaza la llamada a `seed()` por los seeders tipados;
- * el resto de este archivo no cambia.
  */
 function ensureSeeded(): void {
   if (!StorageService.hasData('users') && !StorageService.hasData('pedidos')) {
-    seed()
+    const users = seedUsers()
+    const creadores = seedCreadores()
+    const marcas = seedMarcas()
+    const pedidos = seedPedidos(marcas, creadores, users)
+    StorageService.write('users', users)
+    StorageService.write('creadores', creadores)
+    StorageService.write('marcas', marcas)
+    StorageService.write('pedidos', pedidos)
   }
 }
 
