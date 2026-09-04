@@ -38,7 +38,7 @@ export class AuthService {
     StorageService.clearSession()
   }
 
-  static isAdmin(usuario: UserInterface | undefined): boolean {
-    return usuario?.rol === 'admin'
+  static getCurrentUser(): UserInterface | undefined {
+    return useSessionStore().current
   }
 }

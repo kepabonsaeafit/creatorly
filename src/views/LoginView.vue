@@ -1,17 +1,23 @@
-<script setup>
+<script setup lang="ts">
+// Kevin Pabón
+
+// external imports
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSessionStore } from '@/stores/session'
+
+// internal imports
+import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
-const session = useSessionStore()
 
+// selectors
 const email = ref('')
 const password = ref('')
 const error = ref('')
 
-function onSubmit() {
-  const result = session.login(email.value, password.value)
+// functions
+function onSubmit(): void {
+  const result = AuthService.login({ email: email.value, password: password.value })
   if (result.ok) {
     router.push({ name: 'home' })
   } else {

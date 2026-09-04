@@ -1,23 +1,19 @@
-<script setup>
+<script setup lang="ts">
+// Kevin Pabón
+
+// external imports
 import { computed } from 'vue'
 
-const props = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: [Number, String],
-    required: true,
-  },
-  delta: {
-    type: Number,
-    default: null,
-  },
-  unit: {
-    type: String,
-    default: '',
-  },
+interface Props {
+  label: string
+  value: number | string
+  delta?: number | null
+  unit?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  delta: null,
+  unit: '',
 })
 
 const formattedValue = computed(() => `${props.unit}${props.value.toLocaleString()}`)

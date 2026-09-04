@@ -4,11 +4,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from 'vue-router'
 
 // internal imports
-// Store viejo (sin tocar) a propósito: NavBar.vue y LoginView.vue siguen
-// leyendo/escribiendo esta misma instancia hasta el paso 7, cuando la
-// capa nueva (SessionStore.ts + AuthService.ts) se completa y el guard,
-// NavBar y LoginView migran juntos, atómicamente.
-import { useSessionStore } from '@/stores/session'
+import { useSessionStore } from '@/stores/SessionStore'
 
 declare module 'vue-router' {
   interface RouteMeta {

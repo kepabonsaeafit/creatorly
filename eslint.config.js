@@ -17,9 +17,9 @@ import globals from 'globals'
 // cargar un eslint.config.ts, y `jiti` no está dentro de los paquetes autorizados
 // del paso 1. La integración con TypeScript está completa igual (vueTsConfigs).
 
-// Durante la migración conviven SFCs con <script setup> y con <script setup lang="ts">.
-// En el paso 7, cuando ya no quede JavaScript en src/, esto vuelve al default ['ts'].
-configureVueProject({ scriptLangs: ['ts', 'js'] })
+// Migración a TypeScript completa (paso 7): todas las SFCs usan
+// <script setup lang="ts">, así que scriptLangs vuelve al default (['ts']).
+configureVueProject({})
 
 export default defineConfigWithVueTs(
   {
