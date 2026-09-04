@@ -1,9 +1,8 @@
-<script setup>
-defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
+<script setup lang="ts">
+// Kevin Pabón
+
+withDefaults(defineProps<{ title?: string }>(), {
+  title: '',
 })
 </script>
 

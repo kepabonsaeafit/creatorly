@@ -1,12 +1,11 @@
-<script setup>
-import StatCard from '@/components/StatCard.vue'
+<script setup lang="ts">
+// Kevin Pabón
 
-defineProps({
-  stats: {
-    type: Array,
-    required: true,
-  },
-})
+// internal imports
+import StatCard from '@/components/StatCard.vue'
+import type { HomeStat } from '@/services/PedidoService'
+
+defineProps<{ stats: HomeStat[] }>()
 </script>
 
 <template>

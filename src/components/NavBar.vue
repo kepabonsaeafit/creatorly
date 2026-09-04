@@ -1,10 +1,16 @@
-<script setup>
+<script setup lang="ts">
+// Kevin Pabón
+
+// external imports
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSessionStore } from '@/stores/session'
+
+// internal imports
+import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
-const session = useSessionStore()
 
+// selectors
 // Stub de navegación: faltan los links condicionados por rol (tarea de Gerónimo).
 const links = [
   { name: 'home', label: 'Home' },
@@ -14,8 +20,12 @@ const links = [
   { name: 'usuarios', label: 'Usuarios' },
 ]
 
-function logout() {
-  session.logout()
+// computed variables
+const currentUser = computed(() => AuthService.getCurrentUser())
+
+// functions
+function logout(): void {
+  AuthService.logout()
   router.push({ name: 'login' })
 }
 </script>
@@ -28,8 +38,8 @@ function logout() {
         {{ link.label }}
       </RouterLink>
     </nav>
-    <div v-if="session.current" class="navbar__session">
-      <span class="navbar__user">{{ session.current.nombre }} ({{ session.current.rol }})</span>
+    <div v-if="currentUser" class="navbar__session">
+      <span class="navbar__user">{{ currentUser.nombre }} ({{ currentUser.rol }})</span>
       <button type="button" class="navbar__logout" @click="logout">Salir</button>
     </div>
   </header>

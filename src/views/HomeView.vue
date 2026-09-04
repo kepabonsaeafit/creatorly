@@ -1,10 +1,18 @@
-<script setup>
-import StatCardGrid from '@/components/StatCardGrid.vue'
-import DashboardCard from '@/components/DashboardCard.vue'
-import ActivityList from '@/components/ActivityList.vue'
-import { useHomeStats } from '@/composables/useHomeStats'
+<script setup lang="ts">
+// Kevin Pabón
 
-const { stats, recentPedidos } = useHomeStats()
+// external imports
+import { computed } from 'vue'
+
+// internal imports
+import ActivityList from '@/components/ActivityList.vue'
+import DashboardCard from '@/components/DashboardCard.vue'
+import StatCardGrid from '@/components/StatCardGrid.vue'
+import { PedidoService } from '@/services/PedidoService'
+
+// computed variables
+const stats = computed(() => PedidoService.getStats())
+const recentPedidos = computed(() => PedidoService.getRecentPedidos())
 </script>
 
 <template>
