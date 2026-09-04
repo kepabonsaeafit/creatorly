@@ -15,6 +15,22 @@ const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'ent
 
 const ESTADOS_ACTIVOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion']
 
+const ESTADOS_FINALES: EstadoPedido[] = ['entregado', 'aprobado']
+
+export interface HomeStat {
+  id: string
+  label: string
+  value: number
+  unit: string
+}
+
+export interface PedidoActivity {
+  id: string
+  title: string
+  timestamp: string
+  type: 'default' | 'milestone'
+}
+
 function validate(datos: CreatePedidoDTO): void {
   if (!datos.descripcion || typeof datos.descripcion !== 'string') {
     throw new Error('Pedido: la descripción es obligatoria')
@@ -63,6 +79,52 @@ export class PedidoService {
 
   static estaActivo(pedido: PedidoInterface): boolean {
     return ESTADOS_ACTIVOS.includes(pedido.estado)
+  }
+
+  /** KPIs del HomeView. Puerto de composables/useHomeStats.js (paso 7). */
+  static getStats(): HomeStat[] {
+    const pedidos = this.getAll()
+    const activos = pedidos.filter((pedido) => this.estaActivo(pedido))
+    const presupuestoComprometido = activos.reduce((suma, pedido) => suma + pedido.presupuesto, 0)
+
+    const hoy = new Date()
+    const esMismoMes = (fechaIso: string): boolean => {
+      const fecha = new Date(fechaIso)
+      return (
+        fecha.getUTCFullYear() === hoy.getUTCFullYear() && fecha.getUTCMonth() === hoy.getUTCMonth()
+      )
+    }
+    const entregasDelMes = pedidos.filter(
+      (pedido) =>
+        ESTADOS_FINALES.includes(pedido.estado) &&
+        pedido.fechaEntrega !== null &&
+        esMismoMes(pedido.fechaEntrega),
+    ).length
+
+    return [
+      { id: 'total', label: 'Pedidos totales', value: pedidos.length, unit: '' },
+      { id: 'activos', label: 'Pedidos activos', value: activos.length, unit: '' },
+      {
+        id: 'presupuesto',
+        label: 'Presupuesto comprometido',
+        value: presupuestoComprometido,
+        unit: '$',
+      },
+      { id: 'entregas', label: 'Entregas del mes', value: entregasDelMes, unit: '' },
+    ]
+  }
+
+  /** Actividad reciente del HomeView. Puerto de composables/useHomeStats.js (paso 7). */
+  static getRecentPedidos(limite: number = 5): PedidoActivity[] {
+    return [...this.getAll()]
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .slice(0, limite)
+      .map((pedido) => ({
+        id: pedido.id,
+        title: `${pedido.descripcion} — ${this.getMarca(pedido)?.nombre ?? 'sin marca'}`,
+        timestamp: pedido.createdAt,
+        type: ESTADOS_FINALES.includes(pedido.estado) ? 'milestone' : 'default',
+      }))
   }
 
   static create(datos: CreatePedidoDTO): PedidoInterface {
