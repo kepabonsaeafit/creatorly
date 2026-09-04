@@ -3,9 +3,7 @@
 
 // external imports
 import { computed } from 'vue'
-import TrendSparkline from '@/components/TrendSparkline.vue'
 
-<<<<<<< HEAD
 interface Props {
   label: string
   value: number | string
@@ -16,29 +14,6 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   delta: null,
   unit: '',
-=======
-const props = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: [Number, String],
-    required: true,
-  },
-  delta: {
-    type: Number,
-    default: null,
-  },
-  unit: {
-    type: String,
-    default: '',
-  },
-  trend: {
-    type: Array,
-    default: () => [],
-  },
->>>>>>> a3c8835 (Add new chart with solid colors red & green for the stats preview)
 })
 
 const formattedValue = computed(() => `${props.unit}${props.value.toLocaleString()}`)
@@ -56,7 +31,6 @@ const deltaClass = computed(() => {
     <p v-if="delta !== null" class="stat-card__delta" :class="deltaClass">
       {{ delta >= 0 ? '+' : '' }}{{ delta }}%
     </p>
-    <TrendSparkline v-if="trend.length > 0" class="stat-card__sparkline" :data="trend" />
   </div>
 </template>
 
@@ -92,9 +66,5 @@ const deltaClass = computed(() => {
 
 .stat-card__delta.negative {
   color: var(--color-danger);
-}
-
-.stat-card__sparkline {
-  margin-top: 0.75rem;
 }
 </style>
