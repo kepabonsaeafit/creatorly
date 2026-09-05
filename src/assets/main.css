@@ -19,3 +19,12 @@ a {
     background-color: var(--color-primary-soft);
   }
 }
+
+/* vue-toastification: usa la paleta de marca en vez de sus colores por defecto */
+.Vue-Toastification__toast--success {
+  background-color: var(--color-success);
+}
+
+.Vue-Toastification__toast--error {
+  background-color: var(--color-danger);
+}
