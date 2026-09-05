@@ -2,16 +2,21 @@
 // Felipe Gómez
 
 // external imports
-import type { ChartData } from 'chart.js'
+import type { ChartData, ChartOptions } from 'chart.js'
 import { computed } from 'vue'
 
 // internal imports
 import BaseChart from '@/components/charts/BaseChart.vue'
 import type { PedidosPorEstadoDTO } from '@/dtos/PedidosPorEstadoDTO'
-import { getChartPalette } from '@/utils/chartColors'
+import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import { formatEstado } from '@/utils/formatEstado'
 
-const props = defineProps<{ datos: PedidosPorEstadoDTO[] }>()
+const props = withDefaults(
+  defineProps<{ datos: PedidosPorEstadoDTO[]; mostrarLeyenda?: boolean }>(),
+  {
+    mostrarLeyenda: true,
+  },
+)
 
 // computed variables
 const data = computed<ChartData<'pie'>>(() => ({
@@ -23,8 +28,17 @@ const data = computed<ChartData<'pie'>>(() => ({
     },
   ],
 }))
+
+const options = computed<ChartOptions<'pie'>>(() => ({
+  plugins: {
+    legend: {
+      display: props.mostrarLeyenda,
+      labels: { color: getChartTextColor() },
+    },
+  },
+}))
 </script>
 
 <template>
-  <BaseChart type="pie" :data="data" />
+  <BaseChart type="pie" :data="data" :options="options" />
 </template>
