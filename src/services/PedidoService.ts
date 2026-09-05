@@ -2,6 +2,11 @@
 
 // internal imports
 import type { CreatePedidoDTO } from '@/dtos/CreatePedidoDTO'
+import type { PedidoFiltroDTO } from '@/dtos/PedidoFiltroDTO'
+import type { PedidosPorCreadorDTO } from '@/dtos/PedidosPorCreadorDTO'
+import type { PedidosPorEstadoDTO } from '@/dtos/PedidosPorEstadoDTO'
+import type { PedidosPorMesDTO } from '@/dtos/PedidosPorMesDTO'
+import type { PresupuestoPorMarcaDTO } from '@/dtos/PresupuestoPorMarcaDTO'
 import { CreadorService } from '@/services/CreadorService'
 import { MarcaService } from '@/services/MarcaService'
 import { UserService } from '@/services/UserService'
@@ -10,6 +15,7 @@ import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import type { EstadoPedido, PedidoInterface } from '@/interfaces/PedidoInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { usePedidoStore } from '@/stores/PedidoStore'
+import { formatMonthLabel } from '@/utils/formatDate'
 
 const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
@@ -177,5 +183,99 @@ export class PedidoService {
     if (indice === -1) return false
     pedidos.splice(indice, 1)
     return true
+  }
+
+  /** Aplica un PedidoFiltroDTO sobre una lista de pedidos. Usado por PedidosIndexView y ReportesView. */
+  static filtrar(pedidos: PedidoInterface[], filtro: PedidoFiltroDTO): PedidoInterface[] {
+    return pedidos.filter((pedido) => {
+      if (filtro.estado && pedido.estado !== filtro.estado) return false
+      if (filtro.marcaId && pedido.marcaId !== filtro.marcaId) return false
+      if (filtro.creadorId && pedido.creadorId !== filtro.creadorId) return false
+      if (filtro.desde && pedido.fechaSolicitud < filtro.desde) return false
+      if (filtro.hasta && pedido.fechaSolicitud > filtro.hasta) return false
+      if (filtro.texto) {
+        const texto = filtro.texto.trim().toLowerCase()
+        if (texto && !pedido.descripcion.toLowerCase().includes(texto)) return false
+      }
+      return true
+    })
+  }
+
+  /** Cantidad de pedidos por estado, en el orden fijo del ciclo de vida. */
+  static getPedidosPorEstado(pedidos: PedidoInterface[]): PedidosPorEstadoDTO[] {
+    return ESTADOS.map((estado) => ({
+      estado,
+      cantidad: pedidos.filter((pedido) => pedido.estado === estado).length,
+    }))
+  }
+
+  /** Cantidad de pedidos asignados por creador (excluye pedidos sin creador asignado). */
+  static getPedidosPorCreador(pedidos: PedidoInterface[]): PedidosPorCreadorDTO[] {
+    const conteos = new Map<string, number>()
+    for (const pedido of pedidos) {
+      if (!pedido.creadorId) continue
+      conteos.set(pedido.creadorId, (conteos.get(pedido.creadorId) ?? 0) + 1)
+    }
+    return [...conteos.entries()]
+      .map(([creadorId, cantidad]) => ({
+        creadorId,
+        creadorNombre: CreadorService.getById(creadorId)?.nombre ?? 'Creador eliminado',
+        cantidad,
+      }))
+      .sort((a, b) => b.cantidad - a.cantidad)
+  }
+
+  /** Presupuesto total comprometido por marca. */
+  static getPresupuestoPorMarca(pedidos: PedidoInterface[]): PresupuestoPorMarcaDTO[] {
+    const totales = new Map<string, number>()
+    for (const pedido of pedidos) {
+      totales.set(pedido.marcaId, (totales.get(pedido.marcaId) ?? 0) + pedido.presupuesto)
+    }
+    return [...totales.entries()]
+      .map(([marcaId, presupuesto]) => ({
+        marcaId,
+        marcaNombre: MarcaService.getById(marcaId)?.nombre ?? 'Marca eliminada',
+        presupuesto,
+      }))
+      .sort((a, b) => b.presupuesto - a.presupuesto)
+  }
+
+  /** Cantidad de pedidos y presupuesto por mes de solicitud, ordenado cronológicamente. */
+  static getPedidosPorMes(pedidos: PedidoInterface[]): PedidosPorMesDTO[] {
+    const agregados = new Map<string, { cantidad: number; presupuesto: number }>()
+    for (const pedido of pedidos) {
+      const mes = pedido.fechaSolicitud.slice(0, 7)
+      const actual = agregados.get(mes) ?? { cantidad: 0, presupuesto: 0 }
+      agregados.set(mes, {
+        cantidad: actual.cantidad + 1,
+        presupuesto: actual.presupuesto + pedido.presupuesto,
+      })
+    }
+    return [...agregados.entries()]
+      .sort(([mesA], [mesB]) => mesA.localeCompare(mesB))
+      .map(([mes, valores]) => ({
+        mes,
+        etiqueta: formatMonthLabel(`${mes}-01`),
+        ...valores,
+      }))
+  }
+
+  /** KPIs de ReportesView, con la misma forma que HomeStat para reusar StatCardGrid. */
+  static getReportStats(pedidos: PedidoInterface[]): HomeStat[] {
+    const presupuestoTotal = pedidos.reduce((suma, pedido) => suma + pedido.presupuesto, 0)
+    const aprobados = pedidos.filter((pedido) => pedido.estado === 'aprobado').length
+    const tasaAprobacion = pedidos.length > 0 ? Math.round((aprobados / pedidos.length) * 100) : 0
+
+    return [
+      { id: 'total', label: 'Pedidos', value: pedidos.length, unit: '' },
+      { id: 'presupuesto', label: 'Presupuesto total', value: presupuestoTotal, unit: '$' },
+      {
+        id: 'promedio',
+        label: 'Presupuesto promedio',
+        value: pedidos.length > 0 ? Math.round(presupuestoTotal / pedidos.length) : 0,
+        unit: '$',
+      },
+      { id: 'aprobacion', label: 'Tasa de aprobación (%)', value: tasaAprobacion, unit: '' },
+    ]
   }
 }
