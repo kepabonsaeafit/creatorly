@@ -3,6 +3,7 @@
 
 // external imports
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
@@ -10,8 +11,10 @@ import UsuarioForm from '@/components/UsuarioForm.vue'
 import UsuariosTable from '@/components/UsuariosTable.vue'
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
 import { AuthService } from '@/services/AuthService'
+import { DemoDataService } from '@/services/DemoDataService'
 import { UserService } from '@/services/UserService'
 
+const router = useRouter()
 const toast = useToast()
 
 // selectors
@@ -93,6 +96,16 @@ function onEliminar(id: string): void {
     toast.error('No fue posible eliminar el usuario')
   }
 }
+
+function onRestablecerDemo(): void {
+  const mensaje =
+    '¿Restablecer los datos demo? Se borran creadores, marcas, pedidos y usuarios, ' +
+    'se vuelve a sembrar y se cierra la sesión.'
+  if (!confirm(mensaje)) return
+  DemoDataService.reset()
+  toast.success('Datos demo restablecidos: inicia sesión de nuevo')
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -125,6 +138,17 @@ function onEliminar(id: string): void {
         @eliminar="onEliminar"
       />
     </section>
+
+    <section class="usuarios__seccion">
+      <h2 class="usuarios__titulo">Datos demo</h2>
+      <p class="usuarios__demo-texto">
+        Borra todo lo guardado en el navegador y vuelve a sembrar los datos ficticios iniciales.
+        Cierra la sesión, porque la siembra genera usuarios nuevos.
+      </p>
+      <button type="button" class="usuarios__demo-boton" @click="onRestablecerDemo">
+        Restablecer datos demo
+      </button>
+    </section>
   </main>
 </template>
 
@@ -138,5 +162,20 @@ function onEliminar(id: string): void {
   font-weight: 600;
   color: var(--color-heading);
   margin-bottom: 1rem;
+}
+.usuarios__demo-texto {
+  color: var(--color-text);
+  opacity: 0.8;
+  max-width: 52ch;
+  margin-bottom: 1rem;
+}
+
+.usuarios__demo-boton {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-danger);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-danger);
+  cursor: pointer;
 }
 </style>
