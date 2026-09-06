@@ -1,6 +1,7 @@
 // Kevin Pabón
 
 // internal imports
+import type { CreadorFiltroDTO } from '@/dtos/CreadorFiltroDTO'
 import type { CreateCreadorDTO } from '@/dtos/CreateCreadorDTO'
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
 import { useCreadorStore } from '@/stores/CreadorStore'
@@ -72,5 +73,24 @@ export class CreadorService {
     if (indice === -1) return false
     creadores.splice(indice, 1)
     return true
+  }
+
+  /** Aplica un CreadorFiltroDTO sobre una lista de creadores. Usado por CreadoresIndexView. */
+  static filtrar(creadores: CreadorInterface[], filtro: CreadorFiltroDTO): CreadorInterface[] {
+    return creadores.filter((creador) => {
+      if (filtro.nicho && creador.nicho !== filtro.nicho) return false
+      if (filtro.disponible !== undefined && creador.disponible !== filtro.disponible) return false
+      if (filtro.texto) {
+        const texto = filtro.texto.trim().toLowerCase()
+        if (texto && !creador.nombre.toLowerCase().includes(texto)) return false
+      }
+      return true
+    })
+  }
+
+  /** Nichos distintos presentes en el catálogo, ordenados, para poblar el filtro. */
+  static getNichos(): string[] {
+    const unicos = new Set(this.getAll().map((creador) => creador.nicho))
+    return [...unicos].sort((primero, segundo) => primero.localeCompare(segundo))
   }
 }
