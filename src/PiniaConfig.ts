@@ -6,10 +6,7 @@ import type { Ref } from 'vue'
 import { watch } from 'vue'
 
 // internal imports
-import { seedCreadores } from '@/seeders/CreadorSeeder'
-import { seedMarcas } from '@/seeders/MarcaSeeder'
-import { seedPedidos } from '@/seeders/PedidoSeeder'
-import { seedUsers } from '@/seeders/UserSeeder'
+import { DemoDataService } from '@/services/DemoDataService'
 import type { CollectionName } from '@/services/StorageService'
 import { StorageService } from '@/services/StorageService'
 import { useCreadorStore } from '@/stores/CreadorStore'
@@ -24,14 +21,7 @@ import { useUserStore } from '@/stores/UserStore'
  */
 function ensureSeeded(): void {
   if (!StorageService.hasData('users') && !StorageService.hasData('pedidos')) {
-    const users = seedUsers()
-    const creadores = seedCreadores()
-    const marcas = seedMarcas()
-    const pedidos = seedPedidos(marcas, creadores, users)
-    StorageService.write('users', users)
-    StorageService.write('creadores', creadores)
-    StorageService.write('marcas', marcas)
-    StorageService.write('pedidos', pedidos)
+    DemoDataService.persistir(DemoDataService.generar())
   }
 }
 
