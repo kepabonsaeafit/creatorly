@@ -57,27 +57,36 @@ El sistema se modela con exactamente **4 clases**. **Pedido** es la clase centra
 ```mermaid
 flowchart TD
     subgraph Navegador["Navegador (cliente)"]
-        Rtr["Vue Router + guards<br/>(rutas y control de acceso)"]
+        Rtr["Router + guards<br/>accessControl.ts · admin/adminRoutes.ts"]
         V["Vistas — SFC<br/>Home · Login · Pedidos · Creadores · Reportes · Usuarios"]
-        Cmp["Componentes reutilizables<br/>DataTable · BaseChart · FilterSelect · StatCard…"]
-        Comp["Composables<br/>(useAuth, usePedidos…)"]
-        Pin["Stores Pinia<br/>(sesión / usuario actual)"]
-        Svc["Servicios<br/>storage.js · seed.js"]
-        Mdl["Modelos de dominio<br/>User · Creador · Marca · Pedido"]
-        LS[("LocalStorage<br/>creatorly_* )")]
+        Cmp["Componentes<br/>reutilizables + components/charts (BaseChart)"]
+        Utl["utils/<br/>formateadores puros: fecha, moneda, estado"]
+        Svc["services/<br/>toda la lógica y validaciones"]
+        Dto["dtos/<br/>tipos derivados por caso de uso (Omit/Pick)"]
+        Int["interfaces/<br/>la forma de cada entidad"]
+        Str["stores/ — Pinia<br/>solo el array/estado"]
+        Seed["seeders/<br/>datos ficticios tipados"]
+        SS["StorageService<br/>única puerta a LocalStorage"]
+        LS[("LocalStorage<br/>creatorly_*")]
+
         Rtr --> V
         V --> Cmp
-        V --> Comp
-        Comp --> Svc
-        Pin --> Svc
-        Svc --> Mdl
-        Svc --> LS
+        V --> Svc
+        Cmp --> Utl
+        Svc --> Utl
+        Svc --> Dto
+        Svc --> Str
+        Str --> Int
+        Seed --> SS
+        Svc --> SS
+        SS --> Str
+        SS --> LS
     end
     GCP["Servidor de estáticos (GCP)"]
     GCP -->|"HTTP: index.html + bundle JS/CSS"| Navegador
 ```
 
-Capas de la SPA (de afuera hacia adentro): **enrutamiento** (router + guards) → **vistas** (páginas SFC) → **componentes reutilizables y composables** (presentación y lógica de UI) → **stores** (estado compartido) → **servicios y modelos** (dominio) → **LocalStorage** (persistencia simulada). El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
+Capas de la SPA (de afuera hacia adentro): **enrutamiento** (router + guards) → **vistas** (páginas SFC) → **componentes reutilizables** (presentación, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad) → **StorageService** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). La siembra inicial (`PiniaConfig`) sigue ese mismo camino: `seeders/` → `StorageService` → stores (hidratación). El botón de "restablecer datos demo" es una excepción deliberada y documentada: `DemoDataService.reset()` escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
 
 ## Anexo: sketches de las 7 páginas
 
