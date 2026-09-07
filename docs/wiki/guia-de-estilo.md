@@ -55,7 +55,7 @@ src/
 
 - Usar las **variables de marca** de `src/assets/base.css` (`--color-primary`, `--color-success`, etc.); no colores mágicos (`#7c3aed`) en componentes.
 - Estilos `scoped` en cada SFC; solo `assets/` tiene estilos globales.
-- Consultar [Identidad de Marca y Sistema de Diseño](./identidad-de-marca.md) para la guía completa de tokens, tipografía (3 roles), KPI cards y paleta de gráficos Chart.js.
+- Consultar [Identidad de Marca y Sistema de Diseño](identidad-de-marca) para la guía completa de tokens, tipografía (3 roles), KPI cards y paleta de gráficos Chart.js.
 
 ### Documentación
 

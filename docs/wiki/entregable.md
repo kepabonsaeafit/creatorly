@@ -8,14 +8,9 @@ El logotipo de **Creatorly** utiliza el concepto *Monogram + Meaning* combinado 
 - **Concepto:** Representa un monograma de la **C** de Creatorly cuyos dos extremos simbolizan a las dos partes involucradas (**Marca** arriba y **Creador** abajo). En el espacio negativo de apertura se ubica un **rombo (nodo a 45°)** que representa el **Pedido** como el conector indispensable gestionado por la agencia.
 - **Tipografía Wordmark:** `Unbounded 600`.
 - **Colores:** Trazo en `--color-primary` (`#7c3aed`) y nodo central en blanco (`#ffffff`).
-- **Especificación técnica y SVG:** Ver detalle completo en [Identidad de Marca y Sistema de Diseño](./identidad-de-marca.md).
+- **Especificación técnica y SVG:** Ver detalle completo en [Identidad de Marca y Sistema de Diseño](identidad-de-marca).
 
-```xml
-<svg viewBox="0 0 120 120" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3" stroke="#7c3aed" stroke-width="15" stroke-linecap="round"/>
-  <rect x="76" y="51" width="24" height="24" rx="2" transform="rotate(45 88 63)" fill="#ffffff"/>
-</svg>
-```
+![Logo Creatorly](assets/logo-creatorly.png)
 
 ## 2. Modelo verbal definitivo
 
@@ -88,16 +83,16 @@ flowchart TD
 
 Capas de la SPA (de afuera hacia adentro): **enrutamiento** (router + guards) → **vistas** (páginas SFC) → **componentes reutilizables** (presentación, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad) → **StorageService** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). La siembra inicial (`PiniaConfig`) sigue ese mismo camino: `seeders/` → `StorageService` → stores (hidratación). El botón de "restablecer datos demo" es una excepción deliberada y documentada: `DemoDataService.reset()` escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
 
-## Anexo: capturas de las 7 páginas
+## Anexo: capturas de las páginas
 
-> Los sketches originales de la Fase 0 quedaron desactualizados frente a la app real ya implementada. Pendiente: reemplazar cada fila con una captura real de la página.
+> Los sketches originales de la Fase 0 quedaron desactualizados frente a la app real ya implementada.
 
 | # | Página | Captura |
 |---|---|---|
-| 1 | Home | _(pendiente)_ |
-| 2 | Login | _(pendiente)_ |
-| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | _(pendiente)_ |
-| 4 | Crear / Editar Pedido | _(pendiente)_ |
-| 5 | Creadores (solo-admin, CRUD #1) | _(pendiente)_ |
-| 6 | Reportes (selector/tabla/Chart.js) | _(pendiente)_ |
-| 7 | Usuarios (solo-admin) | _(pendiente)_ |
+| 1 | Home | ![Home admin](assets/home-admin.png)<br>![Home coordinador](assets/home-coord.png) |
+| 2 | Login | ![Login](assets/login-version1.png) |
+| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | ![Pedidos filtrado por estado](assets/pedidos-sketch1.png)<br>![Pedidos filtrado por marca](assets/pedidos-sketch2.png) |
+| 4 | Crear / Editar Pedido | ![Crear pedido](assets/crear-pedido.png)<br>![Editar pedido](assets/editar-pedido.png) |
+| 5 | Creadores (solo-admin, CRUD #1) | ![Creadores](assets/creadores-admin.png) |
+| 6 | Reportes (selector/tabla/Chart.js) | ![Reportes: pedidos por mes](assets/reportes-chart1.png)<br>![Reportes: pedidos por estado](assets/reportes-chart2.png)<br>![Reportes: pedidos por creador](assets/reportes-chart3.png)<br>![Reportes: presupuesto por marca](assets/reportes-chart4.png) |
+| 7 | Usuarios (solo-admin) | ![Usuarios](assets/usuarios-admin.png) |
