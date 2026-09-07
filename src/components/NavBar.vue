@@ -64,14 +64,24 @@ function logout(): void {
           </linearGradient>
         </defs>
         <rect width="32" height="32" rx="9" fill="url(#navbar-logo-gradient)" />
-        <path
-          d="M20.5 10.8a6 6 0 1 0 0 10.4"
-          stroke="#ffffff"
-          stroke-width="2.4"
-          stroke-linecap="round"
-          fill="none"
-        />
-        <path d="M14.5 16 19 13.2v5.6z" fill="#ffffff" />
+        <g transform="scale(0.228571) translate(-47.875,10.125)">
+          <path
+            d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3"
+            stroke="#ffffff"
+            stroke-width="15"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <rect
+            x="76"
+            y="51"
+            width="24"
+            height="24"
+            rx="2"
+            transform="rotate(45 88 63)"
+            fill="#ffffff"
+          />
+        </g>
       </svg>
       <span class="navbar__wordmark">Creatorly</span>
     </RouterLink>
