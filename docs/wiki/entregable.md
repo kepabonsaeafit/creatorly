@@ -88,14 +88,16 @@ flowchart TD
 
 Capas de la SPA (de afuera hacia adentro): **enrutamiento** (router + guards) → **vistas** (páginas SFC) → **componentes reutilizables** (presentación, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad) → **StorageService** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). La siembra inicial (`PiniaConfig`) sigue ese mismo camino: `seeders/` → `StorageService` → stores (hidratación). El botón de "restablecer datos demo" es una excepción deliberada y documentada: `DemoDataService.reset()` escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
 
-## Anexo: sketches de las 7 páginas
+## Anexo: capturas de las 7 páginas
 
-| # | Página | Sketch |
+> Los sketches originales de la Fase 0 quedaron desactualizados frente a la app real ya implementada. Pendiente: reemplazar cada fila con una captura real de la página.
+
+| # | Página | Captura |
 |---|---|---|
-| 1 | Home | ![Sketch Home](./assets/sketch-01-home.png) |
-| 2 | Login | ![Sketch Login](./assets/sketch-02-login.png) |
-| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | ![Sketch Pedidos](./assets/sketch-03-pedidos.png) |
-| 4 | Crear / Editar Pedido | ![Sketch Crear/Editar Pedido](./assets/sketch-04-crear-editar-pedido.png) |
-| 5 | Creadores (solo-admin, CRUD #1) | ![Sketch Creadores](./assets/sketch-05-creadores.png) |
-| 6 | Reportes (selector/tabla/Chart.js) | ![Sketch Reportes](./assets/sketch-06-reportes.png) |
-| 7 | Usuarios (solo-admin) | ![Sketch Usuarios](./assets/sketch-07-usuarios.png) |
+| 1 | Home | _(pendiente)_ |
+| 2 | Login | _(pendiente)_ |
+| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | _(pendiente)_ |
+| 4 | Crear / Editar Pedido | _(pendiente)_ |
+| 5 | Creadores (solo-admin, CRUD #1) | _(pendiente)_ |
+| 6 | Reportes (selector/tabla/Chart.js) | _(pendiente)_ |
+| 7 | Usuarios (solo-admin) | _(pendiente)_ |
