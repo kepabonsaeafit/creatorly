@@ -8,14 +8,9 @@ El logotipo de **Creatorly** utiliza el concepto *Monogram + Meaning* combinado 
 - **Concepto:** Representa un monograma de la **C** de Creatorly cuyos dos extremos simbolizan a las dos partes involucradas (**Marca** arriba y **Creador** abajo). En el espacio negativo de apertura se ubica un **rombo (nodo a 45°)** que representa el **Pedido** como el conector indispensable gestionado por la agencia.
 - **Tipografía Wordmark:** `Unbounded 600`.
 - **Colores:** Trazo en `--color-primary` (`#7c3aed`) y nodo central en blanco (`#ffffff`).
-- **Especificación técnica y SVG:** Ver detalle completo en [Identidad de Marca y Sistema de Diseño](./identidad-de-marca.md).
+- **Especificación técnica y SVG:** Ver detalle completo en [Identidad de Marca y Sistema de Diseño](identidad-de-marca).
 
-```xml
-<svg viewBox="0 0 120 120" width="80" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3" stroke="#7c3aed" stroke-width="15" stroke-linecap="round"/>
-  <rect x="76" y="51" width="24" height="24" rx="2" transform="rotate(45 88 63)" fill="#ffffff"/>
-</svg>
-```
+![Logo Creatorly](assets/logo-creatorly.png)
 
 ## 2. Modelo verbal definitivo
 
@@ -52,52 +47,34 @@ El sistema se modela con exactamente **4 clases**. **Pedido** es la clase centra
 
 ## 4. Diagrama de arquitectura
 
-> ⚠️ **Borrador generado como base** — el equipo puede reemplazarlo por su versión final si prefiere otro estilo.
+Mapa de módulos: cada caja es una carpeta real de `src/`, cada fila dentro es un archivo real. Las flechas dicen "usa/importa" (A → B significa que A importa algo de B), verificado import por import contra el código.
 
-```mermaid
-flowchart TD
-    subgraph Navegador["Navegador (cliente)"]
-        Rtr["Router + guards<br/>accessControl.ts · admin/adminRoutes.ts"]
-        V["Vistas — SFC<br/>Home · Login · Pedidos · Creadores · Reportes · Usuarios"]
-        Cmp["Componentes<br/>reutilizables + components/charts (BaseChart)"]
-        Utl["utils/<br/>formateadores puros: fecha, moneda, estado"]
-        Svc["services/<br/>toda la lógica y validaciones"]
-        Dto["dtos/<br/>tipos derivados por caso de uso (Omit/Pick)"]
-        Int["interfaces/<br/>la forma de cada entidad"]
-        Str["stores/ — Pinia<br/>solo el array/estado"]
-        Seed["seeders/<br/>datos ficticios tipados"]
-        SS["StorageService<br/>única puerta a LocalStorage"]
-        LS[("LocalStorage<br/>creatorly_*")]
+![Diagrama de arquitectura completo](assets/diagrama-arq-completo.png)
 
-        Rtr --> V
-        V --> Cmp
-        V --> Svc
-        Cmp --> Utl
-        Svc --> Utl
-        Svc --> Dto
-        Svc --> Str
-        Str --> Int
-        Seed --> SS
-        Svc --> SS
-        SS --> Str
-        SS --> LS
-    end
-    GCP["Servidor de estáticos (GCP)"]
-    GCP -->|"HTTP: index.html + bundle JS/CSS"| Navegador
-```
+Detalle por partes (el diagrama completo es muy grande para leerse de corrido):
 
-Capas de la SPA (de afuera hacia adentro): **enrutamiento** (router + guards) → **vistas** (páginas SFC) → **componentes reutilizables** (presentación, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad) → **StorageService** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). La siembra inicial (`PiniaConfig`) sigue ese mismo camino: `seeders/` → `StorageService` → stores (hidratación). El botón de "restablecer datos demo" es una excepción deliberada y documentada: `DemoDataService.reset()` escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
+![Arquitectura parte 1: entrada, router, main.ts, PiniaConfig](assets/diagrama-arq-pt1.png)
 
-## Anexo: capturas de las 7 páginas
+![Arquitectura parte 2: vistas, componentes, charts](assets/diagrama-arq-pt2.png)
 
-> Los sketches originales de la Fase 0 quedaron desactualizados frente a la app real ya implementada. Pendiente: reemplazar cada fila con una captura real de la página.
+![Arquitectura parte 3: services, utils, dtos, seeders, stores](assets/diagrama-arq-pt3.png)
+
+![Arquitectura parte 4: dtos, interfaces, seeders, stores, LocalStorage](assets/diagrama-arq-pt4.png)
+
+[Link del diagrama](https://lucid.app/lucidchart/9f425ba0-8f21-44b7-b40a-330e12673750/edit?viewport_loc=-12152%2C4670%2C4484%2C1947%2Cp1&invitationId=inv_f07ff397-f817-46c1-89ba-60e26ed17a5c)
+
+Capas (de afuera hacia adentro): `main.ts` arranca Pinia (`PiniaConfig.ts`) y el `router` → **vistas** (`views/`, una por ruta) → **componentes reutilizables** (`components/`, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad) → **StorageService** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). Dos excepciones documentadas: el guard del router (`accessControl.ts`) lee `SessionStore` directamente en vez de pasar por un service, y `DemoDataService.reset()` (botón de "restablecer datos demo") escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
+
+## Anexo: capturas de las páginas
+
+> Los sketches originales de la Fase 0 quedaron desactualizados frente a la app real ya implementada.
 
 | # | Página | Captura |
 |---|---|---|
-| 1 | Home | _(pendiente)_ |
-| 2 | Login | _(pendiente)_ |
-| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | _(pendiente)_ |
-| 4 | Crear / Editar Pedido | _(pendiente)_ |
-| 5 | Creadores (solo-admin, CRUD #1) | _(pendiente)_ |
-| 6 | Reportes (selector/tabla/Chart.js) | _(pendiente)_ |
-| 7 | Usuarios (solo-admin) | _(pendiente)_ |
+| 1 | Home | ![Home admin](assets/home-admin.png)<br>![Home coordinador](assets/home-coord.png) |
+| 2 | Login | ![Login](assets/login-version1.png) |
+| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | ![Pedidos filtrado por estado](assets/pedidos-sketch1.png)<br>![Pedidos filtrado por marca](assets/pedidos-sketch2.png) |
+| 4 | Crear / Editar Pedido | ![Crear pedido](assets/crear-pedido.png)<br>![Editar pedido](assets/editar-pedido.png) |
+| 5 | Creadores (solo-admin, CRUD #1) | ![Creadores](assets/creadores-admin.png) |
+| 6 | Reportes (selector/tabla/Chart.js) | ![Reportes: pedidos por mes](assets/reportes-chart1.png)<br>![Reportes: pedidos por estado](assets/reportes-chart2.png)<br>![Reportes: pedidos por creador](assets/reportes-chart3.png)<br>![Reportes: presupuesto por marca](assets/reportes-chart4.png) |
+| 7 | Usuarios (solo-admin) | ![Usuarios](assets/usuarios-admin.png) |
