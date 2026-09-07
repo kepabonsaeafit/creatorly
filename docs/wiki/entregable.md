@@ -49,132 +49,17 @@ El sistema se modela con exactamente **4 clases**. **Pedido** es la clase centra
 
 Mapa de módulos: cada caja es una carpeta real de `src/`, cada fila dentro es un archivo real. Las flechas dicen "usa/importa" (A → B significa que A importa algo de B), verificado import por import contra el código.
 
-```mermaid
-flowchart TD
-    Browser["Navegador (Chrome/Edge/Safari)"]
+![Diagrama de arquitectura completo](assets/diagrama-arq-completo.png)
 
-    subgraph Server["Servidor de estáticos (GCP)"]
-        subgraph Router["src/router/"]
-            R1["index.ts"]
-            R2["accessControl.ts"]
-            R3["admin/adminRoutes.ts"]
-        end
+Detalle por partes (el diagrama completo es muy grande para leerse de corrido):
 
-        subgraph Views["src/views/"]
-            VW1["HomeView.vue"]
-            VW2["LoginView.vue"]
-            VW3["PedidosIndexView.vue"]
-            VW4["PedidosCreateView.vue"]
-            VW5["PedidosEditView.vue"]
-            VW6["ReportesView.vue"]
-            VW7["CreadoresIndexView.vue"]
-            VW8["CreadoresCreateView.vue"]
-            VW9["CreadoresEditView.vue"]
-            VW10["UsuariosView.vue"]
-        end
+![Arquitectura parte 1: entrada, router, main.ts, PiniaConfig](assets/diagrama-arq-pt1.png)
 
-        subgraph Components["src/components/"]
-            C1["NavBar.vue"]
-            C2["ActivityItem.vue"]
-            C3["ActivityList.vue"]
-            C4["DashboardCard.vue"]
-            C5["StatCard.vue"]
-            C6["StatCardGrid.vue"]
-            C7["PedidoForm.vue"]
-            C8["PedidosTable.vue"]
-            C9["ReportTable.vue"]
-            C10["CreadorForm.vue"]
-            C11["CreadoresTable.vue"]
-            C12["UsuarioForm.vue"]
-            C13["UsuariosTable.vue"]
-        end
+![Arquitectura parte 2: vistas, componentes, charts](assets/diagrama-arq-pt2.png)
 
-        subgraph Charts["src/components/charts/"]
-            CH1["BaseChart.vue"]
-            CH2["PedidosPorCreadorChart.vue"]
-            CH3["PedidosPorEstadoChart.vue"]
-            CH4["PedidosPorMesChart.vue"]
-            CH5["PresupuestoPorMarcaChart.vue"]
-        end
+![Arquitectura parte 3: services, utils, dtos, seeders, stores](assets/diagrama-arq-pt3.png)
 
-        subgraph Services["src/services/"]
-            S1["AuthService.ts"]
-            S2["UserService.ts"]
-            S3["CreadorService.ts"]
-            S4["MarcaService.ts"]
-            S5["PedidoService.ts"]
-            S6["DemoDataService.ts"]
-            S7["StorageService.ts"]
-        end
-
-        subgraph Dtos["src/dtos/ (11 archivos)"]
-            D1["Create*DTO.ts (4)"]
-            D2["*FiltroDTO.ts (2)"]
-            D3["LoginDTO.ts"]
-            D4["PedidosPor*DTO.ts / PresupuestoPorMarcaDTO.ts (4)"]
-        end
-
-        subgraph Interfaces["src/interfaces/"]
-            I1["UserInterface.ts"]
-            I2["CreadorInterface.ts"]
-            I3["MarcaInterface.ts"]
-            I4["PedidoInterface.ts"]
-        end
-
-        subgraph Stores["src/stores/"]
-            ST1["SessionStore.ts"]
-            ST2["UserStore.ts"]
-            ST3["CreadorStore.ts"]
-            ST4["MarcaStore.ts"]
-            ST5["PedidoStore.ts"]
-        end
-
-        subgraph Seeders["src/seeders/"]
-            SE1["UserSeeder.ts"]
-            SE2["CreadorSeeder.ts"]
-            SE3["MarcaSeeder.ts"]
-            SE4["PedidoSeeder.ts"]
-        end
-
-        subgraph Utils["src/utils/"]
-            U1["chartColors.ts"]
-            U2["formatCurrency.ts"]
-            U3["formatDate.ts"]
-            U4["formatEstado.ts"]
-        end
-
-        Boot["src/PiniaConfig.ts"]
-        Main["src/main.ts"]
-        Assets["src/assets/<br/>main.css · base.css"]
-        LS[("LocalStorage<br/>creatorly_*")]
-    end
-
-    Browser -->|"HTTPS request"| Server
-    Server -->|"HTTPS response: index.html + bundle JS/CSS"| Browser
-
-    Main --> Router
-    Main --> Boot
-    Main --> Assets
-    Router --> Views
-    Router --> Stores
-    Views --> Components
-    Views --> Services
-    Views --> Utils
-    Components --> Services
-    Components --> Utils
-    Charts --> Dtos
-    Charts --> Utils
-    Services --> Dtos
-    Services --> Interfaces
-    Services --> Stores
-    Services --> Utils
-    Services --> Seeders
-    Stores --> Interfaces
-    Seeders --> Interfaces
-    Boot --> Services
-    Boot --> Stores
-    S7 --> LS
-```
+![Arquitectura parte 4: dtos, interfaces, seeders, stores, LocalStorage](assets/diagrama-arq-pt4.png)
 
 Capas (de afuera hacia adentro): `main.ts` arranca Pinia (`PiniaConfig.ts`) y el `router` → **vistas** (`views/`, una por ruta) → **componentes reutilizables** (`components/`, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad) → **StorageService** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). Dos excepciones documentadas: el guard del router (`accessControl.ts`) lee `SessionStore` directamente en vez de pasar por un service, y `DemoDataService.reset()` (botón de "restablecer datos demo") escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
 
