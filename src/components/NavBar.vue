@@ -10,17 +10,25 @@ import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
 
+interface NavLink {
+  name: string
+  label: string
+  admin: boolean
+}
+
 // selectors
-// Stub de navegación: faltan los links condicionados por rol (tarea de Gerónimo).
-const links = [
-  { name: 'home', label: 'Home' },
-  { name: 'pedidos', label: 'Pedidos' },
-  { name: 'reportes', label: 'Reportes' },
-  { name: 'creadores', label: 'Creadores' },
-  { name: 'usuarios', label: 'Usuarios' },
+/** Catálogo completo de links; `admin` marca los que exigen el rol de administrador. */
+const LINKS: NavLink[] = [
+  { name: 'home', label: 'Home', admin: false },
+  { name: 'pedidos', label: 'Pedidos', admin: false },
+  { name: 'reportes', label: 'Reportes', admin: false },
+  { name: 'creadores', label: 'Creadores', admin: true },
+  { name: 'usuarios', label: 'Usuarios', admin: true },
 ]
 
 // computed variables
+// El rol sale de AuthService y no del SessionStore: las views y los componentes
+// solo hablan con services (regla 5 de AGENTS.md).
 const currentUser = computed(() => AuthService.getCurrentUser())
 
 const iniciales = computed(() => {
@@ -32,6 +40,11 @@ const iniciales = computed(() => {
     .map((palabra) => palabra[0]?.toUpperCase())
     .join('')
 })
+
+const esAdmin = computed(() => currentUser.value?.rol === 'admin')
+
+/** Un coordinador no ve los links solo-admin; el guard del router los sigue bloqueando igual. */
+const links = computed(() => LINKS.filter((link) => !link.admin || esAdmin.value))
 
 // functions
 function logout(): void {
@@ -63,7 +76,7 @@ function logout(): void {
       <span class="navbar__wordmark">Creatorly</span>
     </RouterLink>
 
-    <nav class="navbar__links">
+    <nav v-if="currentUser" class="navbar__links">
       <RouterLink
         v-for="link in links"
         :key="link.name"
