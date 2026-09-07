@@ -9,7 +9,8 @@ lerna-debug.log*
 
 node_modules
 .DS_Store
-dist
+# dist/ se versiona a propósito: el Dockerfile de despliegue solo copia el build,
+# no compila en la VM (ver Dockerfile / nginx.conf en la raíz)
 dist-ssr
 coverage
 *.local
