@@ -23,26 +23,19 @@ Esta página especifica la **identidad de marca** y el **sistema de diseño (Bra
 
 ### 2.1 Concepto
 Monograma de la **C** de Creatorly, construido bajo el método *Monogram + Meaning* combinado con *Negative Space*:
-- El trazo de la **C** se abre en dos extremos: uno representa la **Marca** y el otro al **Creador**.
+- El trazo de la **C** se abre en dos extremos: el extremo superior representa la **Marca** y el inferior al **Creador**.
 - Un **rombo** (cuadrado rotado 45°) ocupa la apertura central: representa el **Pedido**, el nodo que siempre conecta a ambas partes.
 - La forma nunca se cierra en un círculo completo porque la relación siempre pasa por un pedido activo administrado por la agencia.
 
-```
-       Marca (extremo superior)
-      ╭────────╮
-     │          │  
-     │           ◆  ← Pedido (rombo / nodo conector)
-     │          │
-      ╰────────╯
-       Creador (extremo inferior)
-```
+![Logo Creatorly](assets/logo-creatorly.png)
 
-### 2.2 Construcción Geométrica y SVG
+### 2.2 Proceso de diseño
 
-- **Circunferencia guía:** centro `(60, 60)`, radio `42px`, grosor de trazo `15px`, remates redondeados (`stroke-linecap: round`).
-- **Arco:** de `25°` a `335°` (apertura de `50°` hacia la derecha), `large-arc-flag=1`.
-- **Nodo central (Pedido):** rombo de `24×24px` rotado `45°`, centrado en `(88, 63)`. Relleno blanco (`--brand-white`) sobre trazo violeta.
-- **Wordmark:** `Creatorly` en tipografía `Unbounded 600`.
+El logo se fue construyendo por iteración visual hasta llegar a la forma final: partimos de la idea de la C abierta con el rombo del Pedido en la apertura (sección 2.1), y fuimos ajustando el arco y el nodo central hasta que la proporción se viera bien — sin colores de más, sin relleno decorativo, buscando esa línea minimalista y tecnológica que pide la personalidad de marca de la sección 1.
+
+El wordmark usa la tipografía `Unbounded 600`.
+
+El SVG de abajo es el resultado final ya verificado (sin recortes, ver también el PNG en `entregable.md`) y es el mismo código que usa el proyecto — por ejemplo en `NavBar.vue`, escalado a su contenedor de 32×32.
 
 #### Código SVG de referencia:
 ```xml
