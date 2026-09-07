@@ -29,21 +29,26 @@ npm run format   # prettier sobre src/
 src/
 ├── assets/       # estilos globales (paleta de marca en base.css)
 ├── components/   # componentes reutilizables (PascalCase)
-├── composables/  # funciones compositivas (useAlgo.js)
-├── models/       # clases del dominio: User, Creador, Marca, Pedido
-├── services/     # storage.js (única puerta a LocalStorage), seed.js
-├── router/       # rutas + guards
-├── stores/       # stores de Pinia
+│   └── charts/   # gráficos Chart.js, siempre vía BaseChart.vue
+├── interfaces/   # la forma de cada entidad: User, Creador, Marca, Pedido
+├── dtos/         # tipos derivados por caso de uso (Omit/Pick)
+├── stores/       # stores de Pinia (solo el array, cero lógica)
+├── services/     # toda la lógica; StorageService es la única puerta a LocalStorage
+├── seeders/      # datos ficticios tipados, uno por entidad
+├── utils/        # formateadores puros compartidos (fecha, moneda, estado)
+├── router/       # rutas + guards (admin/ agrupa las rutas solo-admin)
 └── views/        # una vista por ruta (*View.vue)
 ```
 
 ### Nombres
 
 - **Componentes:** `PascalCase.vue` (`StatCard.vue`, `BaseChart.vue`).
-- **Vistas:** `NombreView.vue` (`PedidosView.vue`).
-- **Composables:** `useAlgo.js` (`useAuth.js`).
-- **Clases/modelos:** sustantivo del dominio en singular (`Creador.js`).
-- **Rutas:** paths en minúscula con guiones (`/pedidos/nuevo`).
+- **Vistas:** `NombreView.vue` (`PedidosIndexView.vue`, `CreadoresEditView.vue`).
+- **Interfaces:** `NombreInterface.ts` (`PedidoInterface.ts`).
+- **DTOs:** `NombreDTO.ts` (`CreatePedidoDTO.ts`, `PedidoFiltroDTO.ts`).
+- **Services:** `NombreService.ts` (`PedidoService.ts`, `StorageService.ts`).
+- **Seeders:** `NombreSeeder.ts` (`PedidoSeeder.ts`).
+- **Rutas:** paths en minúscula con guiones (`/pedidos/crear`).
 - **CSS:** clases con prefijo del bloque (`stat-card__label`, patrón BEM ligero).
 
 ### Estilos
@@ -54,7 +59,7 @@ src/
 
 ### Documentación
 
-- **JSDoc obligatorio** en `models/`, `services/` y `composables/`: todo método documenta `@param` (con tipo) y `@returns` (con tipo).
+- **Tipos explícitos en TypeScript**, no JSDoc: todo parámetro y retorno de función o método declara su tipo directamente en la firma. `any` está prohibido sin justificación escrita en comentario.
 
 ### Commits
 
