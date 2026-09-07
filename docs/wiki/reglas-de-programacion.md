@@ -1,6 +1,6 @@
 # Reglas de programación
 
-Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite a esta página. Fuente completa: [AGENTS.md](../../AGENTS.md).
+Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite a esta página. Fuente completa: [AGENTS.md](https://github.com/kepabonsaeafit/creatorly/blob/main/AGENTS.md).
 
 ## Generales
 
