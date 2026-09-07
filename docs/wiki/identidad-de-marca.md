@@ -35,30 +35,7 @@ El logo se fue construyendo por iteración visual hasta llegar a la forma final:
 
 El wordmark usa la tipografía `Unbounded 600`.
 
-El SVG de abajo es el resultado final ya verificado (sin recortes, ver también el PNG en `entregable.md`) y es el mismo código que usa el proyecto — por ejemplo en `NavBar.vue`, escalado a su contenedor de 32×32.
-
-#### Código SVG de referencia:
-```xml
-<svg viewBox="0 0 120 120" width="120" height="120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Arco de la C (trazo violeta de marca) -->
-  <path
-    d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3"
-    stroke="var(--color-primary, #7c3aed)"
-    stroke-width="15"
-    stroke-linecap="round"
-  />
-  <!-- Rombo nodo (Pedido) rotado 45° -->
-  <rect
-    x="76"
-    y="51"
-    width="24"
-    height="24"
-    rx="2"
-    transform="rotate(45 88 63)"
-    fill="var(--brand-white, #ffffff)"
-  />
-</svg>
-```
+El resultado final ya está verificado sin recortes (ver el PNG arriba). El código de implementación vive en `NavBar.vue`.
 
 ### 2.3 Reglas de uso
 - **Ícono solo:** favicon, avatar y tamaños pequeños (≥16px).
