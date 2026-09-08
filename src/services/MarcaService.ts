@@ -4,6 +4,7 @@
 import type { CreateMarcaDTO } from '@/dtos/CreateMarcaDTO'
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import { useMarcaStore } from '@/stores/MarcaStore'
+import { generateId } from '@/utils/generateId'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -40,7 +41,7 @@ export class MarcaService {
     const ahora = new Date().toISOString()
     const nuevaMarca: MarcaInterface = {
       ...normalizado,
-      id: crypto.randomUUID(),
+      id: generateId(),
       createdAt: ahora,
       updatedAt: ahora,
     }

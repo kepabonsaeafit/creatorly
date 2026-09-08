@@ -16,6 +16,7 @@ import type { EstadoPedido, PedidoInterface } from '@/interfaces/PedidoInterface
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { usePedidoStore } from '@/stores/PedidoStore'
 import { formatMonthLabel } from '@/utils/formatDate'
+import { generateId } from '@/utils/generateId'
 
 const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
@@ -145,7 +146,7 @@ export class PedidoService {
     const ahora = new Date().toISOString()
     const nuevoPedido: PedidoInterface = {
       ...normalizado,
-      id: crypto.randomUUID(),
+      id: generateId(),
       createdAt: ahora,
       updatedAt: ahora,
     }
