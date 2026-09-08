@@ -5,6 +5,7 @@ import type { CreadorFiltroDTO } from '@/dtos/CreadorFiltroDTO'
 import type { CreateCreadorDTO } from '@/dtos/CreateCreadorDTO'
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
 import { useCreadorStore } from '@/stores/CreadorStore'
+import { generateId } from '@/utils/generateId'
 
 function validate(datos: CreateCreadorDTO): void {
   if (!datos.nombre || typeof datos.nombre !== 'string') {
@@ -37,7 +38,7 @@ export class CreadorService {
     const nuevoCreador: CreadorInterface = {
       ...normalizado,
       disponible: Boolean(normalizado.disponible),
-      id: crypto.randomUUID(),
+      id: generateId(),
       createdAt: ahora,
       updatedAt: ahora,
     }

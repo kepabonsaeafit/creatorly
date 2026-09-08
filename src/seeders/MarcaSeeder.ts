@@ -2,12 +2,13 @@
 
 // internal imports
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
+import { generateId } from '@/utils/generateId'
 
 /** Datos ficticios de marcas. Mismos valores que services/seed.js:90-119. */
 export function seedMarcas(): MarcaInterface[] {
   return [
     {
-      id: crypto.randomUUID(),
+      id: generateId(),
       nombre: 'Natura Belleza',
       industria: 'belleza y cuidado personal',
       contactoNombre: 'María Fernández',
@@ -16,7 +17,7 @@ export function seedMarcas(): MarcaInterface[] {
       updatedAt: '2026-01-07T09:00:00.000Z',
     },
     {
-      id: crypto.randomUUID(),
+      id: generateId(),
       nombre: 'PixelPlay',
       industria: 'videojuegos',
       contactoNombre: 'Carlos Andrade',
@@ -25,7 +26,7 @@ export function seedMarcas(): MarcaInterface[] {
       updatedAt: '2026-01-20T15:00:00.000Z',
     },
     {
-      id: crypto.randomUUID(),
+      id: generateId(),
       nombre: 'Áurea Moda',
       industria: 'moda y accesorios',
       contactoNombre: 'Paula Ruiz',
@@ -34,7 +35,7 @@ export function seedMarcas(): MarcaInterface[] {
       updatedAt: '2026-02-01T08:30:00.000Z',
     },
     {
-      id: crypto.randomUUID(),
+      id: generateId(),
       nombre: 'FitPro Suplementos',
       industria: 'fitness y nutrición',
       contactoNombre: 'Diego Salazar',
