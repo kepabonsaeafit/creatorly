@@ -5,6 +5,7 @@ import type { CreadorInterface } from '@/interfaces/CreadorInterface'
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import type { EstadoPedido, PedidoInterface } from '@/interfaces/PedidoInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
+import { generateId } from '@/utils/generateId'
 
 const ESTADOS_FINALES: EstadoPedido[] = ['entregado', 'aprobado']
 
@@ -26,7 +27,7 @@ function construirPedido(datos: DatosPedidoSeed): PedidoInterface {
     ? `${datos.fechaEntrega}T15:00:00.000Z`
     : createdAt
   return {
-    id: crypto.randomUUID(),
+    id: generateId(),
     descripcion: datos.descripcion,
     presupuesto: datos.presupuesto,
     fechaSolicitud: datos.fechaSolicitud,

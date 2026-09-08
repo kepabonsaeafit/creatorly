@@ -5,6 +5,7 @@ import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
 import type { LoginDTO } from '@/dtos/LoginDTO'
 import type { RolUsuario, UserInterface } from '@/interfaces/UserInterface'
 import { useUserStore } from '@/stores/UserStore'
+import { generateId } from '@/utils/generateId'
 
 const ROLES: RolUsuario[] = ['admin', 'coordinador']
 
@@ -54,7 +55,7 @@ export class UserService {
     const ahora = new Date().toISOString()
     const nuevoUsuario: UserInterface = {
       ...normalizado,
-      id: crypto.randomUUID(),
+      id: generateId(),
       createdAt: ahora,
       updatedAt: ahora,
     }
