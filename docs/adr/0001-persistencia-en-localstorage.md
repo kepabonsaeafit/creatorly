@@ -15,7 +15,7 @@ El enunciado del curso exige que la "base de datos" de la SPA viva en el LocalSt
 ## Consequences
 
 - La fuente de verdad en memoria son los stores de Pinia; LocalStorage es la capa de persistencia detrás de ellos.
-- `PiniaConfig.init()` centraliza el arranque: hidrata los stores desde LocalStorage o ejecuta la siembra si están vacíos, y luego observa los stores en profundidad para persistir cada cambio.
+- `initPinia()` centraliza el arranque: hidrata los stores desde LocalStorage o ejecuta la siembra si están vacíos, y luego observa los stores en profundidad para persistir cada cambio.
 - Los services leen y escriben sobre los stores, no sobre LocalStorage. `StorageService` es el único módulo que toca la API del navegador.
 - Las relaciones por id se resuelven en los services (`PedidoService.getMarca(pedido)`), no en las views.
 - Ningún service ni seeder llama a `crypto.randomUUID()` directamente: todos generan ids con `utils/generateId.ts`, que centraliza el fallback y evita que el bug de contexto inseguro se repita en un archivo nuevo.

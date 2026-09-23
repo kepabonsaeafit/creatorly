@@ -2,7 +2,7 @@
 
 > **Actualizado por ADR-0004 (2026-09-02):** la decisión sigue vigente y se refuerza. Cambia la ubicación del componente y se hace explícita la regla de que ningún gráfico vive dentro de una view.
 
-El enunciado exige Chart.js como librería gráfica obligatoria. Decidimos usar `chart.js` directamente y construir nuestro propio componente wrapper `components/charts/BaseChart.vue` — monta el canvas, recibe `type` + `data` + `options` tipados y destruye la instancia al desmontar — en lugar de añadir la librería `vue-chartjs`. Menos dependencias, control total del ciclo de vida del gráfico, y el wrapper cuenta como uno de los componentes reutilizables que el enunciado exige. La segunda librería visual obligatoria queda pendiente de elección por Felipe.
+El enunciado exige Chart.js como librería gráfica obligatoria. Decidimos usar `chart.js` directamente y construir nuestro propio componente wrapper `components/charts/BaseChart.vue` — monta el canvas, recibe `type` + `data` + `options` tipados y destruye la instancia al desmontar — en lugar de añadir la librería `vue-chartjs`. Menos dependencias, control total del ciclo de vida del gráfico, y el wrapper cuenta como uno de los componentes reutilizables que el enunciado exige. La segunda librería JS obligatoria queda pendiente de la respuesta del profesor sobre si `vue-toastification`, ya instalada en el proyecto, cuenta como tal.
 
 ## Considered Options
 
