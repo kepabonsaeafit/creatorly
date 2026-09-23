@@ -33,8 +33,9 @@ src/
 ├── interfaces/   # la forma de cada entidad: User, Creador, Marca, Pedido
 ├── dtos/         # de entrada: derivados con Omit/Pick; de filtro/agregación: interfaces propias
 ├── stores/       # stores de Pinia (solo el array, cero lógica; excepción: SessionStore)
-├── services/     # toda la lógica; StorageService es la única puerta a LocalStorage
+├── services/     # toda la lógica
 ├── seeders/      # datos ficticios tipados, uno por entidad
+├── storage/      # StorageService: única puerta a LocalStorage
 ├── utils/        # formateadores puros compartidos (fecha, moneda, estado)
 ├── router/       # rutas + guards (admin/ agrupa las rutas solo-admin)
 └── views/        # una vista por ruta (*View.vue)
@@ -46,7 +47,7 @@ src/
 - **Vistas:** `NombreView.vue` (`PedidosIndexView.vue`, `CreadoresEditView.vue`).
 - **Interfaces:** `NombreInterface.ts` (`PedidoInterface.ts`).
 - **DTOs:** `NombreDTO.ts` (`CreatePedidoDTO.ts`, `PedidoFiltroDTO.ts`).
-- **Services:** `NombreService.ts` (`PedidoService.ts`, `StorageService.ts`).
+- **Services:** `NombreService.ts` (`PedidoService.ts`).
 - **Seeders:** `NombreSeeder.ts` (`PedidoSeeder.ts`).
 - **Rutas:** paths en minúscula con guiones (`/pedidos/crear`).
 - **CSS:** clases con prefijo del bloque (`stat-card__label`, patrón BEM ligero).

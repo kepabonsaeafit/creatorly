@@ -3,8 +3,10 @@
 > **Actualizado por ADR-0004 (2026-09-02):** la decisión de fondo sigue vigente. Cambian los nombres de archivo y la forma de hidratar los datos, por la migración a TypeScript con el patrón interfaces + stores + services.
 >
 > **Actualizado el 2026-09-07:** el despliegue en GCP por HTTP sin dominio propio expuso que `crypto.randomUUID()` solo existe en contextos seguros (HTTPS o `localhost`) — en ese entorno el navegador no lo expone y lanza `TypeError: crypto.randomUUID is not a function`, rompiendo el sembrado de datos al arrancar. Los ids se siguen generando como UUID v4, pero ahora a través de `utils/generateId.ts`, que usa `crypto.randomUUID()` cuando está disponible y si no arma el UUID a mano con `crypto.getRandomValues()` (esta sí funciona sin contexto seguro). Ver detalle en Consequences.
+>
+> **Actualizado el 2026-09-23:** `StorageService` sale de `services/` a `storage/`, porque es la capa de persistencia y no lógica de negocio. La decisión de fondo no cambia.
 
-El enunciado del curso exige que la "base de datos" de la SPA viva en el LocalStorage del navegador, sembrada con datos ficticios en el primer arranque. Decidimos: una clave por colección con prefijo `creatorly_` (`creatorly_users`, `creatorly_creadores`, `creatorly_marcas`, `creatorly_pedidos`), identificadores generados como UUID v4, y cada pedido guarda sus referencias a marca, creador y coordinador como **ids planos** — nunca objetos anidados. Las relaciones se resuelven al leer, no al escribir. Todo acceso a LocalStorage pasa por un único servicio (`services/StorageService.ts`).
+El enunciado del curso exige que la "base de datos" de la SPA viva en el LocalStorage del navegador, sembrada con datos ficticios en el primer arranque. Decidimos: una clave por colección con prefijo `creatorly_` (`creatorly_users`, `creatorly_creadores`, `creatorly_marcas`, `creatorly_pedidos`), identificadores generados como UUID v4, y cada pedido guarda sus referencias a marca, creador y coordinador como **ids planos** — nunca objetos anidados. Las relaciones se resuelven al leer, no al escribir. Todo acceso a LocalStorage pasa por un único servicio (`storage/StorageService.ts`).
 
 ## Considered Options
 

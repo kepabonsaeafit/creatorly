@@ -14,9 +14,9 @@
 
 // internal imports
 import type { LoginDTO } from '@/dtos/LoginDTO'
-import { StorageService } from '@/services/StorageService'
 import { UserService } from '@/services/UserService'
 import type { UserInterface } from '@/interfaces/UserInterface'
+import { StorageService } from '@/storage/StorageService'
 import { useSessionStore } from '@/stores/SessionStore'
 
 interface LoginResult {
