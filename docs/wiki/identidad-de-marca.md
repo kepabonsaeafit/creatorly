@@ -89,7 +89,7 @@ https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains
 |---|---|---|---|
 | **Display / Marca** | `Unbounded` | `600`, `700` | Logotipo / Wordmark, números grandes en tarjetas KPI |
 | **Interfaz / Lectura** | `Inter` | `400`, `500`, `600` | Textos de UI, botones, campos de formulario, celdas de tablas |
-| **Datos / Código** | `JetBrains Mono` | `400`, `500` | IDs UUID (`crypto.randomUUID()`), labels uppercase, chips de estado, badges de rol (`ADMIN`, `COORDINADOR`) |
+| **Datos / Código** | `JetBrains Mono` | `400`, `500` | IDs UUID (generados con `generateId()`), labels uppercase, chips de estado, badges de rol (`ADMIN`, `COORDINADOR`) |
 
 ---
 

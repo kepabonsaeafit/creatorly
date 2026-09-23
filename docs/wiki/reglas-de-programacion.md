@@ -30,7 +30,7 @@ Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite
 
 ## Arquitectura
 
-15. Cada entidad del dominio se parte en hasta cinco piezas: `interfaces/` (la forma, sin métodos) + `dtos/` (tipos derivados con `Omit`/`Pick`) + `stores/` (Pinia, solo el array, cero lógica) + `services/` (clase de métodos estáticos, toda la lógica y validaciones) + `seeders/` (datos ficticios, objetos planos tipados). `utils/` guarda formateadores puros compartidos (fecha, moneda, estado) sin estado ni acceso a stores/LocalStorage. El molde, con `Pedido` de ejemplo:
+15. Cada entidad del dominio se parte en hasta cinco piezas: `interfaces/` (la forma, sin métodos) + `dtos/` (de entrada: derivados con `Omit`/`Pick`; de filtro/agregación: interfaces propias) + `stores/` (Pinia, solo el array, cero lógica; excepción: `SessionStore`) + `services/` (clase de métodos estáticos, toda la lógica y validaciones) + `seeders/` (datos ficticios, objetos planos tipados). `utils/` guarda formateadores puros compartidos (fecha, moneda, estado) sin estado ni acceso a stores/LocalStorage. El molde, con `Pedido` de ejemplo:
 
 ```ts
     // interfaces/PedidoInterface.ts → LA FORMA. Solo atributos, sin métodos.
@@ -57,8 +57,10 @@ Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite
     }
 ```
 
-16. **Un DTO por caso de uso.** Varios DTOs en un service está bien; un DTO partido en dos, no.
-17. Los ids se generan con `crypto.randomUUID()`; los pedidos referencian marca/creador/coordinador **por id**, no con objetos anidados.
+Los stores de entidad guardan solo el array, sin lógica. Excepción: `SessionStore`, que además lee la sesión persistida al crearse y deriva `current`, `isLoggedIn` e `isAdmin` con `computed`.
+
+16. **Un DTO por caso de uso.** Los DTOs de entrada (`Create*`, `Login`) derivan de su interface con `Omit`/`Pick`; los DTOs de filtro y de agregación (reportes y gráficos) son interfaces propias, porque su forma no sale de una entidad. Varios DTOs en un service está bien; un DTO partido en dos, no.
+17. Los ids se generan con `generateId()` (`utils/generateId.ts`), que usa `crypto.randomUUID()` cuando hay contexto seguro y, si no, un respaldo con `crypto.getRandomValues()` (ver ADR-0001). Nunca se llama `crypto.randomUUID()` directo; los pedidos referencian marca/creador/coordinador **por id**, no con objetos anidados.
 
 ## Datos
 
@@ -71,17 +73,17 @@ Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite
 
 22. Nada de pushes directos a `main`: todo por rama + Pull Request. Push y PR requieren autorización explícita del integrante dueño de esa rama; aprobar y mergear a `main` sigue siendo autoridad del arquitecto, igual que instalar o actualizar dependencias.
 23. Commits convencionales: tipo en inglés + descripción en español (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`), cuerpo en viñetas de hechos técnicos verificables — nada de narración del proceso ni mensajes dirigidos a alguien.
-24. `npm run lint`, `npm run type-check` y `npm run build` en verde antes de abrir el PR.
+24. Antes de cada commit: `npm run lint`, `npm run format` y `npm run type-check` en verde (si `format` modifica archivos, esos cambios van en el mismo commit). `npm run build` en verde antes de abrir el PR.
 
 ## Cómo agregar una entidad nueva (con o sin agente de IA)
 
 El patrón de la sección Arquitectura no depende de tener un agente que lo aplique por ti. Para agregar una entidad nueva a mano, en este orden:
 
 1. **`interfaces/NombreInterface.ts`** — solo los atributos, sin métodos. Revisa primero si ya existe una pieza equivalente para otra entidad y cópiale la forma.
-2. **`dtos/CreateNombreDTO.ts`** (y cualquier otro DTO de lectura que necesites, ej. un filtro) — un `Omit`/`Pick` sobre la interface, uno por caso de uso.
+2. **`dtos/CreateNombreDTO.ts`** — un `Omit`/`Pick` sobre la interface, uno por caso de uso; si necesitas un DTO de filtro o de agregación (reportes, gráficos), es una interface propia, porque su forma no sale de la entidad.
 3. **`stores/NombreStore.ts`** — solo el `ref` del array. No le agregues lógica aquí, ni siquiera "por ahora".
 4. **`services/NombreService.ts`** — aquí van las validaciones y toda la lógica (`getAll`, `getById`, `create`, `update`, `remove`, y los métodos propios del dominio que necesites).
-5. Si la entidad necesita datos de siembra, **`seeders/NombreSeeder.ts`** — función pura que devuelve objetos planos tipados, nunca instancias de una clase.
+5. Si la entidad necesita datos de siembra, **`seeders/NombreSeeder.ts`** — función que construye y devuelve objetos planos tipados sin leer ni modificar estado externo (stores, LocalStorage), nunca instancias de una clase. No es pura en sentido estricto: genera ids aleatorios con `generateId()`.
 6. Antes de guardar: el archivo lleva tu nombre en la primera línea como comentario, los imports van agrupados (`// external imports` / `// internal imports`) y alfabetizados dentro de cada grupo.
-7. Corre `npm run lint`, `npm run type-check` y `npm run build` — los tres en verde antes de pedir revisión o abrir el PR.
+7. Antes de comitear, corre `npm run lint`, `npm run format` y `npm run type-check` — los tres en verde (si `format` modifica archivos, esos cambios van en el mismo commit). Corre `npm run build` en verde antes de pedir revisión o abrir el PR.
 8. El criterio de aceptación no es "compila": es que puedas explicar cada archivo que creaste en la sustentación individual, sin ayuda. Si no puedes explicar por qué algo quedó donde quedó, revísalo antes de comitear, no después.

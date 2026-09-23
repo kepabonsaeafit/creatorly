@@ -4,7 +4,7 @@ Guía **híbrida**: lo que el linter garantiza automáticamente y las convencion
 
 ## Parte automatizada: el linter
 
-El proyecto trae tres herramientas configuradas. Corren con un solo comando:
+El proyecto trae tres herramientas configuradas, en dos comandos distintos: `npm run lint` (oxlint + ESLint) y `npm run format` (Prettier).
 
 ```sh
 npm run lint     # oxlint (rápido) + eslint (completo), ambos con --fix
@@ -19,7 +19,7 @@ npm run format   # prettier sobre src/
 | **oxlint** | `.oxlintrc.json` | Primera pasada rápida de errores comunes (se ejecuta antes de ESLint) |
 | **Prettier** | `.prettierrc.json` | Formato uniforme: sangría, comillas simples sin punto y coma, ancho de línea, comas finales |
 
-**Regla de oro:** `npm run lint` debe terminar en verde y sin warnings nuevos antes de abrir cualquier Pull Request. No se discute estilo en los PRs — el linter ya lo decidió.
+**Regla de oro:** antes de cada commit, `npm run lint`, `npm run format` y `npm run type-check` en verde (si `format` modifica archivos, esos cambios van en el mismo commit); `npm run build` en verde antes de abrir cualquier Pull Request. No se discute estilo en los PRs — el linter ya lo decidió.
 
 ## Parte manual: convenciones que el linter no revisa
 
@@ -31,8 +31,8 @@ src/
 ├── components/   # componentes reutilizables (PascalCase)
 │   └── charts/   # gráficos Chart.js, siempre vía BaseChart.vue
 ├── interfaces/   # la forma de cada entidad: User, Creador, Marca, Pedido
-├── dtos/         # tipos derivados por caso de uso (Omit/Pick)
-├── stores/       # stores de Pinia (solo el array, cero lógica)
+├── dtos/         # de entrada: derivados con Omit/Pick; de filtro/agregación: interfaces propias
+├── stores/       # stores de Pinia (solo el array, cero lógica; excepción: SessionStore)
 ├── services/     # toda la lógica; StorageService es la única puerta a LocalStorage
 ├── seeders/      # datos ficticios tipados, uno por entidad
 ├── utils/        # formateadores puros compartidos (fecha, moneda, estado)
