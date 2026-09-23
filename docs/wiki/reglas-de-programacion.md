@@ -64,9 +64,9 @@ Los stores de entidad guardan solo el array, sin lógica. Excepción: `SessionSt
 
 ## Datos
 
-18. **Nadie toca `localStorage` directamente**: siempre vía `services/StorageService.ts`.
+18. **Nadie toca `localStorage` directamente**: siempre vía `storage/StorageService.ts`.
 19. Claves de LocalStorage con prefijo `creatorly_` (`creatorly_users`, `creatorly_pedidos`, `creatorly_session`…).
-20. La siembra de datos ficticios ocurre solo si LocalStorage está vacío (`PiniaConfig` + `DemoDataService.generar()`/`.persistir()`). El botón "Restablecer datos demo" en `/usuarios` llama a `DemoDataService.reset()`, que siembra exactamente igual y cierra la sesión activa.
+20. La siembra de datos ficticios ocurre solo si LocalStorage está vacío, en `PiniaConfig` (`generar()`/`persistir()`). El botón "Restablecer datos demo" en `/usuarios` llama a `resetDemoData()` de `PiniaConfig`, que siembra exactamente igual, y después la vista cierra la sesión con `AuthService.logout()`.
 21. La sesión **nunca** guarda la contraseña del usuario.
 
 ## Git y PRs

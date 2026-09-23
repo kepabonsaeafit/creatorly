@@ -6,8 +6,8 @@ import { computed, ref } from 'vue'
 
 // internal imports
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { StorageService } from '@/services/StorageService'
 import { UserService } from '@/services/UserService'
+import { StorageService } from '@/storage/StorageService'
 
 export const useSessionStore = defineStore('session', () => {
   const userId = ref<string | null>(StorageService.getSession()?.userId ?? null)

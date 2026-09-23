@@ -10,8 +10,8 @@ import { useToast } from 'vue-toastification'
 import UsuarioForm from '@/components/UsuarioForm.vue'
 import UsuariosTable from '@/components/UsuariosTable.vue'
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
+import { resetDemoData } from '@/PiniaConfig'
 import { AuthService } from '@/services/AuthService'
-import { DemoDataService } from '@/services/DemoDataService'
 import { UserService } from '@/services/UserService'
 
 const router = useRouter()
@@ -102,7 +102,8 @@ function onRestablecerDemo(): void {
     '¿Restablecer los datos demo? Se borran creadores, marcas, pedidos y usuarios, ' +
     'se vuelve a sembrar y se cierra la sesión.'
   if (!confirm(mensaje)) return
-  DemoDataService.reset()
+  resetDemoData()
+  AuthService.logout()
   toast.success('Datos demo restablecidos: inicia sesión de nuevo')
   router.push({ name: 'login' })
 }

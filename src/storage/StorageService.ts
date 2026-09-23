@@ -1,9 +1,10 @@
 // Kevin Pabón
 
 /**
- * Capa única de acceso a LocalStorage del navegador (ADR-0001).
- * Ningún otro módulo nuevo debe usar `localStorage` directamente;
- * los stores hidratan y persisten a través de este servicio.
+ * Capa de persistencia: única puerta de acceso a LocalStorage del navegador
+ * (ADR-0001). No es lógica de negocio: ningún otro módulo nuevo debe usar
+ * `localStorage` directamente; los stores hidratan y persisten a través de
+ * esta clase.
  */
 
 export type CollectionName = 'users' | 'creadores' | 'marcas' | 'pedidos'
@@ -12,20 +13,20 @@ interface SessionRecord {
   userId: string
 }
 
-const KEYS: Record<CollectionName, string> = {
-  users: 'creatorly_users',
-  creadores: 'creatorly_creadores',
-  marcas: 'creatorly_marcas',
-  pedidos: 'creatorly_pedidos',
-}
-
-const SESSION_KEY = 'creatorly_session'
-
 export class StorageService {
+  private static readonly KEYS: Record<CollectionName, string> = {
+    users: 'creatorly_users',
+    creadores: 'creatorly_creadores',
+    marcas: 'creatorly_marcas',
+    pedidos: 'creatorly_pedidos',
+  }
+
+  private static readonly SESSION_KEY = 'creatorly_session'
+
   /** Lee una colección completa como objetos planos. */
   static read<T>(name: CollectionName): T[] {
     try {
-      const raw = localStorage.getItem(KEYS[name])
+      const raw = localStorage.getItem(this.KEYS[name])
       return raw ? (JSON.parse(raw) as T[]) : []
     } catch {
       return []
@@ -34,7 +35,7 @@ export class StorageService {
 
   /** Reemplaza el contenido completo de una colección. */
   static write<T>(name: CollectionName, data: T[]): void {
-    localStorage.setItem(KEYS[name], JSON.stringify(data))
+    localStorage.setItem(this.KEYS[name], JSON.stringify(data))
   }
 
   /** Indica si una colección ya tiene datos (usado por la siembra del primer arranque). */
@@ -44,14 +45,14 @@ export class StorageService {
 
   /** Elimina todos los datos de Creatorly, incluida la sesión. */
   static clearAll(): void {
-    Object.values(KEYS).forEach((key) => localStorage.removeItem(key))
-    localStorage.removeItem(SESSION_KEY)
+    Object.values(this.KEYS).forEach((key) => localStorage.removeItem(key))
+    localStorage.removeItem(this.SESSION_KEY)
   }
 
   /** Lee la sesión persistida. */
   static getSession(): SessionRecord | null {
     try {
-      const raw = localStorage.getItem(SESSION_KEY)
+      const raw = localStorage.getItem(this.SESSION_KEY)
       return raw ? (JSON.parse(raw) as SessionRecord) : null
     } catch {
       return null
@@ -60,11 +61,11 @@ export class StorageService {
 
   /** Persiste la sesión activa. Nunca guarda la contraseña. */
   static setSession(userId: string): void {
-    localStorage.setItem(SESSION_KEY, JSON.stringify({ userId }))
+    localStorage.setItem(this.SESSION_KEY, JSON.stringify({ userId }))
   }
 
   /** Elimina la sesión persistida. */
   static clearSession(): void {
-    localStorage.removeItem(SESSION_KEY)
+    localStorage.removeItem(this.SESSION_KEY)
   }
 }
