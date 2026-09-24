@@ -11,59 +11,52 @@ import { CreadorService } from '@/services/CreadorService'
 import { MarcaService } from '@/services/MarcaService'
 import { UserService } from '@/services/UserService'
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
+import type { HomeStat } from '@/interfaces/HomeStatInterface'
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
-import type { EstadoPedido, PedidoInterface } from '@/interfaces/PedidoInterface'
+import type { PedidoActivity } from '@/interfaces/PedidoActivityInterface'
+import {
+  ESTADOS,
+  ESTADOS_FINALES,
+  type EstadoPedido,
+  type PedidoInterface,
+} from '@/interfaces/PedidoInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { usePedidoStore } from '@/stores/PedidoStore'
 import { formatMonthLabel } from '@/utils/formatDate'
 import { generateId } from '@/utils/generateId'
 
-const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
-
-const ESTADOS_ACTIVOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion']
-
-const ESTADOS_FINALES: EstadoPedido[] = ['entregado', 'aprobado']
-
-export interface HomeStat {
-  id: string
-  label: string
-  value: number
-  unit: string
-}
-
-export interface PedidoActivity {
-  id: string
-  title: string
-  timestamp: string
-  type: 'default' | 'milestone'
-}
-
-function validate(datos: CreatePedidoDTO): void {
-  if (!datos.descripcion || typeof datos.descripcion !== 'string') {
-    throw new Error('Pedido: la descripción es obligatoria')
-  }
-  if (
-    typeof datos.presupuesto !== 'number' ||
-    Number.isNaN(datos.presupuesto) ||
-    datos.presupuesto < 0
-  ) {
-    throw new Error('Pedido: el presupuesto debe ser un número >= 0')
-  }
-  if (!ESTADOS.includes(datos.estado)) {
-    throw new Error(`Pedido: el estado debe ser uno de ${ESTADOS.join(' | ')}`)
-  }
-  if (!datos.marcaId || typeof datos.marcaId !== 'string') {
-    throw new Error('Pedido: marcaId es obligatorio')
-  }
-  if (!datos.coordinadorId || typeof datos.coordinadorId !== 'string') {
-    throw new Error('Pedido: coordinadorId es obligatorio')
-  }
-  if (datos.creadorId !== null && typeof datos.creadorId !== 'string') {
-    throw new Error('Pedido: creadorId debe ser un id o null')
-  }
-}
-
 export class PedidoService {
+  private static readonly ESTADOS_ACTIVOS: EstadoPedido[] = [
+    'solicitado',
+    'asignado',
+    'en_produccion',
+  ]
+
+  private static validate(datos: CreatePedidoDTO): void {
+    if (!datos.descripcion || typeof datos.descripcion !== 'string') {
+      throw new Error('Pedido: la descripción es obligatoria')
+    }
+    if (
+      typeof datos.presupuesto !== 'number' ||
+      Number.isNaN(datos.presupuesto) ||
+      datos.presupuesto < 0
+    ) {
+      throw new Error('Pedido: el presupuesto debe ser un número >= 0')
+    }
+    if (!ESTADOS.includes(datos.estado)) {
+      throw new Error(`Pedido: el estado debe ser uno de ${ESTADOS.join(' | ')}`)
+    }
+    if (!datos.marcaId || typeof datos.marcaId !== 'string') {
+      throw new Error('Pedido: marcaId es obligatorio')
+    }
+    if (!datos.coordinadorId || typeof datos.coordinadorId !== 'string') {
+      throw new Error('Pedido: coordinadorId es obligatorio')
+    }
+    if (datos.creadorId !== null && typeof datos.creadorId !== 'string') {
+      throw new Error('Pedido: creadorId debe ser un id o null')
+    }
+  }
+
   static getAll(): PedidoInterface[] {
     return usePedidoStore().pedidos
   }
@@ -85,7 +78,7 @@ export class PedidoService {
   }
 
   static estaActivo(pedido: PedidoInterface): boolean {
-    return ESTADOS_ACTIVOS.includes(pedido.estado)
+    return this.ESTADOS_ACTIVOS.includes(pedido.estado)
   }
 
   /** KPIs del HomeView. Puerto de composables/useHomeStats.js (paso 7). */
@@ -142,7 +135,7 @@ export class PedidoService {
       creadorId: datos.creadorId ?? null,
       fechaSolicitud: datos.fechaSolicitud ?? new Date().toISOString().slice(0, 10),
     }
-    validate(normalizado)
+    this.validate(normalizado)
     const ahora = new Date().toISOString()
     const nuevoPedido: PedidoInterface = {
       ...normalizado,
@@ -168,7 +161,7 @@ export class PedidoService {
       creadorId: cambios.creadorId ?? pedidos[indice].creadorId,
       coordinadorId: cambios.coordinadorId ?? pedidos[indice].coordinadorId,
     }
-    validate(combinado)
+    this.validate(combinado)
     const actualizado: PedidoInterface = {
       ...pedidos[indice],
       ...combinado,

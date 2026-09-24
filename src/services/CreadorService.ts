@@ -7,22 +7,22 @@ import type { CreadorInterface } from '@/interfaces/CreadorInterface'
 import { useCreadorStore } from '@/stores/CreadorStore'
 import { generateId } from '@/utils/generateId'
 
-function validate(datos: CreateCreadorDTO): void {
-  if (!datos.nombre || typeof datos.nombre !== 'string') {
-    throw new Error('Creador: el nombre es obligatorio')
-  }
-  if (!datos.nicho || typeof datos.nicho !== 'string') {
-    throw new Error('Creador: el nicho es obligatorio')
-  }
-  if (!datos.tipoContenido || typeof datos.tipoContenido !== 'string') {
-    throw new Error('Creador: el tipo de contenido es obligatorio')
-  }
-  if (typeof datos.tarifa !== 'number' || Number.isNaN(datos.tarifa) || datos.tarifa < 0) {
-    throw new Error('Creador: la tarifa debe ser un número >= 0')
-  }
-}
-
 export class CreadorService {
+  private static validate(datos: CreateCreadorDTO): void {
+    if (!datos.nombre || typeof datos.nombre !== 'string') {
+      throw new Error('Creador: el nombre es obligatorio')
+    }
+    if (!datos.nicho || typeof datos.nicho !== 'string') {
+      throw new Error('Creador: el nicho es obligatorio')
+    }
+    if (!datos.tipoContenido || typeof datos.tipoContenido !== 'string') {
+      throw new Error('Creador: el tipo de contenido es obligatorio')
+    }
+    if (typeof datos.tarifa !== 'number' || Number.isNaN(datos.tarifa) || datos.tarifa < 0) {
+      throw new Error('Creador: la tarifa debe ser un número >= 0')
+    }
+  }
+
   static getAll(): CreadorInterface[] {
     return useCreadorStore().creadores
   }
@@ -33,7 +33,7 @@ export class CreadorService {
 
   static create(datos: CreateCreadorDTO): CreadorInterface {
     const normalizado: CreateCreadorDTO = { ...datos, disponible: datos.disponible ?? true }
-    validate(normalizado)
+    this.validate(normalizado)
     const ahora = new Date().toISOString()
     const nuevoCreador: CreadorInterface = {
       ...normalizado,
@@ -57,7 +57,7 @@ export class CreadorService {
       tarifa: cambios.tarifa ?? creadores[indice].tarifa,
       disponible: cambios.disponible ?? creadores[indice].disponible,
     }
-    validate(combinado)
+    this.validate(combinado)
     const actualizado: CreadorInterface = {
       ...creadores[indice],
       ...combinado,

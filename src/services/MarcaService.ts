@@ -6,24 +6,24 @@ import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import { useMarcaStore } from '@/stores/MarcaStore'
 import { generateId } from '@/utils/generateId'
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function validate(datos: CreateMarcaDTO): void {
-  if (!datos.nombre || typeof datos.nombre !== 'string') {
-    throw new Error('Marca: el nombre es obligatorio')
-  }
-  if (!datos.industria || typeof datos.industria !== 'string') {
-    throw new Error('Marca: la industria es obligatoria')
-  }
-  if (!datos.contactoNombre || typeof datos.contactoNombre !== 'string') {
-    throw new Error('Marca: el nombre del contacto es obligatorio')
-  }
-  if (!EMAIL_REGEX.test(datos.contactoEmail ?? '')) {
-    throw new Error('Marca: el email del contacto no tiene un formato válido')
-  }
-}
-
 export class MarcaService {
+  private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  private static validate(datos: CreateMarcaDTO): void {
+    if (!datos.nombre || typeof datos.nombre !== 'string') {
+      throw new Error('Marca: el nombre es obligatorio')
+    }
+    if (!datos.industria || typeof datos.industria !== 'string') {
+      throw new Error('Marca: la industria es obligatoria')
+    }
+    if (!datos.contactoNombre || typeof datos.contactoNombre !== 'string') {
+      throw new Error('Marca: el nombre del contacto es obligatorio')
+    }
+    if (!this.EMAIL_REGEX.test(datos.contactoEmail ?? '')) {
+      throw new Error('Marca: el email del contacto no tiene un formato válido')
+    }
+  }
+
   static getAll(): MarcaInterface[] {
     return useMarcaStore().marcas
   }
@@ -37,7 +37,7 @@ export class MarcaService {
       ...datos,
       contactoEmail: String(datos.contactoEmail).trim().toLowerCase(),
     }
-    validate(normalizado)
+    this.validate(normalizado)
     const ahora = new Date().toISOString()
     const nuevaMarca: MarcaInterface = {
       ...normalizado,
@@ -59,7 +59,7 @@ export class MarcaService {
       contactoNombre: cambios.contactoNombre ?? marcas[indice].contactoNombre,
       contactoEmail: cambios.contactoEmail ?? marcas[indice].contactoEmail,
     }
-    validate(combinado)
+    this.validate(combinado)
     const actualizado: MarcaInterface = {
       ...marcas[indice],
       ...combinado,

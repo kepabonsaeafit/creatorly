@@ -3,30 +3,28 @@
 // internal imports
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
 import type { LoginDTO } from '@/dtos/LoginDTO'
-import type { RolUsuario, UserInterface } from '@/interfaces/UserInterface'
+import { ROLES, type UserInterface } from '@/interfaces/UserInterface'
 import { useUserStore } from '@/stores/UserStore'
 import { generateId } from '@/utils/generateId'
 
-const ROLES: RolUsuario[] = ['admin', 'coordinador']
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function validate(datos: CreateUserDTO): void {
-  if (!datos.nombre || typeof datos.nombre !== 'string') {
-    throw new Error('User: el nombre es obligatorio')
-  }
-  if (!EMAIL_REGEX.test(datos.email ?? '')) {
-    throw new Error('User: el email no tiene un formato válido')
-  }
-  if (!datos.password || typeof datos.password !== 'string') {
-    throw new Error('User: la contraseña es obligatoria')
-  }
-  if (!ROLES.includes(datos.rol)) {
-    throw new Error(`User: el rol debe ser uno de ${ROLES.join(' | ')}`)
-  }
-}
-
 export class UserService {
+  private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  private static validate(datos: CreateUserDTO): void {
+    if (!datos.nombre || typeof datos.nombre !== 'string') {
+      throw new Error('User: el nombre es obligatorio')
+    }
+    if (!this.EMAIL_REGEX.test(datos.email ?? '')) {
+      throw new Error('User: el email no tiene un formato válido')
+    }
+    if (!datos.password || typeof datos.password !== 'string') {
+      throw new Error('User: la contraseña es obligatoria')
+    }
+    if (!ROLES.includes(datos.rol)) {
+      throw new Error(`User: el rol debe ser uno de ${ROLES.join(' | ')}`)
+    }
+  }
+
   static getAll(): UserInterface[] {
     return useUserStore().users
   }
@@ -51,7 +49,7 @@ export class UserService {
       rol: datos.rol ?? 'coordinador',
       email: String(datos.email).trim().toLowerCase(),
     }
-    validate(normalizado)
+    this.validate(normalizado)
     const ahora = new Date().toISOString()
     const nuevoUsuario: UserInterface = {
       ...normalizado,
@@ -73,7 +71,7 @@ export class UserService {
       password: cambios.password ?? usuarios[indice].password,
       rol: cambios.rol ?? usuarios[indice].rol,
     }
-    validate(combinado)
+    this.validate(combinado)
     const actualizado: UserInterface = {
       ...usuarios[indice],
       ...combinado,

@@ -36,7 +36,7 @@ src/
 ├── services/     # toda la lógica
 ├── seeders/      # datos ficticios tipados, uno por entidad
 ├── storage/      # StorageService: única puerta a LocalStorage
-├── utils/        # formateadores puros compartidos (fecha, moneda, estado)
+├── utils/        # helpers compartidos sin acceso a stores/LocalStorage (fecha, moneda, estado, ids)
 ├── router/       # rutas + guards (admin/ agrupa las rutas solo-admin)
 └── views/        # una vista por ruta (*View.vue)
 ```
