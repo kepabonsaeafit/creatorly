@@ -17,7 +17,7 @@ interface DatosPedidoSeed {
   estado: EstadoPedido
   marcaId: string
   creadorId: string | null
-  coordinadorId: string
+  userId: string
 }
 
 /** Igual al helper `pedido()` de services/seed.js:128-139: deriva createdAt/updatedAt. */
@@ -35,7 +35,7 @@ function construirPedido(datos: DatosPedidoSeed): PedidoInterface {
     estado: datos.estado,
     marcaId: datos.marcaId,
     creadorId: datos.creadorId,
-    coordinadorId: datos.coordinadorId,
+    userId: datos.userId,
     createdAt,
     updatedAt,
   }
@@ -65,7 +65,7 @@ export function seedPedidos(
       estado: 'en_produccion',
       marcaId: natura.id,
       creadorId: valentina.id,
-      coordinadorId: laura.id,
+      userId: laura.id,
     }),
     construirPedido({
       descripcion: 'Serie de 4 reels de rutina nocturna de skincare',
@@ -75,7 +75,7 @@ export function seedPedidos(
       estado: 'aprobado',
       marcaId: natura.id,
       creadorId: valentina.id,
-      coordinadorId: sara.id,
+      userId: sara.id,
     }),
     construirPedido({
       descripcion: 'Gameplay de 10 min con integración de producto',
@@ -85,7 +85,7 @@ export function seedPedidos(
       estado: 'asignado',
       marcaId: pixel.id,
       creadorId: andres.id,
-      coordinadorId: laura.id,
+      userId: laura.id,
     }),
     construirPedido({
       descripcion: '2 historias y 1 post de lanzamiento de DLC',
@@ -95,7 +95,7 @@ export function seedPedidos(
       estado: 'solicitado',
       marcaId: pixel.id,
       creadorId: null,
-      coordinadorId: sara.id,
+      userId: sara.id,
     }),
     construirPedido({
       descripcion: 'Lookbook de temporada con 6 fotos Instagram',
@@ -105,7 +105,7 @@ export function seedPedidos(
       estado: 'entregado',
       marcaId: aurea.id,
       creadorId: daniela.id,
-      coordinadorId: laura.id,
+      userId: laura.id,
     }),
     construirPedido({
       descripcion: 'Unboxing y reseña del nuevo catálogo',
@@ -115,7 +115,7 @@ export function seedPedidos(
       estado: 'en_produccion',
       marcaId: aurea.id,
       creadorId: daniela.id,
-      coordinadorId: sara.id,
+      userId: sara.id,
     }),
     construirPedido({
       descripcion: 'Rutina de entrenamiento con stack de suplementos',
@@ -125,7 +125,7 @@ export function seedPedidos(
       estado: 'aprobado',
       marcaId: fitpro.id,
       creadorId: sebastian.id,
-      coordinadorId: laura.id,
+      userId: laura.id,
     }),
     construirPedido({
       descripcion: 'Video YouTube de 8 min de pre-entreno',
@@ -135,7 +135,7 @@ export function seedPedidos(
       estado: 'entregado',
       marcaId: fitpro.id,
       creadorId: sebastian.id,
-      coordinadorId: sara.id,
+      userId: sara.id,
     }),
     construirPedido({
       descripcion: 'Recetas fáciles con línea gourmet',
@@ -145,7 +145,7 @@ export function seedPedidos(
       estado: 'solicitado',
       marcaId: natura.id,
       creadorId: null,
-      coordinadorId: laura.id,
+      userId: laura.id,
     }),
     construirPedido({
       descripcion: 'Live de 1 hora jugando el nuevo título',
@@ -155,7 +155,7 @@ export function seedPedidos(
       estado: 'en_produccion',
       marcaId: pixel.id,
       creadorId: andres.id,
-      coordinadorId: sara.id,
+      userId: sara.id,
     }),
     construirPedido({
       descripcion: '5 fotos de street style con accesorios',
@@ -165,7 +165,7 @@ export function seedPedidos(
       estado: 'asignado',
       marcaId: aurea.id,
       creadorId: isabella.id,
-      coordinadorId: laura.id,
+      userId: laura.id,
     }),
     construirPedido({
       descripcion: 'Review honesta de proteína vegana',
@@ -175,7 +175,7 @@ export function seedPedidos(
       estado: 'entregado',
       marcaId: fitpro.id,
       creadorId: mateo.id,
-      coordinadorId: sara.id,
+      userId: sara.id,
     }),
   ]
 }

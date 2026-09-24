@@ -11,7 +11,8 @@ export const ESTADOS_FINALES: readonly EstadoPedido[] = ['entregado', 'aprobado'
 /**
  * Pedido: la unidad de trabajo del sistema. Conecta a una Marca (quien solicita),
  * un Creador (quien produce, opcional hasta la asignación) y un User coordinador
- * (quien lo gestiona). Ver ADR-0001: las referencias se guardan por id.
+ * (quien lo gestiona). Ver ADR-0001: las referencias se guardan por id; el
+ * coordinador se referencia con userId.
  */
 export interface PedidoInterface {
   id: string
@@ -22,7 +23,7 @@ export interface PedidoInterface {
   estado: EstadoPedido
   marcaId: string
   creadorId: string | null
-  coordinadorId: string
+  userId: string
   createdAt: string
   updatedAt: string
 }

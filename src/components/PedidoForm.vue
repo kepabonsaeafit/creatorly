@@ -35,7 +35,7 @@ const descripcion = ref(props.initial.descripcion ?? '')
 const presupuesto = ref(props.initial.presupuesto ?? 0)
 const marcaId = ref(props.initial.marcaId ?? '')
 const creadorId = ref(props.initial.creadorId ?? '')
-const coordinadorId = ref(props.initial.coordinadorId ?? '')
+const userId = ref(props.initial.userId ?? '')
 const fechaSolicitud = ref(props.initial.fechaSolicitud ?? new Date().toISOString().slice(0, 10))
 const fechaEntrega = ref(props.initial.fechaEntrega ?? '')
 const estado = ref<EstadoPedido>(props.initial.estado ?? 'solicitado')
@@ -54,7 +54,7 @@ function onSubmit(): void {
     presupuesto: Number(presupuesto.value),
     marcaId: marcaId.value,
     creadorId: creadorId.value || null,
-    coordinadorId: coordinadorId.value,
+    userId: userId.value,
     fechaSolicitud: fechaSolicitud.value,
     fechaEntrega: fechaEntrega.value || null,
     estado: estado.value,
@@ -110,7 +110,7 @@ function onSubmit(): void {
 
     <div class="pedido-form__field">
       <label class="pedido-form__label" for="coordinador">Coordinador</label>
-      <select id="coordinador" v-model="coordinadorId" class="pedido-form__input" required>
+      <select id="coordinador" v-model="userId" class="pedido-form__input" required>
         <option value="" disabled>Selecciona un coordinador</option>
         <option v-for="coordinador in coordinadores" :key="coordinador.id" :value="coordinador.id">
           {{ coordinador.nombre }}
