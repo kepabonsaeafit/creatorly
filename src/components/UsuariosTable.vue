@@ -14,7 +14,7 @@ withDefaults(
   { usuarioActualId: '' },
 )
 
-const emit = defineEmits<{ editar: [id: string]; eliminar: [id: string] }>()
+const emit = defineEmits<{ eliminar: [id: string] }>()
 
 // functions
 function onEliminar(id: string): void {
@@ -47,9 +47,9 @@ function onEliminar(id: string): void {
         </td>
         <td>{{ formatDate(usuario.createdAt) }}</td>
         <td class="usuarios-table__acciones">
-          <button type="button" class="usuarios-table__editar" @click="emit('editar', usuario.id)">
+          <RouterLink :to="{ name: 'usuarios.edit', params: { id: usuario.id } }">
             Editar
-          </button>
+          </RouterLink>
           <button
             v-if="usuario.id !== usuarioActualId"
             type="button"
@@ -113,15 +113,6 @@ function onEliminar(id: string): void {
   display: flex;
   gap: 0.75rem;
   align-items: center;
-}
-
-.usuarios-table__editar {
-  border: none;
-  background: transparent;
-  color: var(--color-primary);
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
 }
 
 .usuarios-table__eliminar {
