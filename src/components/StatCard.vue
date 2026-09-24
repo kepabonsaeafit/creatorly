@@ -4,6 +4,9 @@
 // external imports
 import { computed } from 'vue'
 
+// internal imports
+import { formatCurrency } from '@/utils/formatCurrency'
+
 interface Props {
   label: string
   value: number | string
@@ -16,7 +19,12 @@ const props = withDefaults(defineProps<Props>(), {
   unit: '',
 })
 
-const formattedValue = computed(() => `${props.unit}${props.value.toLocaleString()}`)
+const formattedValue = computed(() => {
+  if (props.unit === '$' && typeof props.value === 'number') {
+    return formatCurrency(props.value)
+  }
+  return `${props.unit}${props.value.toLocaleString()}`
+})
 
 const deltaClass = computed(() => {
   if (props.delta === null) return ''

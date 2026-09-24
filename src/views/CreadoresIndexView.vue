@@ -20,9 +20,7 @@ const nichos = computed(() => CreadorService.getNichos())
 
 const creadores = computed(() => {
   const todos = CreadorService.getAll()
-  return CreadorService.filtrar(todos, filtro).sort((primero, segundo) =>
-    primero.nombre.localeCompare(segundo.nombre),
-  )
+  return CreadorService.filtrar(todos, filtro)
 })
 
 // functions

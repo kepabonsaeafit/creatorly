@@ -81,7 +81,7 @@ export class PedidoService {
     return this.ESTADOS_ACTIVOS.includes(pedido.estado)
   }
 
-  /** KPIs del HomeView. Puerto de composables/useHomeStats.js (paso 7). */
+  /** KPIs del HomeView. */
   static getStats(): HomeStat[] {
     const pedidos = this.getAll()
     const activos = pedidos.filter((pedido) => this.estaActivo(pedido))
@@ -114,7 +114,7 @@ export class PedidoService {
     ]
   }
 
-  /** Actividad reciente del HomeView. Puerto de composables/useHomeStats.js (paso 7). */
+  /** Actividad reciente del HomeView. */
   static getRecentPedidos(limite: number = 5): PedidoActivity[] {
     return [...this.getAll()]
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
@@ -179,7 +179,7 @@ export class PedidoService {
     return true
   }
 
-  /** Aplica un PedidoFiltroDTO sobre una lista de pedidos. Usado por PedidosIndexView y ReportesView. */
+  /** Aplica un PedidoFiltroDTO sobre una lista de pedidos, sin ordenar. Usado por ReportesView. */
   static filtrar(pedidos: PedidoInterface[], filtro: PedidoFiltroDTO): PedidoInterface[] {
     return pedidos.filter((pedido) => {
       if (filtro.estado && pedido.estado !== filtro.estado) return false
@@ -193,6 +193,18 @@ export class PedidoService {
       }
       return true
     })
+  }
+
+  /**
+   * Igual que filtrar(), pero ordenado por fecha de solicitud descendente
+   * (más recientes primero). Usado por PedidosIndexView; ReportesView sigue
+   * usando filtrar() sin ordenar porque el orden de su tabla de detalle no
+   * debe cambiar en esta fase.
+   */
+  static filtrarOrdenados(pedidos: PedidoInterface[], filtro: PedidoFiltroDTO): PedidoInterface[] {
+    return this.filtrar(pedidos, filtro).sort((a, b) =>
+      b.fechaSolicitud.localeCompare(a.fechaSolicitud),
+    )
   }
 
   /** Cantidad de pedidos por estado, en el orden fijo del ciclo de vida. */

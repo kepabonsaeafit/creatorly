@@ -28,9 +28,7 @@ const marcas = computed(() => MarcaService.getAll())
 
 const pedidos = computed(() => {
   const todos = PedidoService.getAll()
-  return PedidoService.filtrar(todos, filtro).sort((a, b) =>
-    b.fechaSolicitud.localeCompare(a.fechaSolicitud),
-  )
+  return PedidoService.filtrarOrdenados(todos, filtro)
 })
 
 const porEstado = computed(() => PedidoService.getPedidosPorEstado(pedidos.value))

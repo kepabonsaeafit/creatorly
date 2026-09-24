@@ -14,15 +14,11 @@
 
 // internal imports
 import type { LoginDTO } from '@/dtos/LoginDTO'
-import { UserService } from '@/services/UserService'
+import type { LoginResult } from '@/interfaces/LoginResultInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
+import { UserService } from '@/services/UserService'
 import { StorageService } from '@/storage/StorageService'
 import { useSessionStore } from '@/stores/SessionStore'
-
-interface LoginResult {
-  ok: boolean
-  error?: string
-}
 
 export class AuthService {
   static login(credenciales: LoginDTO): LoginResult {
@@ -40,5 +36,10 @@ export class AuthService {
 
   static getCurrentUser(): UserInterface | undefined {
     return useSessionStore().current
+  }
+
+  /** Rol del usuario de la sesión activa; usado por NavBar para decidir qué links mostrar. */
+  static isAdmin(): boolean {
+    return useSessionStore().isAdmin
   }
 }

@@ -29,6 +29,11 @@ export class UserService {
     return useUserStore().users
   }
 
+  /** Usuarios con rol coordinador, para el select de coordinador de PedidoForm. */
+  static getCoordinadores(): UserInterface[] {
+    return this.getAll().filter((usuario) => usuario.rol === 'coordinador')
+  }
+
   /** Devuelve undefined si no existe (a propósito, ver decisión 1 del paso 4). */
   static getById(id: string): UserInterface | undefined {
     return useUserStore().users.find((usuario) => usuario.id === id)

@@ -7,11 +7,8 @@
  * esta clase.
  */
 
-export type CollectionName = 'users' | 'creadores' | 'marcas' | 'pedidos'
-
-interface SessionRecord {
-  userId: string
-}
+// internal imports
+import type { CollectionName, SessionRecord } from '@/interfaces/StorageInterface'
 
 export class StorageService {
   private static readonly KEYS: Record<CollectionName, string> = {

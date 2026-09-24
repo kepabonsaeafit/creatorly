@@ -43,9 +43,7 @@ const estado = ref<EstadoPedido>(props.initial.estado ?? 'solicitado')
 // computed variables
 const marcas = computed(() => MarcaService.getAll())
 const creadores = computed(() => CreadorService.getAll())
-const coordinadores = computed(() =>
-  UserService.getAll().filter((usuario) => usuario.rol === 'coordinador'),
-)
+const coordinadores = computed(() => UserService.getCoordinadores())
 
 // functions
 function onSubmit(): void {

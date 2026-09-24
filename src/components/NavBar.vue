@@ -6,15 +6,10 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 // internal imports
+import type { NavLink } from '@/interfaces/NavLinkInterface'
 import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
-
-interface NavLink {
-  name: string
-  label: string
-  admin: boolean
-}
 
 // selectors
 /** Catálogo completo de links; `admin` marca los que exigen el rol de administrador. */
@@ -41,7 +36,7 @@ const iniciales = computed(() => {
     .join('')
 })
 
-const esAdmin = computed(() => currentUser.value?.rol === 'admin')
+const esAdmin = computed(() => AuthService.isAdmin())
 
 /** Un coordinador no ve los links solo-admin; el guard del router los sigue bloqueando igual. */
 const links = computed(() => LINKS.filter((link) => !link.admin || esAdmin.value))
