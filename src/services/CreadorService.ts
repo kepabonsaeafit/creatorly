@@ -76,17 +76,23 @@ export class CreadorService {
     return true
   }
 
-  /** Aplica un CreadorFiltroDTO sobre una lista de creadores. Usado por CreadoresIndexView. */
+  /**
+   * Aplica un CreadorFiltroDTO sobre una lista de creadores y ordena el
+   * resultado por nombre. Usado por CreadoresIndexView.
+   */
   static filtrar(creadores: CreadorInterface[], filtro: CreadorFiltroDTO): CreadorInterface[] {
-    return creadores.filter((creador) => {
-      if (filtro.nicho && creador.nicho !== filtro.nicho) return false
-      if (filtro.disponible !== undefined && creador.disponible !== filtro.disponible) return false
-      if (filtro.texto) {
-        const texto = filtro.texto.trim().toLowerCase()
-        if (texto && !creador.nombre.toLowerCase().includes(texto)) return false
-      }
-      return true
-    })
+    return creadores
+      .filter((creador) => {
+        if (filtro.nicho && creador.nicho !== filtro.nicho) return false
+        if (filtro.disponible !== undefined && creador.disponible !== filtro.disponible)
+          return false
+        if (filtro.texto) {
+          const texto = filtro.texto.trim().toLowerCase()
+          if (texto && !creador.nombre.toLowerCase().includes(texto)) return false
+        }
+        return true
+      })
+      .sort((primero, segundo) => primero.nombre.localeCompare(segundo.nombre))
   }
 
   /** Nichos distintos presentes en el catálogo, ordenados, para poblar el filtro. */

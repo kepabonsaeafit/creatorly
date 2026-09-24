@@ -10,3 +10,10 @@ export function formatDate(iso: string | null): string {
 export function formatMonthLabel(iso: string): string {
   return new Intl.DateTimeFormat('es', { month: 'short', year: 'numeric' }).format(new Date(iso))
 }
+
+/** Formatea un timestamp ISO como fecha y hora legibles, p. ej. `12 ago 2026, 3:45 p. m.`. */
+export function formatDateTime(iso: string): string {
+  return new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(
+    new Date(iso),
+  )
+}

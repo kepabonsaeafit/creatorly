@@ -1,10 +1,8 @@
 <script setup lang="ts">
 // Felipe Gómez
 
-export interface ReportTableColumn {
-  key: string
-  label: string
-}
+// internal imports
+import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
 
 defineProps<{
   columnas: ReportTableColumn[]

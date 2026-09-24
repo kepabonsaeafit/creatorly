@@ -4,21 +4,20 @@
 // external imports
 import { computed } from 'vue'
 
+// internal imports
+import { formatDateTime } from '@/utils/formatDate'
+
 interface Props {
   title: string
   timestamp: string
-  type?: 'default' | 'milestone' | 'payment'
+  type?: 'default' | 'milestone'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'default',
 })
 
-const formattedTimestamp = computed(() =>
-  new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(
-    new Date(props.timestamp),
-  ),
-)
+const formattedTimestamp = computed(() => formatDateTime(props.timestamp))
 </script>
 
 <template>
@@ -50,10 +49,6 @@ const formattedTimestamp = computed(() =>
 
 .activity-item__dot.milestone {
   background: var(--color-success);
-}
-
-.activity-item__dot.payment {
-  background: var(--color-danger);
 }
 
 .activity-item__title {

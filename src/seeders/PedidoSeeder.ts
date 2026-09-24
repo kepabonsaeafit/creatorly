@@ -2,23 +2,13 @@
 
 // internal imports
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
+import type { DatosPedidoSeed } from '@/interfaces/DatosPedidoSeedInterface'
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import type { EstadoPedido, PedidoInterface } from '@/interfaces/PedidoInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { generateId } from '@/utils/generateId'
 
 const ESTADOS_FINALES: EstadoPedido[] = ['entregado', 'aprobado']
-
-interface DatosPedidoSeed {
-  descripcion: string
-  presupuesto: number
-  fechaSolicitud: string
-  fechaEntrega: string
-  estado: EstadoPedido
-  marcaId: string
-  creadorId: string | null
-  userId: string
-}
 
 /** Igual al helper `pedido()` de services/seed.js:128-139: deriva createdAt/updatedAt. */
 function construirPedido(datos: DatosPedidoSeed): PedidoInterface {
