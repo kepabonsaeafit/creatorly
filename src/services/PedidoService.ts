@@ -49,8 +49,8 @@ export class PedidoService {
     if (!datos.marcaId || typeof datos.marcaId !== 'string') {
       throw new Error('Pedido: marcaId es obligatorio')
     }
-    if (!datos.coordinadorId || typeof datos.coordinadorId !== 'string') {
-      throw new Error('Pedido: coordinadorId es obligatorio')
+    if (!datos.userId || typeof datos.userId !== 'string') {
+      throw new Error('Pedido: userId es obligatorio')
     }
     if (datos.creadorId !== null && typeof datos.creadorId !== 'string') {
       throw new Error('Pedido: creadorId debe ser un id o null')
@@ -74,7 +74,7 @@ export class PedidoService {
   }
 
   static getCoordinador(pedido: PedidoInterface): UserInterface | undefined {
-    return UserService.getById(pedido.coordinadorId)
+    return UserService.getById(pedido.userId)
   }
 
   static estaActivo(pedido: PedidoInterface): boolean {
@@ -159,7 +159,7 @@ export class PedidoService {
       estado: cambios.estado ?? pedidos[indice].estado,
       marcaId: cambios.marcaId ?? pedidos[indice].marcaId,
       creadorId: cambios.creadorId ?? pedidos[indice].creadorId,
-      coordinadorId: cambios.coordinadorId ?? pedidos[indice].coordinadorId,
+      userId: cambios.userId ?? pedidos[indice].userId,
     }
     this.validate(combinado)
     const actualizado: PedidoInterface = {
