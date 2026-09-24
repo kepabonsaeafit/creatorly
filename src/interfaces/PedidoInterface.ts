@@ -1,7 +1,12 @@
 // Kevin Pabón
 
-/** Estados válidos del ciclo de vida de un Pedido. */
-export type EstadoPedido = 'solicitado' | 'asignado' | 'en_produccion' | 'entregado' | 'aprobado'
+/** Estados válidos del ciclo de vida de un Pedido, en el orden fijo del ciclo de vida. */
+export const ESTADOS = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado'] as const
+
+export type EstadoPedido = (typeof ESTADOS)[number]
+
+/** Estados que marcan el cierre del ciclo de vida de un Pedido. */
+export const ESTADOS_FINALES: readonly EstadoPedido[] = ['entregado', 'aprobado']
 
 /**
  * Pedido: la unidad de trabajo del sistema. Conecta a una Marca (quien solicita),

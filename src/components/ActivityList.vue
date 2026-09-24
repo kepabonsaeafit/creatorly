@@ -3,7 +3,7 @@
 
 // internal imports
 import ActivityItem from '@/components/ActivityItem.vue'
-import type { PedidoActivity } from '@/services/PedidoService'
+import type { PedidoActivity } from '@/interfaces/PedidoActivityInterface'
 
 defineProps<{ items: PedidoActivity[] }>()
 </script>

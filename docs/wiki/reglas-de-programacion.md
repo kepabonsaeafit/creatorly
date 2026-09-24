@@ -30,7 +30,7 @@ Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite
 
 ## Arquitectura
 
-15. Cada entidad del dominio se parte en hasta cinco piezas: `interfaces/` (la forma, sin métodos) + `dtos/` (de entrada: derivados con `Omit`/`Pick`; de filtro/agregación: interfaces propias) + `stores/` (Pinia, solo el array, cero lógica; excepción: `SessionStore`) + `services/` (clase de métodos estáticos, toda la lógica y validaciones) + `seeders/` (datos ficticios, objetos planos tipados). `utils/` guarda formateadores puros compartidos (fecha, moneda, estado) sin estado ni acceso a stores/LocalStorage. El molde, con `Pedido` de ejemplo:
+15. Cada entidad del dominio se parte en hasta cinco piezas: `interfaces/` (la forma, sin métodos) + `dtos/` (de entrada: derivados con `Omit`/`Pick`; de filtro/agregación: interfaces propias) + `stores/` (Pinia, solo el array, cero lógica; excepción: `SessionStore`) + `services/` (clase de métodos estáticos, toda la lógica y validaciones; nada de constantes ni funciones a nivel de módulo, todo va dentro de la clase) + `seeders/` (datos ficticios, objetos planos tipados). `utils/` guarda helpers compartidos sin acceso a stores/LocalStorage (fecha, moneda, estado, ids). El molde, con `Pedido` de ejemplo:
 
 ```ts
     // interfaces/PedidoInterface.ts → LA FORMA. Solo atributos, sin métodos.
