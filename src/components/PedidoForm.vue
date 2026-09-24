@@ -31,14 +31,16 @@ const emit = defineEmits<{ submit: [datos: CreatePedidoDTO] }>()
 const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
 // selectors
-const descripcion = ref(props.initial.descripcion ?? '')
-const presupuesto = ref(props.initial.presupuesto ?? 0)
 const marcaId = ref(props.initial.marcaId ?? '')
 const creadorId = ref(props.initial.creadorId ?? '')
 const userId = ref(props.initial.userId ?? '')
+const estado = ref<EstadoPedido>(props.initial.estado ?? 'solicitado')
+
+// state
+const descripcion = ref(props.initial.descripcion ?? '')
+const presupuesto = ref(props.initial.presupuesto ?? 0)
 const fechaSolicitud = ref(props.initial.fechaSolicitud ?? new Date().toISOString().slice(0, 10))
 const fechaEntrega = ref(props.initial.fechaEntrega ?? '')
-const estado = ref<EstadoPedido>(props.initial.estado ?? 'solicitado')
 
 // computed variables
 const marcas = computed(() => MarcaService.getAll())

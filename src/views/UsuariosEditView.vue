@@ -16,7 +16,7 @@ const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 
-// selectors
+// state
 const error = ref('')
 const guardando = ref(false)
 

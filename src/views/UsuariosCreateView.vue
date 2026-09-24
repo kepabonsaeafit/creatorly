@@ -14,7 +14,7 @@ import { UserService } from '@/services/UserService'
 const router = useRouter()
 const toast = useToast()
 
-// selectors
+// state
 const error = ref('')
 const guardando = ref(false)
 

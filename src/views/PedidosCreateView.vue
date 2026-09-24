@@ -14,7 +14,7 @@ import { PedidoService } from '@/services/PedidoService'
 const router = useRouter()
 const toast = useToast()
 
-// selectors
+// state
 const error = ref('')
 const guardando = ref(false)
 

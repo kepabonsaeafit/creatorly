@@ -104,9 +104,12 @@ import { PedidoService } from '@/services/PedidoService';
 
 ```ts
 // selectors
+// state
 // computed variables
 // functions
 ```
+
+`// selectors` es solo para variables ligadas con `v-model` a un `<select>`; cualquier otra variable reactiva (campos de texto, fechas, número, flags como `error`/`guardando`) va bajo `// state`. Si un archivo no tiene ningún `<select>`, no lleva `// selectors`.
 
 **Nombres sin ambigüedad.** Nada de `d`, `p`, `i`, `data`, `temp`. En callbacks: `(pedido) =>`, no `(p) =>`.
 
