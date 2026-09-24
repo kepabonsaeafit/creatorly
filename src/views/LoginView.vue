@@ -10,7 +10,7 @@ import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
 
-// selectors
+// state
 const email = ref('')
 const password = ref('')
 const error = ref('')

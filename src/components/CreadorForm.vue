@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{ submit: [datos: CreateCreadorDTO] }>()
 
-// selectors
+// state
 const nombre = ref(props.initial.nombre ?? '')
 const nicho = ref(props.initial.nicho ?? '')
 const tipoContenido = ref(props.initial.tipoContenido ?? '')

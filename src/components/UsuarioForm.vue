@@ -27,12 +27,14 @@ const emit = defineEmits<{ submit: [datos: CreateUserDTO]; cancelar: [] }>()
 const ROLES: RolUsuario[] = ['admin', 'coordinador']
 
 // selectors
+const rol = ref<RolUsuario>(props.initial.rol ?? 'coordinador')
+
+// state
 const nombre = ref(props.initial.nombre ?? '')
 const email = ref(props.initial.email ?? '')
 // La contraseña se guarda en texto plano por diseño del proyecto (UserInterface),
 // así que en edición se precarga y se reenvía completa, igual que el resto de campos.
 const password = ref(props.initial.password ?? '')
-const rol = ref<RolUsuario>(props.initial.rol ?? 'coordinador')
 
 // functions
 function onSubmit(): void {

@@ -43,7 +43,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// selectors
+// state
 const canvas = ref<HTMLCanvasElement | null>(null)
 let chart: Chart | null = null
 

@@ -11,7 +11,7 @@ import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
 
-// selectors
+// state
 /** Catálogo completo de links; `admin` marca los que exigen el rol de administrador. */
 const LINKS: NavLink[] = [
   { name: 'home', label: 'Home', admin: false },
