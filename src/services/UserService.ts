@@ -3,7 +3,8 @@
 // internal imports
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
 import type { LoginDTO } from '@/dtos/LoginDTO'
-import { ROLES, type UserInterface } from '@/interfaces/UserInterface'
+import type { UsuarioFiltroDTO } from '@/dtos/UsuarioFiltroDTO'
+import { ROLES, type RolUsuario, type UserInterface } from '@/interfaces/UserInterface'
 import { useUserStore } from '@/stores/UserStore'
 import { generateId } from '@/utils/generateId'
 
@@ -93,5 +94,48 @@ export class UserService {
     if (indice === -1) return false
     usuarios.splice(indice, 1)
     return true
+  }
+
+  /**
+   * Aplica un UsuarioFiltroDTO sobre una lista de usuarios y ordena el
+   * resultado por nombre. Usado por UsuariosIndexView.
+   */
+  static filtrar(usuarios: UserInterface[], filtro: UsuarioFiltroDTO): UserInterface[] {
+    return usuarios
+      .filter((usuario) => {
+        if (filtro.rol && usuario.rol !== filtro.rol) return false
+        if (filtro.texto) {
+          const texto = filtro.texto.trim().toLowerCase()
+          if (
+            texto &&
+            !usuario.nombre.toLowerCase().includes(texto) &&
+            !usuario.email.toLowerCase().includes(texto)
+          ) {
+            return false
+          }
+        }
+        return true
+      })
+      .sort((primero, segundo) => primero.nombre.localeCompare(segundo.nombre))
+  }
+
+  /**
+   * La siembra trae un solo admin: si se quitara el rol a sí mismo perdería el
+   * acceso a esta página y no habría forma de devolvérselo desde la interfaz.
+   */
+  static validarCambioDeRolPropio(
+    usuarioActualId: string | undefined,
+    id: string,
+    rolNuevo: RolUsuario,
+  ): void {
+    if (id === usuarioActualId && rolNuevo !== 'admin') {
+      throw new Error('User: no puedes quitarte el rol de admin mientras es tu propia sesión')
+    }
+  }
+
+  static validarEliminacion(usuarioActualId: string | undefined, id: string): void {
+    if (id === usuarioActualId) {
+      throw new Error('User: no puedes eliminar el usuario con el que iniciaste sesión')
+    }
   }
 }
