@@ -14,24 +14,22 @@ const emit = defineEmits<{ delete: [id: string] }>()
 
 // functions
 function onDelete(id: string): void {
-  if (!confirmDeletion('creador')) return
+  if (!confirmDeletion('creator')) return
   emit('delete', id)
 }
 </script>
 
 <template>
-  <p v-if="creators.length === 0" class="creators-table__empty">
-    No hay creadores que coincidan con estos filtros.
-  </p>
+  <p v-if="creators.length === 0" class="creators-table__empty">No creators match these filters.</p>
 
   <table v-else class="creators-table">
     <thead>
       <tr>
-        <th>Nombre</th>
-        <th>Nicho</th>
-        <th>Tipo de contenido</th>
-        <th>Tarifa</th>
-        <th>Disponibilidad</th>
+        <th>Name</th>
+        <th>Niche</th>
+        <th>Content type</th>
+        <th>Rate</th>
+        <th>Availability</th>
         <th v-if="actionable"></th>
       </tr>
     </thead>
@@ -46,15 +44,15 @@ function onDelete(id: string): void {
             class="creators-table__badge"
             :class="creator.available ? 'creators-table__badge--available' : ''"
           >
-            {{ creator.available ? 'Disponible' : 'No disponible' }}
+            {{ creator.available ? 'Available' : 'Not available' }}
           </span>
         </td>
         <td v-if="actionable" class="creators-table__actions">
           <RouterLink :to="{ name: 'creators.edit', params: { id: creator.id } }">
-            Editar
+            Edit
           </RouterLink>
           <button type="button" class="creators-table__delete" @click="onDelete(creator.id)">
-            Eliminar
+            Delete
           </button>
         </td>
       </tr>

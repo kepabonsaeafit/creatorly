@@ -45,25 +45,25 @@ function onDelete(id: string): void {
     UserService.validateDeletion(currentUser.value?.id, id)
     const removed = UserService.remove(id)
     if (removed) {
-      toast.success('Usuario eliminado correctamente')
+      toast.success('User deleted successfully')
     } else {
-      toast.error('No fue posible eliminar el usuario')
+      toast.error('It was not possible to delete the user')
     }
   } catch (caughtError) {
     toast.error(
-      caughtError instanceof Error ? caughtError.message : 'No fue posible eliminar el usuario',
+      caughtError instanceof Error ? caughtError.message : 'It was not possible to delete the user',
     )
   }
 }
 
 function onResetDemo(): void {
   const message =
-    '¿Restablecer los datos demo? Se borran creadores, marcas, pedidos y usuarios, ' +
-    'se vuelve a sembrar y se cierra la sesión.'
+    'Reset demo data? This deletes creators, brands, orders and users, ' +
+    'reseeds them, and logs you out.'
   if (!confirm(message)) return
   resetDemoData()
   AuthService.logout()
-  toast.success('Datos demo restablecidos: inicia sesión de nuevo')
+  toast.success('Demo data reset: please log in again')
   router.push({ name: 'login' })
 }
 </script>
@@ -71,8 +71,8 @@ function onResetDemo(): void {
 <template>
   <main class="Panel users">
     <div class="users__header">
-      <h1>Usuarios</h1>
-      <RouterLink class="users__create" :to="{ name: 'users.create' }"> Nuevo usuario </RouterLink>
+      <h1>Users</h1>
+      <RouterLink class="users__create" :to="{ name: 'users.create' }"> New user </RouterLink>
     </div>
 
     <div class="users__filters">
@@ -80,30 +80,28 @@ function onResetDemo(): void {
         v-model="text"
         class="users__filter-input"
         type="search"
-        placeholder="Buscar por nombre o email…"
+        placeholder="Search by name or email…"
       />
 
       <select v-model="filters.role" class="users__filter-input">
-        <option :value="undefined">Todos los roles</option>
+        <option :value="undefined">All roles</option>
         <option v-for="option in roleOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
-      <button type="button" class="users__clear" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="users__clear" @click="clearFilters">Clear filters</button>
     </div>
 
     <UsersTable :users="users" :current-user-id="currentUser?.id ?? ''" @delete="onDelete" />
 
     <section class="users__section">
-      <h2 class="users__title">Datos demo</h2>
+      <h2 class="users__title">Demo data</h2>
       <p class="users__demo-text">
-        Borra todo lo guardado en el navegador y vuelve a sembrar los datos ficticios iniciales.
-        Cierra la sesión, porque la siembra genera usuarios nuevos.
+        Deletes everything stored in the browser and reseeds the initial demo data. Logs you out,
+        because the seeding creates new users.
       </p>
-      <button type="button" class="users__demo-button" @click="onResetDemo">
-        Restablecer datos demo
-      </button>
+      <button type="button" class="users__demo-button" @click="onResetDemo">Reset demo data</button>
     </section>
   </main>
 </template>

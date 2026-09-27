@@ -16,10 +16,10 @@ const router = useRouter()
 /** Catálogo completo de links; el router decide cuáles exigen el rol de administrador. */
 const LINKS: NavLink[] = [
   { name: 'home', label: 'Home' },
-  { name: 'orders', label: 'Pedidos' },
-  { name: 'reports', label: 'Reportes' },
-  { name: 'creators', label: 'Creadores' },
-  { name: 'users', label: 'Usuarios' },
+  { name: 'orders', label: 'Orders' },
+  { name: 'reports', label: 'Reports' },
+  { name: 'creators', label: 'Creators' },
+  { name: 'users', label: 'Users' },
 ]
 
 // computed variables
@@ -123,7 +123,7 @@ function logout(): void {
             fill="none"
           />
         </svg>
-        Salir
+        Log out
       </button>
     </div>
   </header>

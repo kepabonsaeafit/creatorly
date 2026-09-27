@@ -18,7 +18,7 @@ const data = computed<ChartData<'bar'>>(() => ({
   labels: props.items.map((row) => row.brandName),
   datasets: [
     {
-      label: 'Presupuesto',
+      label: 'Budget',
       data: props.items.map((row) => row.budget),
       backgroundColor: getChartPalette()[1],
     },

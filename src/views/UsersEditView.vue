@@ -33,11 +33,11 @@ function onSubmit(userData: CreateUserDTO): void {
   try {
     UserService.validateOwnRoleChange(currentUser.value?.id, user.value.id, userData.role)
     UserService.update(user.value.id, userData)
-    toast.success('Usuario actualizado correctamente')
+    toast.success('User updated successfully')
     router.push({ name: 'users' })
   } catch (caughtError) {
     error.value =
-      caughtError instanceof Error ? caughtError.message : 'No fue posible actualizar el usuario'
+      caughtError instanceof Error ? caughtError.message : 'It was not possible to update the user'
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -50,19 +50,19 @@ function onCancel(): void {
 
 function onDelete(): void {
   if (!user.value) return
-  if (!confirmDeletion('usuario')) return
+  if (!confirmDeletion('user')) return
   try {
     UserService.validateDeletion(currentUser.value?.id, user.value.id)
     const removed = UserService.remove(user.value.id)
     if (removed) {
-      toast.success('Usuario eliminado correctamente')
+      toast.success('User deleted successfully')
       router.push({ name: 'users' })
     } else {
-      toast.error('No fue posible eliminar el usuario')
+      toast.error('It was not possible to delete the user')
     }
   } catch (caughtError) {
     toast.error(
-      caughtError instanceof Error ? caughtError.message : 'No fue posible eliminar el usuario',
+      caughtError instanceof Error ? caughtError.message : 'It was not possible to delete the user',
     )
   }
 }
@@ -71,7 +71,7 @@ function onDelete(): void {
 <template>
   <main class="Panel">
     <template v-if="user">
-      <h1>Editar usuario</h1>
+      <h1>Edit user</h1>
       <UserForm
         edit-mode
         :initial="user"
@@ -86,12 +86,12 @@ function onDelete(): void {
         class="edit-user__delete"
         @click="onDelete"
       >
-        Eliminar usuario
+        Delete user
       </button>
     </template>
     <p v-else class="edit-user__not-found">
-      No se encontró un usuario con ese id.
-      <RouterLink :to="{ name: 'users' }">Volver</RouterLink>
+      No user was found with that id.
+      <RouterLink :to="{ name: 'users' }">Go back</RouterLink>
     </p>
   </main>
 </template>

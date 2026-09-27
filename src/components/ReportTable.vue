@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <p v-if="rows.length === 0" class="report-table__empty">No hay datos para este reporte.</p>
+  <p v-if="rows.length === 0" class="report-table__empty">No data for this report.</p>
 
   <table v-else class="report-table">
     <thead>

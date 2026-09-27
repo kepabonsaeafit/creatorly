@@ -12,16 +12,16 @@ import { generateId } from '@/utils/generateId'
 export class UserService {
   private static validate(userData: CreateUserDTO): void {
     if (!userData.name || typeof userData.name !== 'string') {
-      throw new Error('User: el nombre es obligatorio')
+      throw new Error('User: name is required')
     }
     if (!isValidEmail(userData.email ?? '')) {
-      throw new Error('User: el email no tiene un formato válido')
+      throw new Error('User: email has an invalid format')
     }
     if (!userData.password || typeof userData.password !== 'string') {
-      throw new Error('User: la contraseña es obligatoria')
+      throw new Error('User: password is required')
     }
     if (!ROLES.includes(userData.role)) {
-      throw new Error(`User: el rol debe ser uno de ${ROLES.join(' | ')}`)
+      throw new Error(`User: role must be one of ${ROLES.join(' | ')}`)
     }
   }
 
@@ -126,13 +126,13 @@ export class UserService {
     newRole: UserRole,
   ): void {
     if (id === currentUserId && newRole !== 'admin') {
-      throw new Error('User: no puedes quitarte el rol de admin mientras es tu propia sesión')
+      throw new Error('User: you cannot remove the admin role while it is your own session')
     }
   }
 
   static validateDeletion(currentUserId: string | undefined, id: string): void {
     if (id === currentUserId) {
-      throw new Error('User: no puedes eliminar el usuario con el que iniciaste sesión')
+      throw new Error('User: you cannot delete the user you are logged in as')
     }
   }
 }

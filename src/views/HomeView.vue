@@ -17,19 +17,19 @@ const recentOrders = computed(() => OrderService.getRecentOrders())
 
 <template>
   <main class="Panel dashboard">
-    <h1>Panel de Control</h1>
+    <h1>Dashboard</h1>
 
     <StatCardGrid :stats="stats" />
 
     <div class="dashboard__panels">
-      <DashboardCard title="Pedidos recientes">
+      <DashboardCard title="Recent orders">
         <ActivityList :items="recentOrders" />
       </DashboardCard>
 
-      <DashboardCard title="Gráficos del negocio">
+      <DashboardCard title="Business charts">
         <p class="dashboard__hint">
-          Los gráficos (pie, barras y línea con Chart.js) viven en la página
-          <RouterLink to="/reportes">Reportes</RouterLink>.
+          The charts (pie, bar and line with Chart.js) live on the
+          <RouterLink :to="{ name: 'reports' }">Reports</RouterLink> page.
         </p>
       </DashboardCard>
     </div>

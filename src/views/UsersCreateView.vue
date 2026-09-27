@@ -24,11 +24,11 @@ function onSubmit(userData: CreateUserDTO): void {
   saving.value = true
   try {
     UserService.create(userData)
-    toast.success('Usuario creado correctamente')
+    toast.success('User created successfully')
     router.push({ name: 'users' })
   } catch (caughtError) {
     error.value =
-      caughtError instanceof Error ? caughtError.message : 'No fue posible crear el usuario'
+      caughtError instanceof Error ? caughtError.message : 'It was not possible to create the user'
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -38,7 +38,7 @@ function onSubmit(userData: CreateUserDTO): void {
 
 <template>
   <main class="Panel">
-    <h1>Nuevo usuario</h1>
+    <h1>New user</h1>
     <UserForm :saving="saving" :error="error" @submit="onSubmit" />
   </main>
 </template>

@@ -10,7 +10,7 @@ export function seedCreators(): CreatorInterface[] {
     {
       id: generateId(),
       name: 'Valentina Ríos',
-      niche: 'belleza',
+      niche: 'beauty',
       contentType: 'TikTok',
       rate: 1500,
       available: true,
@@ -30,7 +30,7 @@ export function seedCreators(): CreatorInterface[] {
     {
       id: generateId(),
       name: 'Daniela Kim',
-      niche: 'moda',
+      niche: 'fashion',
       contentType: 'Instagram',
       rate: 1800,
       available: true,
@@ -50,7 +50,7 @@ export function seedCreators(): CreatorInterface[] {
     {
       id: generateId(),
       name: 'Isabella Cruz',
-      niche: 'gastronomía',
+      niche: 'food',
       contentType: 'TikTok',
       rate: 1200,
       available: true,
@@ -60,7 +60,7 @@ export function seedCreators(): CreatorInterface[] {
     {
       id: generateId(),
       name: 'Mateo Vargas',
-      niche: 'tecnología',
+      niche: 'technology',
       contentType: 'Instagram',
       rate: 2000,
       available: true,

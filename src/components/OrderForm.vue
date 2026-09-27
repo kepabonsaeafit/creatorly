@@ -65,7 +65,7 @@ function onSubmit(): void {
 <template>
   <form class="order-form" @submit.prevent="onSubmit">
     <div class="order-form__field">
-      <label class="order-form__label" for="description">Descripción</label>
+      <label class="order-form__label" for="description">Description</label>
       <input
         id="description"
         v-model="description"
@@ -76,7 +76,7 @@ function onSubmit(): void {
     </div>
 
     <div class="order-form__field">
-      <label class="order-form__label" for="budget">Presupuesto</label>
+      <label class="order-form__label" for="budget">Budget</label>
       <input
         id="budget"
         v-model.number="budget"
@@ -89,9 +89,9 @@ function onSubmit(): void {
     </div>
 
     <div class="order-form__field">
-      <label class="order-form__label" for="brand">Marca</label>
+      <label class="order-form__label" for="brand">Brand</label>
       <select id="brand" v-model="brandId" class="order-form__input" required>
-        <option value="" disabled>Selecciona una marca</option>
+        <option value="" disabled>Select a brand</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
         </option>
@@ -99,9 +99,9 @@ function onSubmit(): void {
     </div>
 
     <div class="order-form__field">
-      <label class="order-form__label" for="creator">Creador</label>
+      <label class="order-form__label" for="creator">Creator</label>
       <select id="creator" v-model="creatorId" class="order-form__input">
-        <option value="">Sin asignar</option>
+        <option value="">Unassigned</option>
         <option v-for="creator in creators" :key="creator.id" :value="creator.id">
           {{ creator.name }}
         </option>
@@ -109,9 +109,9 @@ function onSubmit(): void {
     </div>
 
     <div class="order-form__field">
-      <label class="order-form__label" for="coordinator">Coordinador</label>
+      <label class="order-form__label" for="coordinator">Coordinator</label>
       <select id="coordinator" v-model="userId" class="order-form__input" required>
-        <option value="" disabled>Selecciona un coordinador</option>
+        <option value="" disabled>Select a coordinator</option>
         <option v-for="coordinator in coordinators" :key="coordinator.id" :value="coordinator.id">
           {{ coordinator.name }}
         </option>
@@ -119,7 +119,7 @@ function onSubmit(): void {
     </div>
 
     <div class="order-form__field">
-      <label class="order-form__label" for="request-date">Fecha de solicitud</label>
+      <label class="order-form__label" for="request-date">Request date</label>
       <input
         id="request-date"
         v-model="requestDate"
@@ -130,12 +130,12 @@ function onSubmit(): void {
     </div>
 
     <div class="order-form__field">
-      <label class="order-form__label" for="delivery-date">Fecha de entrega</label>
+      <label class="order-form__label" for="delivery-date">Delivery date</label>
       <input id="delivery-date" v-model="deliveryDate" class="order-form__input" type="date" />
     </div>
 
     <div v-if="editMode" class="order-form__field">
-      <label class="order-form__label" for="status">Estado</label>
+      <label class="order-form__label" for="status">Status</label>
       <select id="status" v-model="status" class="order-form__input">
         <option v-for="option in statusOptions" :key="option.value" :value="option.value">
           {{ option.label }}
@@ -146,7 +146,7 @@ function onSubmit(): void {
     <p v-if="error" class="order-form__error">{{ error }}</p>
 
     <button class="order-form__submit" type="submit" :disabled="saving">
-      {{ saving ? 'Guardando…' : editMode ? 'Guardar cambios' : 'Crear pedido' }}
+      {{ saving ? 'Saving…' : editMode ? 'Save changes' : 'Create order' }}
     </button>
   </form>
 </template>

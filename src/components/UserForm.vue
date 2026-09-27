@@ -53,7 +53,7 @@ function onSubmit(): void {
 <template>
   <form class="user-form" @submit.prevent="onSubmit">
     <div class="user-form__field">
-      <label class="user-form__label" for="user-name">Nombre</label>
+      <label class="user-form__label" for="user-name">Name</label>
       <input id="user-name" v-model="name" class="user-form__input" type="text" required />
     </div>
 
@@ -63,7 +63,7 @@ function onSubmit(): void {
     </div>
 
     <div class="user-form__field">
-      <label class="user-form__label" for="user-password">Contraseña</label>
+      <label class="user-form__label" for="user-password">Password</label>
       <input
         id="user-password"
         v-model="password"
@@ -74,7 +74,7 @@ function onSubmit(): void {
     </div>
 
     <div class="user-form__field">
-      <label class="user-form__label" for="user-role">Rol</label>
+      <label class="user-form__label" for="user-role">Role</label>
       <select id="user-role" v-model="role" class="user-form__input">
         <option v-for="option in roleOptions" :key="option.value" :value="option.value">
           {{ option.label }}
@@ -86,10 +86,10 @@ function onSubmit(): void {
 
     <div class="user-form__actions">
       <button class="user-form__submit" type="submit" :disabled="saving">
-        {{ saving ? 'Guardando…' : editMode ? 'Guardar cambios' : 'Crear usuario' }}
+        {{ saving ? 'Saving…' : editMode ? 'Save changes' : 'Create user' }}
       </button>
       <button v-if="editMode" class="user-form__cancel" type="button" @click="emit('cancel')">
-        Cancelar
+        Cancel
       </button>
     </div>
   </form>

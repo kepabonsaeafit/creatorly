@@ -17,34 +17,32 @@ const emit = defineEmits<{ delete: [id: string] }>()
 
 // functions
 function brandName(order: OrderInterface): string {
-  return OrderService.getBrand(order)?.name ?? 'Marca eliminada'
+  return OrderService.getBrand(order)?.name ?? 'Brand deleted'
 }
 
 function creatorName(order: OrderInterface): string {
-  return OrderService.getCreator(order)?.name ?? 'Sin asignar'
+  return OrderService.getCreator(order)?.name ?? 'Unassigned'
 }
 
 function onDelete(id: string): void {
-  if (!confirmDeletion('pedido')) return
+  if (!confirmDeletion('order')) return
   emit('delete', id)
 }
 </script>
 
 <template>
-  <p v-if="orders.length === 0" class="orders-table__empty">
-    No hay pedidos que coincidan con estos filtros.
-  </p>
+  <p v-if="orders.length === 0" class="orders-table__empty">No orders match these filters.</p>
 
   <table v-else class="orders-table">
     <thead>
       <tr>
-        <th>Descripción</th>
-        <th>Marca</th>
-        <th>Creador</th>
-        <th>Presupuesto</th>
-        <th>Estado</th>
-        <th>Solicitud</th>
-        <th>Entrega</th>
+        <th>Description</th>
+        <th>Brand</th>
+        <th>Creator</th>
+        <th>Budget</th>
+        <th>Status</th>
+        <th>Request</th>
+        <th>Delivery</th>
         <th v-if="actionable"></th>
       </tr>
     </thead>
@@ -62,9 +60,9 @@ function onDelete(id: string): void {
         <td>{{ formatDate(order.requestDate) }}</td>
         <td>{{ formatDate(order.deliveryDate) }}</td>
         <td v-if="actionable" class="orders-table__actions">
-          <RouterLink :to="{ name: 'orders.edit', params: { id: order.id } }">Editar</RouterLink>
+          <RouterLink :to="{ name: 'orders.edit', params: { id: order.id } }">Edit</RouterLink>
           <button type="button" class="orders-table__delete" @click="onDelete(order.id)">
-            Eliminar
+            Delete
           </button>
         </td>
       </tr>

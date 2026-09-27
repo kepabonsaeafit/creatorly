@@ -28,20 +28,20 @@ export function todayIso(): string {
 
 /** Formatea una fecha ISO (`YYYY-MM-DD`) como fecha corta legible, p. ej. `12 ago 2026`. */
 export function formatDate(iso: string | null): string {
-  if (!iso) return 'Sin definir'
-  return new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(parseLocalDate(iso))
+  if (!iso) return 'Not set'
+  return new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(parseLocalDate(iso))
 }
 
 /** Etiqueta de mes a partir de una fecha ISO, p. ej. `2026-08-12` → `ago 2026`. */
 export function formatMonthLabel(iso: string): string {
-  return new Intl.DateTimeFormat('es', { month: 'short', year: 'numeric' }).format(
+  return new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' }).format(
     parseLocalDate(iso),
   )
 }
 
 /** Formatea un timestamp ISO como fecha y hora legibles, p. ej. `12 ago 2026, 3:45 p. m.`. */
 export function formatDateTime(iso: string): string {
-  return new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(
+  return new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(
     new Date(iso),
   )
 }

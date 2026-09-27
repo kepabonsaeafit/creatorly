@@ -35,9 +35,9 @@ const creators = computed(() => {
 function onDelete(id: string): void {
   const removed = CreatorService.remove(id)
   if (removed) {
-    toast.success('Creador eliminado correctamente')
+    toast.success('Creator deleted successfully')
   } else {
-    toast.error('No fue posible eliminar el creador')
+    toast.error('It was not possible to delete the creator')
   }
 }
 
@@ -51,9 +51,9 @@ function clearFilters(): void {
 <template>
   <main class="Panel creators">
     <div class="creators__header">
-      <h1>Creadores</h1>
+      <h1>Creators</h1>
       <RouterLink class="creators__create" :to="{ name: 'creators.create' }">
-        Nuevo creador
+        New creator
       </RouterLink>
     </div>
 
@@ -62,21 +62,21 @@ function clearFilters(): void {
         v-model="text"
         class="creators__filter-input"
         type="search"
-        placeholder="Buscar por nombre…"
+        placeholder="Search by name…"
       />
 
       <select v-model="filters.niche" class="creators__filter-input">
-        <option :value="undefined">Todos los nichos</option>
+        <option :value="undefined">All niches</option>
         <option v-for="option in niches" :key="option" :value="option">{{ option }}</option>
       </select>
 
       <select v-model="filters.available" class="creators__filter-input">
-        <option :value="undefined">Toda disponibilidad</option>
-        <option :value="true">Disponibles</option>
-        <option :value="false">No disponibles</option>
+        <option :value="undefined">Any availability</option>
+        <option :value="true">Available</option>
+        <option :value="false">Not available</option>
       </select>
 
-      <button type="button" class="creators__clear" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="creators__clear" @click="clearFilters">Clear filters</button>
     </div>
 
     <CreatorsTable :creators="creators" actionable @delete="onDelete" />

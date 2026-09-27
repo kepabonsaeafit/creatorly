@@ -45,7 +45,7 @@ export function seedOrders(
 
   return [
     buildOrder({
-      description: '3 videos TikTok para campaña de sérum facial',
+      description: '3 TikTok videos for facial serum campaign',
       budget: 3200,
       requestDate: '2026-07-02',
       deliveryDate: '2026-08-20',
@@ -55,7 +55,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
-      description: 'Serie de 4 reels de rutina nocturna de skincare',
+      description: 'Series of 4 reels of nighttime skincare routine',
       budget: 2400,
       requestDate: '2026-03-10',
       deliveryDate: '2026-04-15',
@@ -65,7 +65,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
-      description: 'Gameplay de 10 min con integración de producto',
+      description: '10-min gameplay with product integration',
       budget: 4100,
       requestDate: '2026-08-01',
       deliveryDate: '2026-09-05',
@@ -75,7 +75,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
-      description: '2 historias y 1 post de lanzamiento de DLC',
+      description: '2 stories and 1 post for DLC launch',
       budget: 1800,
       requestDate: '2026-08-10',
       deliveryDate: '2026-09-12',
@@ -85,7 +85,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
-      description: 'Lookbook de temporada con 6 fotos Instagram',
+      description: 'Seasonal lookbook with 6 Instagram photos',
       budget: 2600,
       requestDate: '2026-06-18',
       deliveryDate: '2026-08-14',
@@ -95,7 +95,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
-      description: 'Unboxing y reseña del nuevo catálogo',
+      description: 'Unboxing and review of the new catalog',
       budget: 2900,
       requestDate: '2026-07-22',
       deliveryDate: '2026-08-25',
@@ -105,7 +105,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
-      description: 'Rutina de entrenamiento con stack de suplementos',
+      description: 'Workout routine with supplement stack',
       budget: 3500,
       requestDate: '2026-01-15',
       deliveryDate: '2026-02-20',
@@ -115,7 +115,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
-      description: 'Video YouTube de 8 min de pre-entreno',
+      description: '8-min YouTube video of pre-workout',
       budget: 2200,
       requestDate: '2026-05-06',
       deliveryDate: '2026-07-10',
@@ -125,7 +125,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
-      description: 'Recetas fáciles con línea gourmet',
+      description: 'Easy recipes with gourmet line',
       budget: 1500,
       requestDate: '2026-08-12',
       deliveryDate: '2026-09-01',
@@ -135,7 +135,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
-      description: 'Live de 1 hora jugando el nuevo título',
+      description: '1-hour live stream playing the new title',
       budget: 3900,
       requestDate: '2026-07-14',
       deliveryDate: '2026-08-28',
@@ -145,7 +145,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
-      description: '5 fotos de street style con accesorios',
+      description: '5 street style photos with accessories',
       budget: 1700,
       requestDate: '2026-08-05',
       deliveryDate: '2026-08-30',
@@ -155,7 +155,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
-      description: 'Review honesta de proteína vegana',
+      description: 'Honest review of vegan protein',
       budget: 2000,
       requestDate: '2026-06-20',
       deliveryDate: '2026-08-08',

@@ -45,24 +45,24 @@ function onSubmit(): void {
 <template>
   <form class="creator-form" @submit.prevent="onSubmit">
     <div class="creator-form__field">
-      <label class="creator-form__label" for="name">Nombre</label>
+      <label class="creator-form__label" for="name">Name</label>
       <input id="name" v-model="name" class="creator-form__input" type="text" required />
     </div>
 
     <div class="creator-form__field">
-      <label class="creator-form__label" for="niche">Nicho</label>
+      <label class="creator-form__label" for="niche">Niche</label>
       <input
         id="niche"
         v-model="niche"
         class="creator-form__input"
         type="text"
-        placeholder="belleza, gaming, moda…"
+        placeholder="beauty, gaming, fashion…"
         required
       />
     </div>
 
     <div class="creator-form__field">
-      <label class="creator-form__label" for="content-type">Tipo de contenido</label>
+      <label class="creator-form__label" for="content-type">Content type</label>
       <input
         id="content-type"
         v-model="contentType"
@@ -74,7 +74,7 @@ function onSubmit(): void {
     </div>
 
     <div class="creator-form__field">
-      <label class="creator-form__label" for="rate">Tarifa</label>
+      <label class="creator-form__label" for="rate">Rate</label>
       <input
         id="rate"
         v-model.number="rate"
@@ -88,13 +88,13 @@ function onSubmit(): void {
 
     <div class="creator-form__check">
       <input id="available" v-model="available" type="checkbox" />
-      <label for="available">Disponible para nuevos pedidos</label>
+      <label for="available">Available for new orders</label>
     </div>
 
     <p v-if="error" class="creator-form__error">{{ error }}</p>
 
     <button class="creator-form__submit" type="submit" :disabled="saving">
-      {{ saving ? 'Guardando…' : editMode ? 'Guardar cambios' : 'Crear creador' }}
+      {{ saving ? 'Saving…' : editMode ? 'Save changes' : 'Create creator' }}
     </button>
   </form>
 </template>

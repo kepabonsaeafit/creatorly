@@ -10,20 +10,20 @@ import { generateId } from '@/utils/generateId'
 export class CreatorService {
   private static validate(creatorData: CreateCreatorDTO): void {
     if (!creatorData.name || typeof creatorData.name !== 'string') {
-      throw new Error('Creador: el nombre es obligatorio')
+      throw new Error('Creator: name is required')
     }
     if (!creatorData.niche || typeof creatorData.niche !== 'string') {
-      throw new Error('Creador: el nicho es obligatorio')
+      throw new Error('Creator: niche is required')
     }
     if (!creatorData.contentType || typeof creatorData.contentType !== 'string') {
-      throw new Error('Creador: el tipo de contenido es obligatorio')
+      throw new Error('Creator: content type is required')
     }
     if (
       typeof creatorData.rate !== 'number' ||
       Number.isNaN(creatorData.rate) ||
       creatorData.rate < 0
     ) {
-      throw new Error('Creador: la tarifa debe ser un número >= 0')
+      throw new Error('Creator: rate must be a number >= 0')
     }
   }
 

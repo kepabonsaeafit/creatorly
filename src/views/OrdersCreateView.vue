@@ -24,11 +24,11 @@ function onSubmit(orderData: CreateOrderDTO): void {
   saving.value = true
   try {
     OrderService.create(orderData)
-    toast.success('Pedido creado correctamente')
+    toast.success('Order created successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
     error.value =
-      caughtError instanceof Error ? caughtError.message : 'No fue posible crear el pedido'
+      caughtError instanceof Error ? caughtError.message : 'It was not possible to create the order'
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -38,7 +38,7 @@ function onSubmit(orderData: CreateOrderDTO): void {
 
 <template>
   <main class="Panel">
-    <h1>Nuevo pedido</h1>
+    <h1>New order</h1>
     <OrderForm :saving="saving" :error="error" @submit="onSubmit" />
   </main>
 </template>

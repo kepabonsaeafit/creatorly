@@ -23,10 +23,10 @@ import { formatCurrency } from '@/utils/formatCurrency'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
 const REPORT_OPTIONS: ReportOption[] = [
-  { id: 'month', label: 'Pedidos por mes' },
-  { id: 'status', label: 'Pedidos por estado' },
-  { id: 'creator', label: 'Pedidos por creador' },
-  { id: 'brand', label: 'Presupuesto por marca' },
+  { id: 'month', label: 'Orders by month' },
+  { id: 'status', label: 'Orders by status' },
+  { id: 'creator', label: 'Orders by creator' },
+  { id: 'brand', label: 'Budget by brand' },
 ]
 
 // selectors
@@ -70,26 +70,26 @@ const currentReportOption = computed(
 const reportColumns = computed<ReportTableColumn[]>(() => {
   if (reportType.value === 'status') {
     return [
-      { key: 'status', label: 'Estado' },
-      { key: 'count', label: 'Cantidad' },
+      { key: 'status', label: 'Status' },
+      { key: 'count', label: 'Count' },
     ]
   }
   if (reportType.value === 'creator') {
     return [
-      { key: 'creator', label: 'Creador' },
-      { key: 'count', label: 'Cantidad' },
+      { key: 'creator', label: 'Creator' },
+      { key: 'count', label: 'Count' },
     ]
   }
   if (reportType.value === 'brand') {
     return [
-      { key: 'brand', label: 'Marca' },
-      { key: 'budget', label: 'Presupuesto' },
+      { key: 'brand', label: 'Brand' },
+      { key: 'budget', label: 'Budget' },
     ]
   }
   return [
-    { key: 'month', label: 'Mes' },
-    { key: 'count', label: 'Cantidad' },
-    { key: 'budget', label: 'Presupuesto' },
+    { key: 'month', label: 'Month' },
+    { key: 'count', label: 'Count' },
+    { key: 'budget', label: 'Budget' },
   ]
 })
 
@@ -131,46 +131,44 @@ function clearFilters(): void {
 
 <template>
   <main class="Panel reports">
-    <h1>Reportes</h1>
+    <h1>Reports</h1>
 
     <div class="reports__filters">
       <select v-model="filters.status" class="reports__filter-input">
-        <option :value="undefined">Todos los estados</option>
+        <option :value="undefined">All statuses</option>
         <option v-for="option in statusOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
       <select v-model="filters.brandId" class="reports__filter-input">
-        <option :value="undefined">Todas las marcas</option>
+        <option :value="undefined">All brands</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
         </option>
       </select>
 
       <select v-model="filters.creatorId" class="reports__filter-input">
-        <option :value="undefined">Todos los creadores</option>
+        <option :value="undefined">All creators</option>
         <option v-for="creator in creators" :key="creator.id" :value="creator.id">
           {{ creator.name }}
         </option>
       </select>
 
       <label class="reports__filter-date">
-        Desde
+        From
         <input v-model="from" class="reports__filter-input" type="date" />
       </label>
 
       <label class="reports__filter-date">
-        Hasta
+        To
         <input v-model="to" class="reports__filter-input" type="date" />
       </label>
 
-      <button type="button" class="reports__clear" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="reports__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <p v-if="filteredOrders.length === 0" class="reports__empty">
-      No hay pedidos que coincidan con estos filtros.
-    </p>
+    <p v-if="filteredOrders.length === 0" class="reports__empty">No orders match these filters.</p>
 
     <template v-else>
       <StatCardGrid :stats="stats" />
@@ -179,7 +177,7 @@ function clearFilters(): void {
         <div class="reports__report-header">
           <h2 class="reports__report-title">{{ currentReportOption.label }}</h2>
           <label class="reports__report-selector">
-            Tipo de reporte
+            Report type
             <select v-model="reportType" class="reports__filter-input">
               <option v-for="option in REPORT_OPTIONS" :key="option.id" :value="option.id">
                 {{ option.label }}
@@ -189,7 +187,7 @@ function clearFilters(): void {
         </div>
 
         <p v-if="reportRows.length === 0" class="reports__empty">
-          No hay datos para «{{ currentReportOption.label }}» con estos filtros.
+          No data for "{{ currentReportOption.label }}" with these filters.
         </p>
 
         <div v-else class="reports__report-body">
@@ -202,7 +200,7 @@ function clearFilters(): void {
         </div>
       </DashboardCard>
 
-      <DashboardCard title="Detalle de pedidos" class="reports__detail">
+      <DashboardCard title="Order details" class="reports__detail">
         <OrdersTable :orders="filteredOrders" />
       </DashboardCard>
     </template>
