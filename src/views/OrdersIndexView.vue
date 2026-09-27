@@ -45,9 +45,9 @@ const statusPalette = computed(() => getChartPalette())
 function onDelete(id: string): void {
   const removed = OrderService.remove(id)
   if (removed) {
-    toast.success('Pedido eliminado correctamente')
+    toast.success('Order deleted successfully')
   } else {
-    toast.error('No fue posible eliminar el pedido')
+    toast.error('It was not possible to delete the order')
   }
 }
 
@@ -61,8 +61,8 @@ function clearFilters(): void {
 <template>
   <main class="Panel orders">
     <div class="orders__header">
-      <h1>Pedidos</h1>
-      <RouterLink class="orders__create" :to="{ name: 'orders.create' }">Nuevo pedido</RouterLink>
+      <h1>Orders</h1>
+      <RouterLink class="orders__create" :to="{ name: 'orders.create' }">New order</RouterLink>
     </div>
 
     <div class="orders__filters">
@@ -70,30 +70,30 @@ function clearFilters(): void {
         v-model="text"
         class="orders__filter-input"
         type="search"
-        placeholder="Buscar por descripción…"
+        placeholder="Search by description…"
       />
 
       <select v-model="filters.status" class="orders__filter-input">
-        <option :value="undefined">Todos los estados</option>
+        <option :value="undefined">All statuses</option>
         <option v-for="option in statusOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
       <select v-model="filters.brandId" class="orders__filter-input">
-        <option :value="undefined">Todas las marcas</option>
+        <option :value="undefined">All brands</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
         </option>
       </select>
 
-      <button type="button" class="orders__clear" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="orders__clear" @click="clearFilters">Clear filters</button>
     </div>
 
     <DashboardCard v-if="orders.length > 0" class="orders__chart">
       <div class="orders__chart-header">
-        <h2 class="orders__chart-title">Pedidos por estado</h2>
-        <span class="orders__chart-total">{{ orders.length }} en total</span>
+        <h2 class="orders__chart-title">Orders by status</h2>
+        <span class="orders__chart-total">{{ orders.length }} total</span>
       </div>
 
       <div class="orders__chart-body">

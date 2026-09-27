@@ -10,7 +10,7 @@ export function seedBrands(): BrandInterface[] {
     {
       id: generateId(),
       name: 'Natura Belleza',
-      industry: 'belleza y cuidado personal',
+      industry: 'beauty and personal care',
       contactName: 'María Fernández',
       contactEmail: 'maria@naturabelleza.com',
       createdAt: '2026-01-07T09:00:00.000Z',
@@ -19,7 +19,7 @@ export function seedBrands(): BrandInterface[] {
     {
       id: generateId(),
       name: 'PixelPlay',
-      industry: 'videojuegos',
+      industry: 'video games',
       contactName: 'Carlos Andrade',
       contactEmail: 'carlos@pixelplay.co',
       createdAt: '2026-01-20T15:00:00.000Z',
@@ -28,7 +28,7 @@ export function seedBrands(): BrandInterface[] {
     {
       id: generateId(),
       name: 'Áurea Moda',
-      industry: 'moda y accesorios',
+      industry: 'fashion and accessories',
       contactName: 'Paula Ruiz',
       contactEmail: 'paula@aureamoda.com',
       createdAt: '2026-02-01T08:30:00.000Z',
@@ -37,7 +37,7 @@ export function seedBrands(): BrandInterface[] {
     {
       id: generateId(),
       name: 'FitPro Suplementos',
-      industry: 'fitness y nutrición',
+      industry: 'fitness and nutrition',
       contactName: 'Diego Salazar',
       contactEmail: 'diego@fitpro.com',
       createdAt: '2026-02-05T13:00:00.000Z',

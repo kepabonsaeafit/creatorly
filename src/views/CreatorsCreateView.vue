@@ -24,11 +24,13 @@ function onSubmit(creatorData: CreateCreatorDTO): void {
   saving.value = true
   try {
     CreatorService.create(creatorData)
-    toast.success('Creador creado correctamente')
+    toast.success('Creator created successfully')
     router.push({ name: 'creators' })
   } catch (caughtError) {
     error.value =
-      caughtError instanceof Error ? caughtError.message : 'No fue posible crear el creador'
+      caughtError instanceof Error
+        ? caughtError.message
+        : 'It was not possible to create the creator'
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -38,7 +40,7 @@ function onSubmit(creatorData: CreateCreatorDTO): void {
 
 <template>
   <main class="Panel">
-    <h1>Nuevo creador</h1>
+    <h1>New creator</h1>
     <CreatorForm :saving="saving" :error="error" @submit="onSubmit" />
   </main>
 </template>

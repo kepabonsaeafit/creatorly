@@ -30,11 +30,13 @@ function onSubmit(creatorData: CreateCreatorDTO): void {
   saving.value = true
   try {
     CreatorService.update(creator.value.id, creatorData)
-    toast.success('Creador actualizado correctamente')
+    toast.success('Creator updated successfully')
     router.push({ name: 'creators' })
   } catch (caughtError) {
     error.value =
-      caughtError instanceof Error ? caughtError.message : 'No fue posible actualizar el creador'
+      caughtError instanceof Error
+        ? caughtError.message
+        : 'It was not possible to update the creator'
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -43,13 +45,13 @@ function onSubmit(creatorData: CreateCreatorDTO): void {
 
 function onDelete(): void {
   if (!creator.value) return
-  if (!confirmDeletion('creador')) return
+  if (!confirmDeletion('creator')) return
   const removed = CreatorService.remove(creator.value.id)
   if (removed) {
-    toast.success('Creador eliminado correctamente')
+    toast.success('Creator deleted successfully')
     router.push({ name: 'creators' })
   } else {
-    toast.error('No fue posible eliminar el creador')
+    toast.error('It was not possible to delete the creator')
   }
 }
 </script>
@@ -57,7 +59,7 @@ function onDelete(): void {
 <template>
   <main class="Panel">
     <template v-if="creator">
-      <h1>Editar creador</h1>
+      <h1>Edit creator</h1>
       <CreatorForm
         edit-mode
         :initial="creator"
@@ -65,11 +67,11 @@ function onDelete(): void {
         :error="error"
         @submit="onSubmit"
       />
-      <button type="button" class="edit-creator__delete" @click="onDelete">Eliminar creador</button>
+      <button type="button" class="edit-creator__delete" @click="onDelete">Delete creator</button>
     </template>
     <p v-else class="edit-creator__not-found">
-      No se encontró un creador con ese id.
-      <RouterLink :to="{ name: 'creators' }">Volver</RouterLink>
+      No creator was found with that id.
+      <RouterLink :to="{ name: 'creators' }">Go back</RouterLink>
     </p>
   </main>
 </template>

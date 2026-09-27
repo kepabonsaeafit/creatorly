@@ -17,7 +17,7 @@ const data = computed<ChartData<'line'>>(() => ({
   labels: props.items.map((row) => row.label),
   datasets: [
     {
-      label: 'Pedidos',
+      label: 'Orders',
       data: props.items.map((row) => row.count),
       borderColor: getChartPalette()[0],
       backgroundColor: getChartPalette()[0],

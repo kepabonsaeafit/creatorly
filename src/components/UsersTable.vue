@@ -20,21 +20,21 @@ const emit = defineEmits<{ delete: [id: string] }>()
 
 // functions
 function onDelete(id: string): void {
-  if (!confirmDeletion('usuario')) return
+  if (!confirmDeletion('user')) return
   emit('delete', id)
 }
 </script>
 
 <template>
-  <p v-if="users.length === 0" class="users-table__empty">No hay usuarios registrados.</p>
+  <p v-if="users.length === 0" class="users-table__empty">No registered users.</p>
 
   <table v-else class="users-table">
     <thead>
       <tr>
-        <th>Nombre</th>
+        <th>Name</th>
         <th>Email</th>
-        <th>Rol</th>
-        <th>Creado</th>
+        <th>Role</th>
+        <th>Created</th>
         <th></th>
       </tr>
     </thead>
@@ -49,16 +49,16 @@ function onDelete(id: string): void {
         </td>
         <td>{{ formatDate(user.createdAt) }}</td>
         <td class="users-table__actions">
-          <RouterLink :to="{ name: 'users.edit', params: { id: user.id } }"> Editar </RouterLink>
+          <RouterLink :to="{ name: 'users.edit', params: { id: user.id } }"> Edit </RouterLink>
           <button
             v-if="user.id !== currentUserId"
             type="button"
             class="users-table__delete"
             @click="onDelete(user.id)"
           >
-            Eliminar
+            Delete
           </button>
-          <span v-else class="users-table__session">Sesión actual</span>
+          <span v-else class="users-table__session">Current session</span>
         </td>
       </tr>
     </tbody>

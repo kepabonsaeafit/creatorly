@@ -21,15 +21,15 @@ function onSubmit(): void {
   if (result.ok) {
     router.push({ name: 'home' })
   } else {
-    error.value = result.error ?? 'No fue posible iniciar sesión'
+    error.value = result.error ?? 'It was not possible to log in'
   }
 }
 </script>
 
 <template>
   <main class="Panel login">
-    <h1>Iniciar sesión</h1>
-    <p class="login__intro">Herramienta interna de la agencia. Ingresa tus credenciales.</p>
+    <h1>Log in</h1>
+    <p class="login__intro">Internal agency tool. Enter your credentials.</p>
 
     <form class="login__form" @submit.prevent="onSubmit">
       <label class="login__label" for="email">Email</label>
@@ -42,7 +42,7 @@ function onSubmit(): void {
         required
       />
 
-      <label class="login__label" for="password">Contraseña</label>
+      <label class="login__label" for="password">Password</label>
       <input
         id="password"
         v-model="password"
@@ -54,17 +54,17 @@ function onSubmit(): void {
 
       <p v-if="error" class="login__error">{{ error }}</p>
 
-      <button class="login__submit" type="submit">Entrar</button>
+      <button class="login__submit" type="submit">Log in</button>
     </form>
 
     <aside class="login__demo">
-      <p>Usuarios demo (datos semilla):</p>
+      <p>Demo users (seed data):</p>
       <ul>
-        <li>admin@creatorly.com — administradora</li>
-        <li>laura@creatorly.com — coordinadora</li>
-        <li>sara@creatorly.com — coordinadora</li>
+        <li>admin@creatorly.com — administrator</li>
+        <li>laura@creatorly.com — coordinator</li>
+        <li>sara@creatorly.com — coordinator</li>
       </ul>
-      <p>Contraseña de los tres: <code>1234</code></p>
+      <p>Password for all three: <code>1234</code></p>
     </aside>
   </main>
 </template>

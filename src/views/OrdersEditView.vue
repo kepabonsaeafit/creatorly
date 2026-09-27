@@ -30,11 +30,11 @@ function onSubmit(orderData: CreateOrderDTO): void {
   saving.value = true
   try {
     OrderService.update(order.value.id, orderData)
-    toast.success('Pedido actualizado correctamente')
+    toast.success('Order updated successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
     error.value =
-      caughtError instanceof Error ? caughtError.message : 'No fue posible actualizar el pedido'
+      caughtError instanceof Error ? caughtError.message : 'It was not possible to update the order'
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -43,13 +43,13 @@ function onSubmit(orderData: CreateOrderDTO): void {
 
 function onDelete(): void {
   if (!order.value) return
-  if (!confirmDeletion('pedido')) return
+  if (!confirmDeletion('order')) return
   const removed = OrderService.remove(order.value.id)
   if (removed) {
-    toast.success('Pedido eliminado correctamente')
+    toast.success('Order deleted successfully')
     router.push({ name: 'orders' })
   } else {
-    toast.error('No fue posible eliminar el pedido')
+    toast.error('It was not possible to delete the order')
   }
 }
 </script>
@@ -57,12 +57,12 @@ function onDelete(): void {
 <template>
   <main class="Panel">
     <template v-if="order">
-      <h1>Editar pedido</h1>
+      <h1>Edit order</h1>
       <OrderForm edit-mode :initial="order" :saving="saving" :error="error" @submit="onSubmit" />
-      <button type="button" class="edit-order__delete" @click="onDelete">Eliminar pedido</button>
+      <button type="button" class="edit-order__delete" @click="onDelete">Delete order</button>
     </template>
     <p v-else class="edit-order__not-found">
-      No se encontró un pedido con ese id. <RouterLink :to="{ name: 'orders' }">Volver</RouterLink>
+      No order was found with that id. <RouterLink :to="{ name: 'orders' }">Go back</RouterLink>
     </p>
   </main>
 </template>

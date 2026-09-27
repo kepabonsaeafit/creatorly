@@ -34,26 +34,26 @@ export class OrderService {
 
   private static validate(orderData: CreateOrderDTO): void {
     if (!orderData.description || typeof orderData.description !== 'string') {
-      throw new Error('Pedido: la descripción es obligatoria')
+      throw new Error('Order: description is required')
     }
     if (
       typeof orderData.budget !== 'number' ||
       Number.isNaN(orderData.budget) ||
       orderData.budget < 0
     ) {
-      throw new Error('Pedido: el presupuesto debe ser un número >= 0')
+      throw new Error('Order: budget must be a number >= 0')
     }
     if (!STATUSES.includes(orderData.status)) {
-      throw new Error(`Pedido: el estado debe ser uno de ${STATUSES.join(' | ')}`)
+      throw new Error(`Order: status must be one of ${STATUSES.join(' | ')}`)
     }
     if (!orderData.brandId || typeof orderData.brandId !== 'string') {
-      throw new Error('Pedido: marcaId es obligatorio')
+      throw new Error('Order: brandId is required')
     }
     if (!orderData.userId || typeof orderData.userId !== 'string') {
-      throw new Error('Pedido: userId es obligatorio')
+      throw new Error('Order: userId is required')
     }
     if (orderData.creatorId !== null && typeof orderData.creatorId !== 'string') {
-      throw new Error('Pedido: creadorId debe ser un id o null')
+      throw new Error('Order: creatorId must be an id or null')
     }
   }
 
@@ -99,15 +99,15 @@ export class OrderService {
     ).length
 
     return [
-      { id: 'total', label: 'Pedidos totales', value: orders.length, unit: '' },
-      { id: 'activos', label: 'Pedidos activos', value: activeOrders.length, unit: '' },
+      { id: 'total', label: 'Total orders', value: orders.length, unit: '' },
+      { id: 'activos', label: 'Active orders', value: activeOrders.length, unit: '' },
       {
         id: 'presupuesto',
-        label: 'Presupuesto comprometido',
+        label: 'Committed budget',
         value: committedBudget,
         unit: '$',
       },
-      { id: 'entregas', label: 'Entregas del mes', value: deliveriesThisMonth, unit: '' },
+      { id: 'entregas', label: 'Deliveries this month', value: deliveriesThisMonth, unit: '' },
     ]
   }
 
@@ -118,7 +118,7 @@ export class OrderService {
       .slice(0, limit)
       .map((order) => ({
         id: order.id,
-        title: `${order.description} — ${this.getBrand(order)?.name ?? 'sin marca'}`,
+        title: `${order.description} — ${this.getBrand(order)?.name ?? 'no brand'}`,
         timestamp: order.createdAt,
         type: FINAL_STATUSES.includes(order.status) ? 'milestone' : 'default',
       }))
@@ -225,7 +225,7 @@ export class OrderService {
     return [...counts.entries()]
       .map(([creatorId, count]) => ({
         creatorId,
-        creatorName: CreatorService.getById(creatorId)?.name ?? 'Creador eliminado',
+        creatorName: CreatorService.getById(creatorId)?.name ?? 'Creator deleted',
         count,
       }))
       .sort((a, b) => b.count - a.count)
@@ -240,7 +240,7 @@ export class OrderService {
     return [...totals.entries()]
       .map(([brandId, budget]) => ({
         brandId,
-        brandName: BrandService.getById(brandId)?.name ?? 'Marca eliminada',
+        brandName: BrandService.getById(brandId)?.name ?? 'Brand deleted',
         budget,
       }))
       .sort((a, b) => b.budget - a.budget)
@@ -274,15 +274,15 @@ export class OrderService {
     const approvalRate = orders.length > 0 ? Math.round((approvedCount / orders.length) * 100) : 0
 
     return [
-      { id: 'total', label: 'Pedidos', value: orders.length, unit: '' },
-      { id: 'presupuesto', label: 'Presupuesto total', value: totalBudget, unit: '$' },
+      { id: 'total', label: 'Orders', value: orders.length, unit: '' },
+      { id: 'presupuesto', label: 'Total budget', value: totalBudget, unit: '$' },
       {
         id: 'promedio',
-        label: 'Presupuesto promedio',
+        label: 'Average budget',
         value: orders.length > 0 ? Math.round(totalBudget / orders.length) : 0,
         unit: '$',
       },
-      { id: 'aprobacion', label: 'Tasa de aprobación (%)', value: approvalRate, unit: '' },
+      { id: 'aprobacion', label: 'Approval rate (%)', value: approvalRate, unit: '' },
     ]
   }
 }

@@ -10,16 +10,16 @@ import { generateId } from '@/utils/generateId'
 export class BrandService {
   private static validate(brandData: CreateBrandDTO): void {
     if (!brandData.name || typeof brandData.name !== 'string') {
-      throw new Error('Marca: el nombre es obligatorio')
+      throw new Error('Brand: name is required')
     }
     if (!brandData.industry || typeof brandData.industry !== 'string') {
-      throw new Error('Marca: la industria es obligatoria')
+      throw new Error('Brand: industry is required')
     }
     if (!brandData.contactName || typeof brandData.contactName !== 'string') {
-      throw new Error('Marca: el nombre del contacto es obligatorio')
+      throw new Error('Brand: contact name is required')
     }
     if (!isValidEmail(brandData.contactEmail ?? '')) {
-      throw new Error('Marca: el email del contacto no tiene un formato válido')
+      throw new Error('Brand: contact email has an invalid format')
     }
   }
 
