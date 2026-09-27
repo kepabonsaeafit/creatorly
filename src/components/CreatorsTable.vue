@@ -20,11 +20,11 @@ function onDelete(id: string): void {
 </script>
 
 <template>
-  <p v-if="creators.length === 0" class="creadores-table__vacio">
+  <p v-if="creators.length === 0" class="creators-table__empty">
     No hay creadores que coincidan con estos filtros.
   </p>
 
-  <table v-else class="creadores-table">
+  <table v-else class="creators-table">
     <thead>
       <tr>
         <th>Nombre</th>
@@ -43,17 +43,17 @@ function onDelete(id: string): void {
         <td>{{ formatCurrency(creator.rate) }}</td>
         <td>
           <span
-            class="creadores-table__badge"
-            :class="creator.available ? 'creadores-table__badge--disponible' : ''"
+            class="creators-table__badge"
+            :class="creator.available ? 'creators-table__badge--available' : ''"
           >
             {{ creator.available ? 'Disponible' : 'No disponible' }}
           </span>
         </td>
-        <td v-if="actionable" class="creadores-table__acciones">
+        <td v-if="actionable" class="creators-table__actions">
           <RouterLink :to="{ name: 'creators.edit', params: { id: creator.id } }">
             Editar
           </RouterLink>
-          <button type="button" class="creadores-table__eliminar" @click="onDelete(creator.id)">
+          <button type="button" class="creators-table__delete" @click="onDelete(creator.id)">
             Eliminar
           </button>
         </td>
@@ -63,36 +63,36 @@ function onDelete(id: string): void {
 </template>
 
 <style scoped>
-.creadores-table__vacio {
+.creators-table__empty {
   color: var(--color-text);
   opacity: 0.75;
   padding: 2rem 0;
   text-align: center;
 }
 
-.creadores-table {
+.creators-table {
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
   display: block;
 }
 
-.creadores-table th,
-.creadores-table td {
+.creators-table th,
+.creators-table td {
   text-align: left;
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
 }
 
-.creadores-table th {
+.creators-table th {
   color: var(--color-text);
   opacity: 0.7;
   font-size: 0.8rem;
   text-transform: uppercase;
 }
 
-.creadores-table__badge {
+.creators-table__badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -101,18 +101,18 @@ function onDelete(id: string): void {
   color: var(--color-text);
 }
 
-.creadores-table__badge--disponible {
+.creators-table__badge--available {
   background: var(--color-success);
   color: var(--brand-white);
 }
 
-.creadores-table__acciones {
+.creators-table__actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
 }
 
-.creadores-table__eliminar {
+.creators-table__delete {
   border: none;
   background: transparent;
   color: var(--color-danger);

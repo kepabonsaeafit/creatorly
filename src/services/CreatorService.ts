@@ -8,17 +8,21 @@ import { useCreatorStore } from '@/stores/CreatorStore'
 import { generateId } from '@/utils/generateId'
 
 export class CreatorService {
-  private static validate(datos: CreateCreatorDTO): void {
-    if (!datos.name || typeof datos.name !== 'string') {
+  private static validate(creatorData: CreateCreatorDTO): void {
+    if (!creatorData.name || typeof creatorData.name !== 'string') {
       throw new Error('Creador: el nombre es obligatorio')
     }
-    if (!datos.niche || typeof datos.niche !== 'string') {
+    if (!creatorData.niche || typeof creatorData.niche !== 'string') {
       throw new Error('Creador: el nicho es obligatorio')
     }
-    if (!datos.contentType || typeof datos.contentType !== 'string') {
+    if (!creatorData.contentType || typeof creatorData.contentType !== 'string') {
       throw new Error('Creador: el tipo de contenido es obligatorio')
     }
-    if (typeof datos.rate !== 'number' || Number.isNaN(datos.rate) || datos.rate < 0) {
+    if (
+      typeof creatorData.rate !== 'number' ||
+      Number.isNaN(creatorData.rate) ||
+      creatorData.rate < 0
+    ) {
       throw new Error('Creador: la tarifa debe ser un número >= 0')
     }
   }
@@ -28,51 +32,54 @@ export class CreatorService {
   }
 
   static getById(id: string): CreatorInterface | undefined {
-    return useCreatorStore().creators.find((creador) => creador.id === id)
+    return useCreatorStore().creators.find((creator) => creator.id === id)
   }
 
-  static create(datos: CreateCreatorDTO): CreatorInterface {
-    const normalizado: CreateCreatorDTO = { ...datos, available: datos.available ?? true }
-    this.validate(normalizado)
-    const ahora = new Date().toISOString()
-    const nuevoCreador: CreatorInterface = {
-      ...normalizado,
-      available: Boolean(normalizado.available),
+  static create(creatorData: CreateCreatorDTO): CreatorInterface {
+    const normalizedData: CreateCreatorDTO = {
+      ...creatorData,
+      available: creatorData.available ?? true,
+    }
+    this.validate(normalizedData)
+    const now = new Date().toISOString()
+    const newCreator: CreatorInterface = {
+      ...normalizedData,
+      available: Boolean(normalizedData.available),
       id: generateId(),
-      createdAt: ahora,
-      updatedAt: ahora,
+      createdAt: now,
+      updatedAt: now,
     }
-    useCreatorStore().creators.push(nuevoCreador)
-    return nuevoCreador
+    useCreatorStore().creators.push(newCreator)
+    return newCreator
   }
 
-  static update(id: string, cambios: Partial<CreateCreatorDTO>): CreatorInterface | undefined {
-    const creadores = useCreatorStore().creators
-    const indice = creadores.findIndex((creador) => creador.id === id)
-    if (indice === -1) return undefined
-    const combinado: CreateCreatorDTO = {
-      name: cambios.name ?? creadores[indice].name,
-      niche: cambios.niche ?? creadores[indice].niche,
-      contentType: cambios.contentType ?? creadores[indice].contentType,
-      rate: cambios.rate ?? creadores[indice].rate,
-      available: cambios.available ?? creadores[indice].available,
+  static update(id: string, changes: Partial<CreateCreatorDTO>): CreatorInterface | undefined {
+    const creators = useCreatorStore().creators
+    const index = creators.findIndex((creator) => creator.id === id)
+    if (index === -1) return undefined
+    const merged: CreateCreatorDTO = {
+      name: changes.name ?? creators[index].name,
+      niche: changes.niche ?? creators[index].niche,
+      contentType: changes.contentType ?? creators[index].contentType,
+      rate: changes.rate ?? creators[index].rate,
+      available: changes.available ?? creators[index].available,
     }
-    this.validate(combinado)
-    const actualizado: CreatorInterface = {
-      ...creadores[indice],
-      ...combinado,
-      available: Boolean(combinado.available),
+    this.validate(merged)
+    const updated: CreatorInterface = {
+      ...creators[index],
+      ...merged,
+      available: Boolean(merged.available),
       updatedAt: new Date().toISOString(),
     }
-    creadores[indice] = actualizado
-    return actualizado
+    creators[index] = updated
+    return updated
   }
 
   static remove(id: string): boolean {
-    const creadores = useCreatorStore().creators
-    const indice = creadores.findIndex((creador) => creador.id === id)
-    if (indice === -1) return false
-    creadores.splice(indice, 1)
+    const creators = useCreatorStore().creators
+    const index = creators.findIndex((creator) => creator.id === id)
+    if (index === -1) return false
+    creators.splice(index, 1)
     return true
   }
 
@@ -80,23 +87,23 @@ export class CreatorService {
    * Aplica un CreatorFilterDTO sobre una lista de creadores y ordena el
    * resultado por nombre. Usado por CreatorsIndexView.
    */
-  static filter(creadores: CreatorInterface[], filtro: CreatorFilterDTO): CreatorInterface[] {
-    return creadores
-      .filter((creador) => {
-        if (filtro.niche && creador.niche !== filtro.niche) return false
-        if (filtro.available !== undefined && creador.available !== filtro.available) return false
-        if (filtro.text) {
-          const texto = filtro.text.trim().toLowerCase()
-          if (texto && !creador.name.toLowerCase().includes(texto)) return false
+  static filter(creators: CreatorInterface[], filter: CreatorFilterDTO): CreatorInterface[] {
+    return creators
+      .filter((creator) => {
+        if (filter.niche && creator.niche !== filter.niche) return false
+        if (filter.available !== undefined && creator.available !== filter.available) return false
+        if (filter.text) {
+          const text = filter.text.trim().toLowerCase()
+          if (text && !creator.name.toLowerCase().includes(text)) return false
         }
         return true
       })
-      .sort((primero, segundo) => primero.name.localeCompare(segundo.name))
+      .sort((first, second) => first.name.localeCompare(second.name))
   }
 
   /** Nichos distintos presentes en el catálogo, ordenados, para poblar el filtro. */
   static getNiches(): string[] {
-    const unicos = new Set(this.getAll().map((creador) => creador.niche))
-    return [...unicos].sort((primero, segundo) => primero.localeCompare(segundo))
+    const uniqueNiches = new Set(this.getAll().map((creator) => creator.niche))
+    return [...uniqueNiches].sort((first, second) => first.localeCompare(second))
   }
 }

@@ -9,21 +9,21 @@ import type { UserInterface } from '@/interfaces/UserInterface'
 import { generateId } from '@/utils/generateId'
 
 /** Deriva createdAt/updatedAt a partir de requestDate, deliveryDate y el estado. */
-function buildOrder(datos: OrderSeedData): OrderInterface {
-  const createdAt = `${datos.requestDate}T09:00:00.000Z`
-  const updatedAt = FINAL_STATUSES.includes(datos.status)
-    ? `${datos.deliveryDate}T15:00:00.000Z`
+function buildOrder(orderData: OrderSeedData): OrderInterface {
+  const createdAt = `${orderData.requestDate}T09:00:00.000Z`
+  const updatedAt = FINAL_STATUSES.includes(orderData.status)
+    ? `${orderData.deliveryDate}T15:00:00.000Z`
     : createdAt
   return {
     id: generateId(),
-    description: datos.description,
-    budget: datos.budget,
-    requestDate: datos.requestDate,
-    deliveryDate: datos.deliveryDate,
-    status: datos.status,
-    brandId: datos.brandId,
-    creatorId: datos.creatorId,
-    userId: datos.userId,
+    description: orderData.description,
+    budget: orderData.budget,
+    requestDate: orderData.requestDate,
+    deliveryDate: orderData.deliveryDate,
+    status: orderData.status,
+    brandId: orderData.brandId,
+    creatorId: orderData.creatorId,
+    userId: orderData.userId,
     createdAt,
     updatedAt,
   }
@@ -35,13 +35,13 @@ function buildOrder(datos: OrderSeedData): OrderInterface {
  * capturándolos por posición antes de construir los pedidos.
  */
 export function seedOrders(
-  marcas: BrandInterface[],
-  creadores: CreatorInterface[],
+  brands: BrandInterface[],
+  creators: CreatorInterface[],
   users: UserInterface[],
 ): OrderInterface[] {
   const [, laura, sara] = users
-  const [valentina, andres, daniela, sebastian, isabella, mateo] = creadores
-  const [natura, pixel, aurea, fitpro] = marcas
+  const [valentina, andres, daniela, sebastian, isabella, mateo] = creators
+  const [natura, pixel, aurea, fitpro] = brands
 
   return [
     buildOrder({

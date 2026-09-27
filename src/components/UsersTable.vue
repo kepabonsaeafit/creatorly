@@ -26,9 +26,9 @@ function onDelete(id: string): void {
 </script>
 
 <template>
-  <p v-if="users.length === 0" class="usuarios-table__vacio">No hay usuarios registrados.</p>
+  <p v-if="users.length === 0" class="users-table__empty">No hay usuarios registrados.</p>
 
-  <table v-else class="usuarios-table">
+  <table v-else class="users-table">
     <thead>
       <tr>
         <th>Nombre</th>
@@ -43,22 +43,22 @@ function onDelete(id: string): void {
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>
-          <span class="usuarios-table__badge" :class="`usuarios-table__badge--${user.role}`">
+          <span class="users-table__badge" :class="`users-table__badge--${user.role}`">
             {{ formatRole(user.role) }}
           </span>
         </td>
         <td>{{ formatDate(user.createdAt) }}</td>
-        <td class="usuarios-table__acciones">
+        <td class="users-table__actions">
           <RouterLink :to="{ name: 'users.edit', params: { id: user.id } }"> Editar </RouterLink>
           <button
             v-if="user.id !== currentUserId"
             type="button"
-            class="usuarios-table__eliminar"
+            class="users-table__delete"
             @click="onDelete(user.id)"
           >
             Eliminar
           </button>
-          <span v-else class="usuarios-table__sesion">Sesión actual</span>
+          <span v-else class="users-table__session">Sesión actual</span>
         </td>
       </tr>
     </tbody>
@@ -66,36 +66,36 @@ function onDelete(id: string): void {
 </template>
 
 <style scoped>
-.usuarios-table__vacio {
+.users-table__empty {
   color: var(--color-text);
   opacity: 0.75;
   padding: 2rem 0;
   text-align: center;
 }
 
-.usuarios-table {
+.users-table {
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
   display: block;
 }
 
-.usuarios-table th,
-.usuarios-table td {
+.users-table th,
+.users-table td {
   text-align: left;
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
 }
 
-.usuarios-table th {
+.users-table th {
   color: var(--color-text);
   opacity: 0.7;
   font-size: 0.8rem;
   text-transform: uppercase;
 }
 
-.usuarios-table__badge {
+.users-table__badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -104,18 +104,18 @@ function onDelete(id: string): void {
   color: var(--color-text);
 }
 
-.usuarios-table__badge--admin {
+.users-table__badge--admin {
   background: var(--color-primary);
   color: var(--brand-white);
 }
 
-.usuarios-table__acciones {
+.users-table__actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
 }
 
-.usuarios-table__eliminar {
+.users-table__delete {
   border: none;
   background: transparent;
   color: var(--color-danger);
@@ -124,7 +124,7 @@ function onDelete(id: string): void {
   font: inherit;
 }
 
-.usuarios-table__sesion {
+.users-table__session {
   color: var(--color-text);
   opacity: 0.6;
   font-size: 0.85rem;

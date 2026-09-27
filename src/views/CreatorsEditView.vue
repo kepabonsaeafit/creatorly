@@ -65,11 +65,9 @@ function onDelete(): void {
         :error="error"
         @submit="onSubmit"
       />
-      <button type="button" class="edit-creador__eliminar" @click="onDelete">
-        Eliminar creador
-      </button>
+      <button type="button" class="edit-creator__delete" @click="onDelete">Eliminar creador</button>
     </template>
-    <p v-else class="edit-creador__no-encontrado">
+    <p v-else class="edit-creator__not-found">
       No se encontró un creador con ese id.
       <RouterLink :to="{ name: 'creators' }">Volver</RouterLink>
     </p>
@@ -77,7 +75,7 @@ function onDelete(): void {
 </template>
 
 <style scoped>
-.edit-creador__eliminar {
+.edit-creator__delete {
   margin-top: 1.5rem;
   padding: 0.5rem 1rem;
   border: 1px solid var(--color-danger);
@@ -87,7 +85,7 @@ function onDelete(): void {
   cursor: pointer;
 }
 
-.edit-creador__no-encontrado {
+.edit-creator__not-found {
   color: var(--color-text);
 }
 </style>

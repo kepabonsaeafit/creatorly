@@ -51,44 +51,44 @@ function onSubmit(): void {
 </script>
 
 <template>
-  <form class="usuario-form" @submit.prevent="onSubmit">
-    <div class="usuario-form__field">
-      <label class="usuario-form__label" for="usuario-nombre">Nombre</label>
-      <input id="usuario-nombre" v-model="name" class="usuario-form__input" type="text" required />
+  <form class="user-form" @submit.prevent="onSubmit">
+    <div class="user-form__field">
+      <label class="user-form__label" for="user-name">Nombre</label>
+      <input id="user-name" v-model="name" class="user-form__input" type="text" required />
     </div>
 
-    <div class="usuario-form__field">
-      <label class="usuario-form__label" for="usuario-email">Email</label>
-      <input id="usuario-email" v-model="email" class="usuario-form__input" type="email" required />
+    <div class="user-form__field">
+      <label class="user-form__label" for="user-email">Email</label>
+      <input id="user-email" v-model="email" class="user-form__input" type="email" required />
     </div>
 
-    <div class="usuario-form__field">
-      <label class="usuario-form__label" for="usuario-password">Contraseña</label>
+    <div class="user-form__field">
+      <label class="user-form__label" for="user-password">Contraseña</label>
       <input
-        id="usuario-password"
+        id="user-password"
         v-model="password"
-        class="usuario-form__input"
+        class="user-form__input"
         type="password"
         required
       />
     </div>
 
-    <div class="usuario-form__field">
-      <label class="usuario-form__label" for="usuario-rol">Rol</label>
-      <select id="usuario-rol" v-model="role" class="usuario-form__input">
+    <div class="user-form__field">
+      <label class="user-form__label" for="user-role">Rol</label>
+      <select id="user-role" v-model="role" class="user-form__input">
         <option v-for="option in roleOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
     </div>
 
-    <p v-if="error" class="usuario-form__error">{{ error }}</p>
+    <p v-if="error" class="user-form__error">{{ error }}</p>
 
-    <div class="usuario-form__acciones">
-      <button class="usuario-form__submit" type="submit" :disabled="saving">
+    <div class="user-form__actions">
+      <button class="user-form__submit" type="submit" :disabled="saving">
         {{ saving ? 'Guardando…' : editMode ? 'Guardar cambios' : 'Crear usuario' }}
       </button>
-      <button v-if="editMode" class="usuario-form__cancelar" type="button" @click="emit('cancel')">
+      <button v-if="editMode" class="user-form__cancel" type="button" @click="emit('cancel')">
         Cancelar
       </button>
     </div>
@@ -96,23 +96,23 @@ function onSubmit(): void {
 </template>
 
 <style scoped>
-.usuario-form {
+.user-form {
   display: grid;
   gap: 1rem;
   max-width: 480px;
 }
 
-.usuario-form__field {
+.user-form__field {
   display: grid;
   gap: 0.35rem;
 }
 
-.usuario-form__label {
+.user-form__label {
   font-size: 0.85rem;
   color: var(--color-text);
 }
 
-.usuario-form__input {
+.user-form__input {
   padding: 0.6rem 0.8rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -121,20 +121,20 @@ function onSubmit(): void {
   font: inherit;
 }
 
-.usuario-form__error {
+.user-form__error {
   color: var(--color-danger);
   font-size: 0.9rem;
   margin: 0;
 }
 
-.usuario-form__acciones {
+.user-form__actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
   margin-top: 0.5rem;
 }
 
-.usuario-form__submit {
+.user-form__submit {
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 6px;
@@ -144,12 +144,12 @@ function onSubmit(): void {
   cursor: pointer;
 }
 
-.usuario-form__submit:disabled {
+.user-form__submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.usuario-form__cancelar {
+.user-form__cancel {
   padding: 0.6rem 1.2rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;

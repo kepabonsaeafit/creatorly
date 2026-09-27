@@ -59,16 +59,16 @@ function onDelete(): void {
     <template v-if="order">
       <h1>Editar pedido</h1>
       <OrderForm edit-mode :initial="order" :saving="saving" :error="error" @submit="onSubmit" />
-      <button type="button" class="edit-pedido__eliminar" @click="onDelete">Eliminar pedido</button>
+      <button type="button" class="edit-order__delete" @click="onDelete">Eliminar pedido</button>
     </template>
-    <p v-else class="edit-pedido__no-encontrado">
+    <p v-else class="edit-order__not-found">
       No se encontró un pedido con ese id. <RouterLink :to="{ name: 'orders' }">Volver</RouterLink>
     </p>
   </main>
 </template>
 
 <style scoped>
-.edit-pedido__eliminar {
+.edit-order__delete {
   margin-top: 1.5rem;
   padding: 0.5rem 1rem;
   border: 1px solid var(--color-danger);
@@ -78,7 +78,7 @@ function onDelete(): void {
   cursor: pointer;
 }
 
-.edit-pedido__no-encontrado {
+.edit-order__not-found {
   color: var(--color-text);
 }
 </style>

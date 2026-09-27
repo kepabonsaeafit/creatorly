@@ -49,36 +49,34 @@ function clearFilters(): void {
 </script>
 
 <template>
-  <main class="Panel creadores">
-    <div class="creadores__header">
+  <main class="Panel creators">
+    <div class="creators__header">
       <h1>Creadores</h1>
-      <RouterLink class="creadores__crear" :to="{ name: 'creators.create' }">
+      <RouterLink class="creators__create" :to="{ name: 'creators.create' }">
         Nuevo creador
       </RouterLink>
     </div>
 
-    <div class="creadores__filtros">
+    <div class="creators__filters">
       <input
         v-model="text"
-        class="creadores__filtro-input"
+        class="creators__filter-input"
         type="search"
         placeholder="Buscar por nombre…"
       />
 
-      <select v-model="filters.niche" class="creadores__filtro-input">
+      <select v-model="filters.niche" class="creators__filter-input">
         <option :value="undefined">Todos los nichos</option>
         <option v-for="option in niches" :key="option" :value="option">{{ option }}</option>
       </select>
 
-      <select v-model="filters.available" class="creadores__filtro-input">
+      <select v-model="filters.available" class="creators__filter-input">
         <option :value="undefined">Toda disponibilidad</option>
         <option :value="true">Disponibles</option>
         <option :value="false">No disponibles</option>
       </select>
 
-      <button type="button" class="creadores__limpiar" @click="clearFilters">
-        Limpiar filtros
-      </button>
+      <button type="button" class="creators__clear" @click="clearFilters">Limpiar filtros</button>
     </div>
 
     <CreatorsTable :creators="creators" actionable @delete="onDelete" />
@@ -86,7 +84,7 @@ function clearFilters(): void {
 </template>
 
 <style scoped>
-.creadores__header {
+.creators__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -94,7 +92,7 @@ function clearFilters(): void {
   flex-wrap: wrap;
 }
 
-.creadores__crear {
+.creators__create {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   background: var(--color-primary);
@@ -102,14 +100,14 @@ function clearFilters(): void {
   font-weight: 600;
 }
 
-.creadores__filtros {
+.creators__filters {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
   margin: 1.5rem 0;
 }
 
-.creadores__filtro-input {
+.creators__filter-input {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -118,7 +116,7 @@ function clearFilters(): void {
   font: inherit;
 }
 
-.creadores__limpiar {
+.creators__clear {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;

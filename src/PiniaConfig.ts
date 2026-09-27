@@ -42,11 +42,11 @@ function generateSeed(): SeedData {
 }
 
 /** Escribe las cuatro colecciones en LocalStorage. */
-function persistSeed(datos: SeedData): void {
-  StorageService.write('users', datos.users)
-  StorageService.write('creators', datos.creators)
-  StorageService.write('brands', datos.brands)
-  StorageService.write('orders', datos.orders)
+function persistSeed(seedData: SeedData): void {
+  StorageService.write('users', seedData.users)
+  StorageService.write('creators', seedData.creators)
+  StorageService.write('brands', seedData.brands)
+  StorageService.write('orders', seedData.orders)
 }
 
 /** Siembra si la "base de datos" está vacía. */
@@ -74,12 +74,12 @@ function persist<T>(items: Ref<T[]>, collection: CollectionName): void {
  */
 export function resetDemoData(): void {
   StorageService.clearAll()
-  const datos = generateSeed()
-  persistSeed(datos)
-  useUserStore().users = datos.users
-  useCreatorStore().creators = datos.creators
-  useBrandStore().brands = datos.brands
-  useOrderStore().orders = datos.orders
+  const seedData = generateSeed()
+  persistSeed(seedData)
+  useUserStore().users = seedData.users
+  useCreatorStore().creators = seedData.creators
+  useBrandStore().brands = seedData.brands
+  useOrderStore().orders = seedData.orders
 }
 
 /**

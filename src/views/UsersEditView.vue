@@ -83,13 +83,13 @@ function onDelete(): void {
       <button
         v-if="user.id !== currentUser?.id"
         type="button"
-        class="edit-usuario__eliminar"
+        class="edit-user__delete"
         @click="onDelete"
       >
         Eliminar usuario
       </button>
     </template>
-    <p v-else class="edit-usuario__no-encontrado">
+    <p v-else class="edit-user__not-found">
       No se encontró un usuario con ese id.
       <RouterLink :to="{ name: 'users' }">Volver</RouterLink>
     </p>
@@ -97,7 +97,7 @@ function onDelete(): void {
 </template>
 
 <style scoped>
-.edit-usuario__eliminar {
+.edit-user__delete {
   margin-top: 1.5rem;
   padding: 0.5rem 1rem;
   border: 1px solid var(--color-danger);
@@ -107,7 +107,7 @@ function onDelete(): void {
   cursor: pointer;
 }
 
-.edit-usuario__no-encontrado {
+.edit-user__not-found {
   color: var(--color-text);
 }
 </style>
