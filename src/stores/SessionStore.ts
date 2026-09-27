@@ -21,7 +21,7 @@ export const useSessionStore = defineStore('session', () => {
   // Inline, no delegado a un helper de AuthService: AuthService ya importa
   // este store para login/logout, así que delegar aquí crearía un ciclo de
   // imports SessionStore -> AuthService -> SessionStore.
-  const isAdmin = computed<boolean>(() => current.value?.rol === 'admin')
+  const isAdmin = computed<boolean>(() => current.value?.role === 'admin')
 
   return { userId, current, isLoggedIn, isAdmin }
 })

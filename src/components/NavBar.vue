@@ -26,17 +26,17 @@ const LINKS: NavLink[] = [
 // solo hablan con services (regla 5 de AGENTS.md).
 const currentUser = computed(() => AuthService.getCurrentUser())
 
-const iniciales = computed(() => {
-  const nombre = currentUser.value?.nombre ?? ''
-  return nombre
+const initials = computed(() => {
+  const fullName = currentUser.value?.name ?? ''
+  return fullName
     .split(' ')
     .filter(Boolean)
     .slice(0, 2)
-    .map((palabra) => palabra[0]?.toUpperCase())
+    .map((word) => word[0]?.toUpperCase())
     .join('')
 })
 
-const esAdmin = computed(() => AuthService.isAdmin())
+const isAdmin = computed(() => AuthService.isAdmin())
 
 /**
  * Un coordinador no ve los links solo-admin; el guard del router los sigue
@@ -44,7 +44,7 @@ const esAdmin = computed(() => AuthService.isAdmin())
  * de qué rutas son solo-admin.
  */
 const links = computed(() =>
-  LINKS.filter((link) => !router.resolve({ name: link.name }).meta.admin || esAdmin.value),
+  LINKS.filter((link) => !router.resolve({ name: link.name }).meta.admin || isAdmin.value),
 )
 
 // functions
@@ -99,10 +99,10 @@ function logout(): void {
     </nav>
 
     <div v-if="currentUser" class="navbar__session">
-      <span class="navbar__avatar" aria-hidden="true">{{ iniciales }}</span>
+      <span class="navbar__avatar" aria-hidden="true">{{ initials }}</span>
       <span class="navbar__user-info">
-        <span class="navbar__user-name">{{ currentUser.nombre }}</span>
-        <span class="navbar__user-role">{{ currentUser.rol }}</span>
+        <span class="navbar__user-name">{{ currentUser.name }}</span>
+        <span class="navbar__user-role">{{ currentUser.role }}</span>
       </span>
       <button type="button" class="navbar__logout" @click="logout">
         <svg class="navbar__logout-icon" viewBox="0 0 16 16" aria-hidden="true">

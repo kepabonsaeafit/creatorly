@@ -2,7 +2,7 @@
 
 /**
  * AuthService no sigue el patrón `throw new Error(...)` del resto de services
- * (UserService, CreadorService, MarcaService, PedidoService). login() devuelve
+ * (UserService, CreatorService, BrandService, OrderService). login() devuelve
  * { ok, error } porque "credenciales inválidas" no es un dato malformado del
  * programador (como un presupuesto negativo) sino una respuesta legítima y
  * esperada de un formulario de login: la view necesita mostrar el error sin

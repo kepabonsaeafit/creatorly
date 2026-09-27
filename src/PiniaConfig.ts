@@ -6,50 +6,53 @@ import type { Ref } from 'vue'
 import { watch } from 'vue'
 
 // internal imports
-import type { CreadorInterface } from '@/interfaces/CreadorInterface'
-import type { MarcaInterface } from '@/interfaces/MarcaInterface'
-import type { PedidoInterface } from '@/interfaces/PedidoInterface'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
 import type { CollectionName } from '@/interfaces/StorageInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { seedCreadores } from '@/seeders/CreadorSeeder'
-import { seedMarcas } from '@/seeders/MarcaSeeder'
-import { seedPedidos } from '@/seeders/PedidoSeeder'
+import { seedBrands } from '@/seeders/BrandSeeder'
+import { seedCreators } from '@/seeders/CreatorSeeder'
+import { seedOrders } from '@/seeders/OrderSeeder'
 import { seedUsers } from '@/seeders/UserSeeder'
 import { StorageService } from '@/storage/StorageService'
-import { useCreadorStore } from '@/stores/CreadorStore'
-import { useMarcaStore } from '@/stores/MarcaStore'
-import { usePedidoStore } from '@/stores/PedidoStore'
+import { useBrandStore } from '@/stores/BrandStore'
+import { useCreatorStore } from '@/stores/CreatorStore'
+import { useOrderStore } from '@/stores/OrderStore'
 import { useUserStore } from '@/stores/UserStore'
 
 /** Las cuatro colecciones de una siembra completa, con las referencias por id ya resueltas. */
-export interface DatosSiembra {
+export interface SeedData {
   users: UserInterface[]
-  creadores: CreadorInterface[]
-  marcas: MarcaInterface[]
-  pedidos: PedidoInterface[]
+  creators: CreatorInterface[]
+  brands: BrandInterface[]
+  orders: OrderInterface[]
 }
 
-/** Genera las cuatro colecciones; PedidoSeeder recibe las otras tres para referenciarlas por id (ADR-0001). */
-function generar(): DatosSiembra {
+// Se llaman generateSeed/persistSeed (no generate/persist) para no colisionar
+// con los helpers genéricos hydrate<T>/persist<T> de más abajo, que ya usaban
+// ese nombre antes de esta traducción.
+/** Genera las cuatro colecciones; OrderSeeder recibe las otras tres para referenciarlas por id (ADR-0001). */
+function generateSeed(): SeedData {
   const users = seedUsers()
-  const creadores = seedCreadores()
-  const marcas = seedMarcas()
-  const pedidos = seedPedidos(marcas, creadores, users)
-  return { users, creadores, marcas, pedidos }
+  const creators = seedCreators()
+  const brands = seedBrands()
+  const orders = seedOrders(brands, creators, users)
+  return { users, creators, brands, orders }
 }
 
 /** Escribe las cuatro colecciones en LocalStorage. */
-function persistir(datos: DatosSiembra): void {
+function persistSeed(datos: SeedData): void {
   StorageService.write('users', datos.users)
-  StorageService.write('creadores', datos.creadores)
-  StorageService.write('marcas', datos.marcas)
-  StorageService.write('pedidos', datos.pedidos)
+  StorageService.write('creadores', datos.creators)
+  StorageService.write('marcas', datos.brands)
+  StorageService.write('pedidos', datos.orders)
 }
 
 /** Siembra si la "base de datos" está vacía. */
 function ensureSeeded(): void {
   if (!StorageService.hasData('users') && !StorageService.hasData('pedidos')) {
-    persistir(generar())
+    persistSeed(generateSeed())
   }
 }
 
@@ -71,12 +74,12 @@ function persist<T>(items: Ref<T[]>, collection: CollectionName): void {
  */
 export function resetDemoData(): void {
   StorageService.clearAll()
-  const datos = generar()
-  persistir(datos)
+  const datos = generateSeed()
+  persistSeed(datos)
   useUserStore().users = datos.users
-  useCreadorStore().creadores = datos.creadores
-  useMarcaStore().marcas = datos.marcas
-  usePedidoStore().pedidos = datos.pedidos
+  useCreatorStore().creators = datos.creators
+  useBrandStore().brands = datos.brands
+  useOrderStore().orders = datos.orders
 }
 
 /**
@@ -87,17 +90,17 @@ export function initPinia(): void {
   ensureSeeded()
 
   const { users } = storeToRefs(useUserStore())
-  const { creadores } = storeToRefs(useCreadorStore())
-  const { marcas } = storeToRefs(useMarcaStore())
-  const { pedidos } = storeToRefs(usePedidoStore())
+  const { creators } = storeToRefs(useCreatorStore())
+  const { brands } = storeToRefs(useBrandStore())
+  const { orders } = storeToRefs(useOrderStore())
 
   hydrate(users, 'users')
-  hydrate(creadores, 'creadores')
-  hydrate(marcas, 'marcas')
-  hydrate(pedidos, 'pedidos')
+  hydrate(creators, 'creadores')
+  hydrate(brands, 'marcas')
+  hydrate(orders, 'pedidos')
 
   persist(users, 'users')
-  persist(creadores, 'creadores')
-  persist(marcas, 'marcas')
-  persist(pedidos, 'pedidos')
+  persist(creators, 'creadores')
+  persist(brands, 'marcas')
+  persist(orders, 'pedidos')
 }
