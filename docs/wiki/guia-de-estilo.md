@@ -2,22 +2,41 @@
 
 Guía **híbrida**: lo que el linter garantiza automáticamente y las convenciones manuales que el linter no puede revisar.
 
-## Parte automatizada: el linter
+## Parte automatizada: linter y formatter
 
-El proyecto trae tres herramientas configuradas, en dos comandos distintos: `npm run lint` (oxlint + ESLint) y `npm run format` (Prettier).
+Son dos herramientas distintas, con responsabilidades distintas. El **linter** revisa que el código sea correcto: errores, malas prácticas, reglas esenciales de Vue y TypeScript. El **formatter** solo decide cómo se ve el código (sangría, comillas, ancho de línea), sin cambiar lo que hace.
+
+### Linter: oxlint + ESLint
+
+**Qué es:** dos herramientas que corren juntas. oxlint es una primera pasada rápida de errores comunes; ESLint (con `eslint-plugin-vue` y la configuración de TypeScript) hace la revisión completa, incluidas las reglas de Vue.
+
+**Cómo se usa:**
 
 ```sh
-npm run lint     # oxlint (rápido) + eslint (completo), ambos con --fix
-npm run format   # prettier sobre src/
+npm run lint   # corre lint:oxlint y lint:eslint, en ese orden, ambos con --fix
 ```
 
-**Qué hace cada una:**
+Lo que se puede arreglar solo, se arregla; lo demás queda como error y hay que corregirlo a mano.
 
-| Herramienta | Archivo de config | Qué garantiza |
-|---|---|---|
-| **ESLint** + `eslint-plugin-vue` | `eslint.config.js` | Reglas de código correcto y esenciales de Vue (orden de atributos, SFC válido, sin variables sin usar) |
-| **oxlint** | `.oxlintrc.json` | Primera pasada rápida de errores comunes (se ejecuta antes de ESLint) |
-| **Prettier** | `.prettierrc.json` | Formato uniforme: sangría, comillas simples sin punto y coma, ancho de línea, comas finales |
+**Dónde se usa:** sobre todo el proyecto (`.`), según `.oxlintrc.json` y `eslint.config.js`.
+
+**Cuándo se usa:** antes de cada commit; no se commitea con errores de lint.
+
+### Formatter: Prettier
+
+**Qué es:** da formato uniforme al código sin cambiar su comportamiento.
+
+**Cómo se usa:**
+
+```sh
+npm run format   # prettier --write sobre src/
+```
+
+Reescribe los archivos en su lugar. Config en `.prettierrc.json`: sin punto y coma, comillas simples, ancho de línea 100.
+
+**Dónde se usa:** solo en `src/`.
+
+**Cuándo se usa:** antes de cada commit; si modifica archivos, esos cambios van en el mismo commit.
 
 **Regla de oro:** antes de cada commit, `npm run lint`, `npm run format` y `npm run type-check` en verde (si `format` modifica archivos, esos cambios van en el mismo commit); `npm run build` en verde antes de abrir cualquier Pull Request. No se discute estilo en los PRs — el linter ya lo decidió.
 
