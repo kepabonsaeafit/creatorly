@@ -4,13 +4,11 @@
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
 import type { DatosPedidoSeed } from '@/interfaces/DatosPedidoSeedInterface'
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
-import type { EstadoPedido, PedidoInterface } from '@/interfaces/PedidoInterface'
+import { ESTADOS_FINALES, type PedidoInterface } from '@/interfaces/PedidoInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { generateId } from '@/utils/generateId'
 
-const ESTADOS_FINALES: EstadoPedido[] = ['entregado', 'aprobado']
-
-/** Igual al helper `pedido()` de services/seed.js:128-139: deriva createdAt/updatedAt. */
+/** Deriva createdAt/updatedAt a partir de fechaSolicitud, fechaEntrega y el estado. */
 function construirPedido(datos: DatosPedidoSeed): PedidoInterface {
   const createdAt = `${datos.fechaSolicitud}T09:00:00.000Z`
   const updatedAt = ESTADOS_FINALES.includes(datos.estado)

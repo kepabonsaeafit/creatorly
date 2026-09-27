@@ -6,16 +6,15 @@ import type { LoginDTO } from '@/dtos/LoginDTO'
 import type { UsuarioFiltroDTO } from '@/dtos/UsuarioFiltroDTO'
 import { ROLES, type RolUsuario, type UserInterface } from '@/interfaces/UserInterface'
 import { useUserStore } from '@/stores/UserStore'
+import { isValidEmail, normalizeEmail } from '@/utils/email'
 import { generateId } from '@/utils/generateId'
 
 export class UserService {
-  private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
   private static validate(datos: CreateUserDTO): void {
     if (!datos.nombre || typeof datos.nombre !== 'string') {
       throw new Error('User: el nombre es obligatorio')
     }
-    if (!this.EMAIL_REGEX.test(datos.email ?? '')) {
+    if (!isValidEmail(datos.email ?? '')) {
       throw new Error('User: el email no tiene un formato válido')
     }
     if (!datos.password || typeof datos.password !== 'string') {
@@ -35,15 +34,13 @@ export class UserService {
     return this.getAll().filter((usuario) => usuario.rol === 'coordinador')
   }
 
-  /** Devuelve undefined si no existe (a propósito, ver decisión 1 del paso 4). */
+  /** Devuelve undefined si no existe, a propósito: el llamador decide cómo manejar la ausencia. */
   static getById(id: string): UserInterface | undefined {
     return useUserStore().users.find((usuario) => usuario.id === id)
   }
 
   static findByCredentials(credenciales: LoginDTO): UserInterface | undefined {
-    const emailNormalizado = String(credenciales.email ?? '')
-      .trim()
-      .toLowerCase()
+    const emailNormalizado = normalizeEmail(credenciales.email ?? '')
     return useUserStore().users.find(
       (usuario) => usuario.email === emailNormalizado && usuario.password === credenciales.password,
     )
@@ -53,7 +50,7 @@ export class UserService {
     const normalizado: CreateUserDTO = {
       ...datos,
       rol: datos.rol ?? 'coordinador',
-      email: String(datos.email).trim().toLowerCase(),
+      email: normalizeEmail(datos.email),
     }
     this.validate(normalizado)
     const ahora = new Date().toISOString()
@@ -81,7 +78,7 @@ export class UserService {
     const actualizado: UserInterface = {
       ...usuarios[indice],
       ...combinado,
-      email: String(combinado.email).trim().toLowerCase(),
+      email: normalizeEmail(combinado.email),
       updatedAt: new Date().toISOString(),
     }
     usuarios[indice] = actualizado

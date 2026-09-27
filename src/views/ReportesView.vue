@@ -14,16 +14,14 @@ import PedidosTable from '@/components/PedidosTable.vue'
 import ReportTable from '@/components/ReportTable.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
 import type { PedidoFiltroDTO } from '@/dtos/PedidoFiltroDTO'
-import type { EstadoPedido } from '@/interfaces/PedidoInterface'
-import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
+import { ESTADOS } from '@/interfaces/PedidoInterface'
 import type { OpcionReporte, TipoReporte } from '@/interfaces/ReporteInterface'
+import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
 import { CreadorService } from '@/services/CreadorService'
 import { MarcaService } from '@/services/MarcaService'
 import { PedidoService } from '@/services/PedidoService'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatEstado } from '@/utils/formatEstado'
-
-const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
 const OPCIONES_REPORTE: OpcionReporte[] = [
   { id: 'mes', label: 'Pedidos por mes' },

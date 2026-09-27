@@ -6,7 +6,7 @@ import { computed, ref } from 'vue'
 
 // internal imports
 import type { CreatePedidoDTO } from '@/dtos/CreatePedidoDTO'
-import type { EstadoPedido } from '@/interfaces/PedidoInterface'
+import { ESTADOS, type EstadoPedido } from '@/interfaces/PedidoInterface'
 import { CreadorService } from '@/services/CreadorService'
 import { MarcaService } from '@/services/MarcaService'
 import { UserService } from '@/services/UserService'
@@ -27,8 +27,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{ submit: [datos: CreatePedidoDTO] }>()
-
-const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
 // selectors
 const marcaId = ref(props.initial.marcaId ?? '')
@@ -189,7 +187,7 @@ function onSubmit(): void {
   border: none;
   border-radius: 6px;
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--brand-white);
   font-weight: 600;
   cursor: pointer;
 }

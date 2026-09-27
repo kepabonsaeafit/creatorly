@@ -10,13 +10,11 @@ import PedidosPorEstadoChart from '@/components/charts/PedidosPorEstadoChart.vue
 import DashboardCard from '@/components/DashboardCard.vue'
 import PedidosTable from '@/components/PedidosTable.vue'
 import type { PedidoFiltroDTO } from '@/dtos/PedidoFiltroDTO'
-import type { EstadoPedido } from '@/interfaces/PedidoInterface'
+import { ESTADOS } from '@/interfaces/PedidoInterface'
 import { MarcaService } from '@/services/MarcaService'
 import { PedidoService } from '@/services/PedidoService'
 import { getChartPalette } from '@/utils/chartColors'
 import { formatEstado } from '@/utils/formatEstado'
-
-const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'entregado', 'aprobado']
 
 const toast = useToast()
 
@@ -135,7 +133,7 @@ function limpiarFiltros(): void {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--brand-white);
   font-weight: 600;
 }
 

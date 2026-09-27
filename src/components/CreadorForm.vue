@@ -145,7 +145,7 @@ function onSubmit(): void {
   border: none;
   border-radius: 6px;
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--brand-white);
   font-weight: 600;
   cursor: pointer;
 }

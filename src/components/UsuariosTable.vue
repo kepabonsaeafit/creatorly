@@ -3,6 +3,7 @@
 
 // internal imports
 import type { UserInterface } from '@/interfaces/UserInterface'
+import { confirmarEliminacion } from '@/utils/confirmarEliminacion'
 import { formatDate } from '@/utils/formatDate'
 
 withDefaults(
@@ -18,7 +19,7 @@ const emit = defineEmits<{ eliminar: [id: string] }>()
 
 // functions
 function onEliminar(id: string): void {
-  if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) return
+  if (!confirmarEliminacion('usuario')) return
   emit('eliminar', id)
 }
 </script>
@@ -106,7 +107,7 @@ function onEliminar(id: string): void {
 
 .usuarios-table__badge--admin {
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--brand-white);
 }
 
 .usuarios-table__acciones {

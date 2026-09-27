@@ -10,6 +10,7 @@ import { useToast } from 'vue-toastification'
 import PedidoForm from '@/components/PedidoForm.vue'
 import type { CreatePedidoDTO } from '@/dtos/CreatePedidoDTO'
 import { PedidoService } from '@/services/PedidoService'
+import { confirmarEliminacion } from '@/utils/confirmarEliminacion'
 
 const route = useRoute()
 const router = useRouter()
@@ -42,7 +43,7 @@ function onSubmit(datos: CreatePedidoDTO): void {
 
 function onEliminar(): void {
   if (!pedido.value) return
-  if (!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.')) return
+  if (!confirmarEliminacion('pedido')) return
   const eliminado = PedidoService.remove(pedido.value.id)
   if (eliminado) {
     toast.success('Pedido eliminado correctamente')

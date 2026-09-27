@@ -12,13 +12,13 @@ import { AuthService } from '@/services/AuthService'
 const router = useRouter()
 
 // state
-/** Catálogo completo de links; `admin` marca los que exigen el rol de administrador. */
+/** Catálogo completo de links; el router decide cuáles exigen el rol de administrador. */
 const LINKS: NavLink[] = [
-  { name: 'home', label: 'Home', admin: false },
-  { name: 'pedidos', label: 'Pedidos', admin: false },
-  { name: 'reportes', label: 'Reportes', admin: false },
-  { name: 'creadores', label: 'Creadores', admin: true },
-  { name: 'usuarios', label: 'Usuarios', admin: true },
+  { name: 'home', label: 'Home' },
+  { name: 'pedidos', label: 'Pedidos' },
+  { name: 'reportes', label: 'Reportes' },
+  { name: 'creadores', label: 'Creadores' },
+  { name: 'usuarios', label: 'Usuarios' },
 ]
 
 // computed variables
@@ -38,8 +38,14 @@ const iniciales = computed(() => {
 
 const esAdmin = computed(() => AuthService.isAdmin())
 
-/** Un coordinador no ve los links solo-admin; el guard del router los sigue bloqueando igual. */
-const links = computed(() => LINKS.filter((link) => !link.admin || esAdmin.value))
+/**
+ * Un coordinador no ve los links solo-admin; el guard del router los sigue
+ * bloqueando igual. El router (meta.admin de cada ruta) es la única fuente
+ * de qué rutas son solo-admin.
+ */
+const links = computed(() =>
+  LINKS.filter((link) => !router.resolve({ name: link.name }).meta.admin || esAdmin.value),
+)
 
 // functions
 function logout(): void {
@@ -62,7 +68,7 @@ function logout(): void {
         <g transform="scale(0.228571) translate(-47.875,10.125)">
           <path
             d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3"
-            stroke="#ffffff"
+            stroke="var(--brand-white)"
             stroke-width="15"
             stroke-linecap="round"
             fill="none"
@@ -74,7 +80,7 @@ function logout(): void {
             height="24"
             rx="2"
             transform="rotate(45 88 63)"
-            fill="#ffffff"
+            fill="var(--brand-white)"
           />
         </g>
       </svg>
@@ -212,7 +218,7 @@ function logout(): void {
   height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
-  color: #ffffff;
+  color: var(--brand-white);
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
@@ -258,7 +264,7 @@ function logout(): void {
 .navbar__logout:hover {
   background: var(--color-danger);
   border-color: var(--color-danger);
-  color: #ffffff;
+  color: var(--brand-white);
 }
 
 .navbar__logout-icon {

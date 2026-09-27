@@ -11,6 +11,7 @@ import UsuarioForm from '@/components/UsuarioForm.vue'
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
 import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
+import { confirmarEliminacion } from '@/utils/confirmarEliminacion'
 
 const route = useRoute()
 const router = useRouter()
@@ -49,7 +50,7 @@ function onCancelar(): void {
 
 function onEliminar(): void {
   if (!usuario.value) return
-  if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) return
+  if (!confirmarEliminacion('usuario')) return
   try {
     UserService.validarEliminacion(usuarioActual.value?.id, usuario.value.id)
     const eliminado = UserService.remove(usuario.value.id)

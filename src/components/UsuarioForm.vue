@@ -6,7 +6,8 @@ import { ref } from 'vue'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
-import type { RolUsuario } from '@/interfaces/UserInterface'
+import { ROLES, type RolUsuario } from '@/interfaces/UserInterface'
+import { normalizeEmail } from '@/utils/email'
 
 interface Props {
   initial?: Partial<CreateUserDTO>
@@ -24,8 +25,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{ submit: [datos: CreateUserDTO]; cancelar: [] }>()
 
-const ROLES: RolUsuario[] = ['admin', 'coordinador']
-
 // selectors
 const rol = ref<RolUsuario>(props.initial.rol ?? 'coordinador')
 
@@ -40,7 +39,7 @@ const password = ref(props.initial.password ?? '')
 function onSubmit(): void {
   emit('submit', {
     nombre: nombre.value.trim(),
-    email: email.value.trim().toLowerCase(),
+    email: normalizeEmail(email.value),
     password: password.value,
     rol: rol.value,
   })
@@ -145,7 +144,7 @@ function onSubmit(): void {
   border: none;
   border-radius: 6px;
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--brand-white);
   font-weight: 600;
   cursor: pointer;
 }
