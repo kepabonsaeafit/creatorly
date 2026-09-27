@@ -22,7 +22,7 @@ import { CreadorService } from '@/services/CreadorService'
 import { MarcaService } from '@/services/MarcaService'
 import { UserService } from '@/services/UserService'
 import { usePedidoStore } from '@/stores/PedidoStore'
-import { formatMonthLabel } from '@/utils/formatDate'
+import { formatMonthLabel, todayIso } from '@/utils/formatDate'
 import { generateId } from '@/utils/generateId'
 
 export class PedidoService {
@@ -87,18 +87,15 @@ export class PedidoService {
     const activos = pedidos.filter((pedido) => this.estaActivo(pedido))
     const presupuestoComprometido = activos.reduce((suma, pedido) => suma + pedido.presupuesto, 0)
 
-    const hoy = new Date()
-    const esMismoMes = (fechaIso: string): boolean => {
-      const fecha = new Date(fechaIso)
-      return (
-        fecha.getUTCFullYear() === hoy.getUTCFullYear() && fecha.getUTCMonth() === hoy.getUTCMonth()
-      )
-    }
+    // Comparación por los primeros 7 caracteres ('YYYY-MM') de la fecha local de
+    // hoy y de fechaEntrega, sin pasar por Date: evita que una fecha solo-día se
+    // interprete como medianoche UTC y "se mueva" de mes en zonas al oeste de UTC.
+    const mesActual = todayIso().slice(0, 7)
     const entregasDelMes = pedidos.filter(
       (pedido) =>
         ESTADOS_FINALES.includes(pedido.estado) &&
         pedido.fechaEntrega !== null &&
-        esMismoMes(pedido.fechaEntrega),
+        pedido.fechaEntrega.slice(0, 7) === mesActual,
     ).length
 
     return [
@@ -133,7 +130,7 @@ export class PedidoService {
       fechaEntrega: datos.fechaEntrega ?? null,
       estado: datos.estado ?? 'solicitado',
       creadorId: datos.creadorId ?? null,
-      fechaSolicitud: datos.fechaSolicitud ?? new Date().toISOString().slice(0, 10),
+      fechaSolicitud: datos.fechaSolicitud ?? todayIso(),
     }
     this.validate(normalizado)
     const ahora = new Date().toISOString()
@@ -155,10 +152,15 @@ export class PedidoService {
       descripcion: cambios.descripcion ?? pedidos[indice].descripcion,
       presupuesto: cambios.presupuesto ?? pedidos[indice].presupuesto,
       fechaSolicitud: cambios.fechaSolicitud ?? pedidos[indice].fechaSolicitud,
-      fechaEntrega: cambios.fechaEntrega ?? pedidos[indice].fechaEntrega,
+      // fechaEntrega y creadorId aceptan null a propósito (sin fecha, sin creador
+      // asignado): `??` trataría ese null como "no cambió" y conservaría el valor
+      // anterior, así que se compara contra undefined para distinguir "no vino en
+      // los cambios" de "se borró a propósito".
+      fechaEntrega:
+        cambios.fechaEntrega !== undefined ? cambios.fechaEntrega : pedidos[indice].fechaEntrega,
       estado: cambios.estado ?? pedidos[indice].estado,
       marcaId: cambios.marcaId ?? pedidos[indice].marcaId,
-      creadorId: cambios.creadorId ?? pedidos[indice].creadorId,
+      creadorId: cambios.creadorId !== undefined ? cambios.creadorId : pedidos[indice].creadorId,
       userId: cambios.userId ?? pedidos[indice].userId,
     }
     this.validate(combinado)
