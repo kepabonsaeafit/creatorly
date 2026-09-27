@@ -5,23 +5,23 @@
 import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
 
 defineProps<{
-  columnas: ReportTableColumn[]
-  filas: Record<string, string>[]
+  columns: ReportTableColumn[]
+  rows: Record<string, string>[]
 }>()
 </script>
 
 <template>
-  <p v-if="filas.length === 0" class="report-table__vacio">No hay datos para este reporte.</p>
+  <p v-if="rows.length === 0" class="report-table__vacio">No hay datos para este reporte.</p>
 
   <table v-else class="report-table">
     <thead>
       <tr>
-        <th v-for="columna in columnas" :key="columna.key">{{ columna.label }}</th>
+        <th v-for="column in columns" :key="column.key">{{ column.label }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(fila, indice) in filas" :key="indice">
-        <td v-for="columna in columnas" :key="columna.key">{{ fila[columna.key] }}</td>
+      <tr v-for="(row, index) in rows" :key="index">
+        <td v-for="column in columns" :key="column.key">{{ row[column.key] }}</td>
       </tr>
     </tbody>
   </table>

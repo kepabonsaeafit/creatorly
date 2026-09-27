@@ -3,7 +3,7 @@
 /** Roles válidos de un User del sistema. */
 export const ROLES = ['admin', 'coordinador'] as const
 
-export type RolUsuario = (typeof ROLES)[number]
+export type UserRole = (typeof ROLES)[number]
 
 /**
  * Usuario interno del sistema (administrador o coordinador).
@@ -11,10 +11,10 @@ export type RolUsuario = (typeof ROLES)[number]
  */
 export interface UserInterface {
   id: string
-  nombre: string
+  name: string
   email: string
   password: string
-  rol: RolUsuario
+  role: UserRole
   createdAt: string
   updatedAt: string
 }

@@ -8,11 +8,11 @@ import { computed } from 'vue'
 import ActivityList from '@/components/ActivityList.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
-import { PedidoService } from '@/services/PedidoService'
+import { OrderService } from '@/services/OrderService'
 
 // computed variables
-const stats = computed(() => PedidoService.getStats())
-const recentPedidos = computed(() => PedidoService.getRecentPedidos())
+const stats = computed(() => OrderService.getStats())
+const recentOrders = computed(() => OrderService.getRecentOrders())
 </script>
 
 <template>
@@ -23,7 +23,7 @@ const recentPedidos = computed(() => PedidoService.getRecentPedidos())
 
     <div class="dashboard__panels">
       <DashboardCard title="Pedidos recientes">
-        <ActivityList :items="recentPedidos" />
+        <ActivityList :items="recentOrders" />
       </DashboardCard>
 
       <DashboardCard title="Gráficos del negocio">
