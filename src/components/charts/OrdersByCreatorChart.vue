@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import type { ChartData, ChartOptions } from 'chart.js'
@@ -10,6 +10,7 @@ import BaseChart from '@/components/charts/BaseChart.vue'
 import type { OrdersByCreatorDTO } from '@/dtos/OrdersByCreatorDTO'
 import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
 
+// props
 const props = defineProps<{ items: OrdersByCreatorDTO[] }>()
 
 // computed variables

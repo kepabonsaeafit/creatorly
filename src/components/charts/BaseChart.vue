@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import {
@@ -35,6 +35,7 @@ Chart.register(
   Tooltip,
 )
 
+// props
 interface Props {
   type: ChartType
   data: ChartData
@@ -43,9 +44,19 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// state
+// reactive variables
 const canvas = ref<HTMLCanvasElement | null>(null)
 let chart: Chart | null = null
+
+// watchers
+watch(
+  () => [props.type, props.data, props.options],
+  () => {
+    destroy()
+    render()
+  },
+  { deep: true },
+)
 
 // functions
 function render(): void {
@@ -64,15 +75,6 @@ function destroy(): void {
 
 onMounted(render)
 onUnmounted(destroy)
-
-watch(
-  () => [props.type, props.data, props.options],
-  () => {
-    destroy()
-    render()
-  },
-  { deep: true },
-)
 </script>
 
 <template>

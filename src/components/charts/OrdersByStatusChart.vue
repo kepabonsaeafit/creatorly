@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import type { ChartData, ChartOptions } from 'chart.js'
@@ -11,6 +11,7 @@ import type { OrdersByStatusDTO } from '@/dtos/OrdersByStatusDTO'
 import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import { formatStatus } from '@/utils/labels'
 
+// props
 const props = withDefaults(defineProps<{ items: OrdersByStatusDTO[]; showLegend?: boolean }>(), {
   showLegend: true,
 })

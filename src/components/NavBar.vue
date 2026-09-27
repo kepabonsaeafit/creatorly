@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'
@@ -12,8 +12,8 @@ import { formatRole } from '@/utils/labels'
 
 const router = useRouter()
 
-// state
-/** Catálogo completo de links; el router decide cuáles exigen el rol de administrador. */
+// reactive variables
+/** Full link catalog; the router decides which ones require the admin role. */
 const LINKS: NavLink[] = [
   { name: 'home', label: 'Home' },
   { name: 'orders', label: 'Orders' },
@@ -23,8 +23,8 @@ const LINKS: NavLink[] = [
 ]
 
 // computed variables
-// El rol sale de AuthService y no del SessionStore: las views y los componentes
-// solo hablan con services (regla 5 de AGENTS.md).
+// The role comes from AuthService, not from SessionStore: views and components
+// only talk to services (rule 5 of AGENTS.md).
 const currentUser = computed(() => AuthService.getCurrentUser())
 
 const initials = computed(() => {
@@ -40,9 +40,9 @@ const initials = computed(() => {
 const isAdmin = computed(() => AuthService.isAdmin())
 
 /**
- * Un coordinador no ve los links solo-admin; el guard del router los sigue
- * bloqueando igual. El router (meta.admin de cada ruta) es la única fuente
- * de qué rutas son solo-admin.
+ * A coordinator does not see admin-only links; the router guard still
+ * blocks them regardless. The router (each route's meta.admin) is the
+ * only source of which routes are admin-only.
  */
 const links = computed(() =>
   LINKS.filter((link) => !router.resolve({ name: link.name }).meta.admin || isAdmin.value),

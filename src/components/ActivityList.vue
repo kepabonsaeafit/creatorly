@@ -1,10 +1,11 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import ActivityItem from '@/components/ActivityItem.vue'
 import type { OrderActivity } from '@/interfaces/OrderActivityInterface'
 
+// props
 defineProps<{ items: OrderActivity[] }>()
 </script>
 

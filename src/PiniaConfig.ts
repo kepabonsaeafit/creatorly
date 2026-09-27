@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { storeToRefs } from 'pinia'
@@ -21,7 +21,7 @@ import { useCreatorStore } from '@/stores/CreatorStore'
 import { useOrderStore } from '@/stores/OrderStore'
 import { useUserStore } from '@/stores/UserStore'
 
-/** Las cuatro colecciones de una siembra completa, con las referencias por id ya resueltas. */
+/** The four collections of a full seed, with id references already resolved. */
 export interface SeedData {
   users: UserInterface[]
   creators: CreatorInterface[]
@@ -29,10 +29,10 @@ export interface SeedData {
   orders: OrderInterface[]
 }
 
-// Se llaman generateSeed/persistSeed (no generate/persist) para no colisionar
-// con los helpers genéricos hydrate<T>/persist<T> de más abajo, que ya usaban
-// ese nombre antes de esta traducción.
-/** Genera las cuatro colecciones; OrderSeeder recibe las otras tres para referenciarlas por id (ADR-0001). */
+// Named generateSeed/persistSeed (not generate/persist) to avoid colliding
+// with the generic hydrate<T>/persist<T> helpers below, which already used
+// that name before this translation.
+/** Generates the four collections; OrderSeeder receives the other three to reference them by id (ADR-0001). */
 function generateSeed(): SeedData {
   const users = seedUsers()
   const creators = seedCreators()
@@ -41,7 +41,7 @@ function generateSeed(): SeedData {
   return { users, creators, brands, orders }
 }
 
-/** Escribe las cuatro colecciones en LocalStorage. */
+/** Writes the four collections to LocalStorage. */
 function persistSeed(seedData: SeedData): void {
   StorageService.write('users', seedData.users)
   StorageService.write('creators', seedData.creators)
@@ -49,28 +49,28 @@ function persistSeed(seedData: SeedData): void {
   StorageService.write('orders', seedData.orders)
 }
 
-/** Siembra si la "base de datos" está vacía. */
+/** Seeds if the "database" is empty. */
 function ensureSeeded(): void {
   if (!StorageService.hasData('users') && !StorageService.hasData('orders')) {
     persistSeed(generateSeed())
   }
 }
 
-/** Carga el estado inicial de un store de colección desde LocalStorage. */
+/** Loads a collection store's initial state from LocalStorage. */
 function hydrate<T>(items: Ref<T[]>, collection: CollectionName): void {
   items.value = StorageService.read<T>(collection)
 }
 
-/** Persiste cada cambio del store de colección en LocalStorage. */
+/** Persists every change of the collection store to LocalStorage. */
 function persist<T>(items: Ref<T[]>, collection: CollectionName): void {
   watch(items, (value) => StorageService.write(collection, value), { deep: true })
 }
 
 /**
- * Limpia LocalStorage y vuelve a sembrar. Escribe en los stores además de en
- * LocalStorage para no depender de que el watcher de `persist` alcance a
- * correr. Quien la llama debe cerrar la sesión: la siembra genera users
- * nuevos, así que el id de la sesión anterior deja de existir.
+ * Clears LocalStorage and seeds again. Writes to the stores in addition to
+ * LocalStorage so it does not depend on the `persist` watcher having a
+ * chance to run. The caller must log out: seeding generates new users,
+ * so the previous session's id stops existing.
  */
 export function resetDemoData(): void {
   StorageService.clearAll()
@@ -83,8 +83,8 @@ export function resetDemoData(): void {
 }
 
 /**
- * Hidrata los stores de colección desde LocalStorage (sembrando antes si
- * está vacío) y conecta la persistencia automática de cada uno.
+ * Hydrates the collection stores from LocalStorage (seeding first if
+ * empty) and wires each one's automatic persistence.
  */
 export function initPinia(): void {
   ensureSeeded()

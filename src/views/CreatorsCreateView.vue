@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // external imports
 import { ref } from 'vue'
@@ -14,7 +14,7 @@ import { CreatorService } from '@/services/CreatorService'
 const router = useRouter()
 const toast = useToast()
 
-// state
+// reactive variables
 const error = ref('')
 const saving = ref(false)
 

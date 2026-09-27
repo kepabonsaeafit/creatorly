@@ -1,6 +1,7 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
+// props
 withDefaults(defineProps<{ title?: string }>(), {
   title: '',
 })

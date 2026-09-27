@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // internal imports
 import type { OrderInterface } from '@/interfaces/OrderInterface'
@@ -9,10 +9,12 @@ import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import { formatStatus } from '@/utils/labels'
 
+// props
 withDefaults(defineProps<{ orders: OrderInterface[]; actionable?: boolean }>(), {
   actionable: false,
 })
 
+// emits
 const emit = defineEmits<{ delete: [id: string] }>()
 
 // functions

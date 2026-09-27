@@ -1,15 +1,15 @@
-// Felipe Gómez
+// Author: Felipe Gómez
 
 /**
- * Lee variables de marca de src/assets/base.css en tiempo de ejecución
- * (ADR-0003: los colores de las series de Chart.js salen de la marca,
- * nunca de valores mágicos en la configuración del gráfico).
+ * Reads a brand variable from src/assets/base.css at runtime
+ * (ADR-0003: Chart.js series colors come from the brand, never from
+ * magic values in the chart configuration).
  */
 function readCssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 }
 
-/** Paleta de series para los gráficos de Reportes, en el orden en que se asignan. */
+/** Series palette for the Reports charts, in assignment order. */
 export function getChartPalette(): string[] {
   return [
     readCssVar('--color-primary'),

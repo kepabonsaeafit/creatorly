@@ -1,6 +1,6 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Un ítem de la actividad reciente del HomeView. */
+/** An item of the recent activity shown in HomeView. */
 export interface OrderActivity {
   id: string
   title: string

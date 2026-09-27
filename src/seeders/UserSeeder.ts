@@ -1,10 +1,10 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Datos ficticios de usuarios. */
+/** Fake user data. */
 export function seedUsers(): UserInterface[] {
   return [
     {

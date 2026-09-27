@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // external imports
 import { ref } from 'vue'
@@ -7,6 +7,7 @@ import { ref } from 'vue'
 // internal imports
 import type { CreateCreatorDTO } from '@/dtos/CreateCreatorDTO'
 
+// props
 interface Props {
   initial?: Partial<CreateCreatorDTO>
   editMode?: boolean
@@ -21,9 +22,10 @@ const props = withDefaults(defineProps<Props>(), {
   error: '',
 })
 
+// emits
 const emit = defineEmits<{ submit: [creatorData: CreateCreatorDTO] }>()
 
-// state
+// reactive variables
 const name = ref(props.initial.name ?? '')
 const niche = ref(props.initial.niche ?? '')
 const contentType = ref(props.initial.contentType ?? '')

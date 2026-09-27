@@ -1,9 +1,9 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Tipos de reporte disponibles en ReportsView. */
+/** Report types available in ReportsView. */
 export type ReportType = 'month' | 'status' | 'creator' | 'brand'
 
-/** Una opción del selector de tipo de reporte de ReportsView. */
+/** An option of ReportsView's report-type selector. */
 export interface ReportOption {
   id: ReportType
   label: string

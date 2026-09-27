@@ -1,8 +1,8 @@
-// Felipe Gómez
+// Author: Felipe Gómez
 
 /**
- * Agregación de pedidos y presupuesto por mes de solicitud, para la vista de Reportes.
- * No deriva de OrderInterface: es un DTO de lectura, no de escritura.
+ * Aggregation of orders and budget per request month, for the Reports view.
+ * Does not derive from OrderInterface: it is a read DTO, not a write one.
  */
 export interface OrdersByMonthDTO {
   month: string

@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
@@ -25,20 +25,37 @@ export class UserService {
     }
   }
 
+  /**
+   * Gets every user in the store.
+   * @returns All users.
+   */
   static getAll(): UserInterface[] {
     return useUserStore().users
   }
 
-  /** Usuarios con rol coordinador, para el select de coordinador de OrderForm. */
+  /**
+   * Users with the coordinator role, for OrderForm's coordinator select.
+   * @returns The users with the coordinator role.
+   */
   static getCoordinators(): UserInterface[] {
     return this.getAll().filter((user) => user.role === 'coordinator')
   }
 
-  /** Devuelve undefined si no existe, a propósito: el llamador decide cómo manejar la ausencia. */
+  /**
+   * Finds a user by id. Returns `undefined` on purpose if it does not exist:
+   * the caller decides how to handle the absence.
+   * @param id - Id of the user to look up.
+   * @returns The matching user, or `undefined` if not found.
+   */
   static getById(id: string): UserInterface | undefined {
     return useUserStore().users.find((user) => user.id === id)
   }
 
+  /**
+   * Finds a user by email and password.
+   * @param credentials - Email and password to match.
+   * @returns The matching user, or `undefined` if not found.
+   */
   static findByCredentials(credentials: LoginDTO): UserInterface | undefined {
     const normalizedEmail = normalizeEmail(credentials.email ?? '')
     return useUserStore().users.find(
@@ -46,6 +63,12 @@ export class UserService {
     )
   }
 
+  /**
+   * Validates and creates a new user.
+   * @param userData - Data required to create the user.
+   * @returns The created user, with its id and timestamps.
+   * @throws {Error} If any required field is missing or invalid.
+   */
   static create(userData: CreateUserDTO): UserInterface {
     const normalizedData: CreateUserDTO = {
       ...userData,
@@ -64,6 +87,13 @@ export class UserService {
     return newUser
   }
 
+  /**
+   * Validates and applies partial changes to a user.
+   * @param id - Id of the user to update.
+   * @param changes - Partial fields to change.
+   * @returns The updated user, or `undefined` if not found.
+   * @throws {Error} If the merged data fails validation.
+   */
   static update(id: string, changes: Partial<CreateUserDTO>): UserInterface | undefined {
     const users = useUserStore().users
     const index = users.findIndex((user) => user.id === id)
@@ -85,6 +115,11 @@ export class UserService {
     return updated
   }
 
+  /**
+   * Removes a user by id.
+   * @param id - Id of the user to remove.
+   * @returns `true` if it was removed, `false` if not found.
+   */
   static remove(id: string): boolean {
     const users = useUserStore().users
     const index = users.findIndex((user) => user.id === id)
@@ -94,8 +129,11 @@ export class UserService {
   }
 
   /**
-   * Aplica un UserFilterDTO sobre una lista de usuarios y ordena el
-   * resultado por nombre. Usado por UsersIndexView.
+   * Applies a UserFilterDTO over a list of users and sorts the result by
+   * name. Used by UsersIndexView.
+   * @param users - Users to filter.
+   * @param filter - Filter criteria.
+   * @returns The filtered, name-sorted users.
    */
   static filter(users: UserInterface[], filter: UserFilterDTO): UserInterface[] {
     return users
@@ -117,8 +155,12 @@ export class UserService {
   }
 
   /**
-   * La siembra trae un solo admin: si se quitara el rol a sí mismo perdería el
-   * acceso a esta página y no habría forma de devolvérselo desde la interfaz.
+   * The seed brings a single admin: if they removed their own role they would
+   * lose access to this page, with no way to give it back from the interface.
+   * @param currentUserId - Id of the active session's user.
+   * @param id - Id of the user being edited.
+   * @param newRole - Role that would be assigned.
+   * @throws {Error} If the user is changing their own admin role away from admin.
    */
   static validateOwnRoleChange(
     currentUserId: string | undefined,
@@ -130,6 +172,12 @@ export class UserService {
     }
   }
 
+  /**
+   * Validates that a user is not deleting their own active session.
+   * @param currentUserId - Id of the active session's user.
+   * @param id - Id of the user to delete.
+   * @throws {Error} If the id matches the active session's user.
+   */
   static validateDeletion(currentUserId: string | undefined, id: string): void {
     if (id === currentUserId) {
       throw new Error('User: you cannot delete the user you are logged in as')

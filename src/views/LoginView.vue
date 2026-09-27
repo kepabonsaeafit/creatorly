@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { ref } from 'vue'
@@ -10,7 +10,7 @@ import { AuthService } from '@/services/AuthService'
 
 const router = useRouter()
 
-// state
+// reactive variables
 const email = ref('')
 const password = ref('')
 const error = ref('')

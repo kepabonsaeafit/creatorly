@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import type { RouteRecordRaw } from 'vue-router'
@@ -11,7 +11,7 @@ import UsersCreateView from '@/views/UsersCreateView.vue'
 import UsersEditView from '@/views/UsersEditView.vue'
 import UsersIndexView from '@/views/UsersIndexView.vue'
 
-/** Rutas solo-admin, agrupadas por nivel de acceso (no por feature). */
+/** Admin-only routes, grouped by access level (not by feature). */
 export const adminRoutes: RouteRecordRaw[] = [
   {
     path: '/creators',

@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { BudgetByBrandDTO } from '@/dtos/BudgetByBrandDTO'
@@ -57,39 +57,72 @@ export class OrderService {
     }
   }
 
+  /**
+   * Gets every order in the store.
+   * @returns All orders.
+   */
   static getAll(): OrderInterface[] {
     return useOrderStore().orders
   }
 
+  /**
+   * Finds an order by id.
+   * @param id - Id of the order to look up.
+   * @returns The matching order, or `undefined` if not found.
+   */
   static getById(id: string): OrderInterface | undefined {
     return useOrderStore().orders.find((order) => order.id === id)
   }
 
+  /**
+   * Gets the brand that requested an order.
+   * @param order - Order to look up.
+   * @returns The requesting brand, or `undefined` if not found.
+   */
   static getBrand(order: OrderInterface): BrandInterface | undefined {
     return BrandService.getById(order.brandId)
   }
 
+  /**
+   * Gets the creator assigned to an order.
+   * @param order - Order to look up.
+   * @returns The assigned creator, or `undefined` if unassigned or not found.
+   */
   static getCreator(order: OrderInterface): CreatorInterface | undefined {
     return order.creatorId ? CreatorService.getById(order.creatorId) : undefined
   }
 
+  /**
+   * Gets the coordinator (User) assigned to an order.
+   * @param order - Order to look up.
+   * @returns The assigned coordinator, or `undefined` if not found.
+   */
   static getCoordinator(order: OrderInterface): UserInterface | undefined {
     return UserService.getById(order.userId)
   }
 
+  /**
+   * Checks whether an order is in one of the active statuses.
+   * @param order - Order to check.
+   * @returns `true` if the order's status is active.
+   */
   static isActive(order: OrderInterface): boolean {
     return this.ACTIVE_STATUSES.includes(order.status)
   }
 
-  /** KPIs del HomeView. */
+  /**
+   * HomeView's KPIs.
+   * @returns The Home KPI cards.
+   */
   static getStats(): HomeStat[] {
     const orders = this.getAll()
     const activeOrders = orders.filter((order) => this.isActive(order))
     const committedBudget = activeOrders.reduce((sum, order) => sum + order.budget, 0)
 
-    // Comparación por los primeros 7 caracteres ('YYYY-MM') de la fecha local de
-    // hoy y de fechaEntrega, sin pasar por Date: evita que una fecha solo-día se
-    // interprete como medianoche UTC y "se mueva" de mes en zonas al oeste de UTC.
+    // Compared by the first 7 characters ('YYYY-MM') of today's local date and
+    // of deliveryDate, without going through Date: this avoids a date-only
+    // value being interpreted as UTC midnight and "moving" to another month
+    // in timezones west of UTC.
     const currentMonth = todayIso().slice(0, 7)
     const deliveriesThisMonth = orders.filter(
       (order) =>
@@ -100,18 +133,22 @@ export class OrderService {
 
     return [
       { id: 'total', label: 'Total orders', value: orders.length, unit: '' },
-      { id: 'activos', label: 'Active orders', value: activeOrders.length, unit: '' },
+      { id: 'active', label: 'Active orders', value: activeOrders.length, unit: '' },
       {
-        id: 'presupuesto',
+        id: 'budget',
         label: 'Committed budget',
         value: committedBudget,
         unit: '$',
       },
-      { id: 'entregas', label: 'Deliveries this month', value: deliveriesThisMonth, unit: '' },
+      { id: 'deliveries', label: 'Deliveries this month', value: deliveriesThisMonth, unit: '' },
     ]
   }
 
-  /** Actividad reciente del HomeView. */
+  /**
+   * HomeView's recent activity.
+   * @param limit - Maximum number of items to return.
+   * @returns The most recent orders as activity items.
+   */
   static getRecentOrders(limit: number = 5): OrderActivity[] {
     return [...this.getAll()]
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
@@ -124,6 +161,12 @@ export class OrderService {
       }))
   }
 
+  /**
+   * Validates and creates a new order.
+   * @param orderData - Data required to create the order.
+   * @returns The created order, with its id and timestamps.
+   * @throws {Error} If any required field is missing or invalid.
+   */
   static create(orderData: CreateOrderDTO): OrderInterface {
     const normalizedData: CreateOrderDTO = {
       ...orderData,
@@ -144,6 +187,13 @@ export class OrderService {
     return newOrder
   }
 
+  /**
+   * Validates and applies partial changes to an order.
+   * @param id - Id of the order to update.
+   * @param changes - Partial fields to change.
+   * @returns The updated order, or `undefined` if not found.
+   * @throws {Error} If the merged data fails validation.
+   */
   static update(id: string, changes: Partial<CreateOrderDTO>): OrderInterface | undefined {
     const orders = useOrderStore().orders
     const index = orders.findIndex((order) => order.id === id)
@@ -152,10 +202,10 @@ export class OrderService {
       description: changes.description ?? orders[index].description,
       budget: changes.budget ?? orders[index].budget,
       requestDate: changes.requestDate ?? orders[index].requestDate,
-      // deliveryDate y creatorId aceptan null a propósito (sin fecha, sin creador
-      // asignado): `??` trataría ese null como "no cambió" y conservaría el valor
-      // anterior, así que se compara contra undefined para distinguir "no vino en
-      // los cambios" de "se borró a propósito".
+      // deliveryDate and creatorId accept null on purpose (no date, no creator
+      // assigned): `??` would treat that null as "unchanged" and keep the
+      // previous value, so it is compared against undefined to distinguish
+      // "not included in the changes" from "cleared on purpose".
       deliveryDate:
         changes.deliveryDate !== undefined ? changes.deliveryDate : orders[index].deliveryDate,
       status: changes.status ?? orders[index].status,
@@ -173,6 +223,11 @@ export class OrderService {
     return updated
   }
 
+  /**
+   * Removes an order by id.
+   * @param id - Id of the order to remove.
+   * @returns `true` if it was removed, `false` if not found.
+   */
   static remove(id: string): boolean {
     const orders = useOrderStore().orders
     const index = orders.findIndex((order) => order.id === id)
@@ -181,7 +236,12 @@ export class OrderService {
     return true
   }
 
-  /** Aplica un OrderFilterDTO sobre una lista de pedidos, sin ordenar. Usado por ReportsView. */
+  /**
+   * Applies an OrderFilterDTO over a list of orders, unsorted. Used by ReportsView.
+   * @param orders - Orders to filter.
+   * @param filter - Filter criteria.
+   * @returns The filtered orders.
+   */
   static filter(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
     return orders.filter((order) => {
       if (filter.status && order.status !== filter.status) return false
@@ -198,16 +258,22 @@ export class OrderService {
   }
 
   /**
-   * Igual que filter(), pero ordenado por fecha de solicitud descendente
-   * (más recientes primero). Usado por OrdersIndexView; ReportsView sigue
-   * usando filter() sin ordenar porque el orden de su tabla de detalle no
-   * debe cambiar en esta fase.
+   * Same as filter(), but sorted by request date descending (most recent
+   * first). Used by OrdersIndexView; ReportsView keeps using filter()
+   * unsorted because its detail table's order must not change in this phase.
+   * @param orders - Orders to filter.
+   * @param filter - Filter criteria.
+   * @returns The filtered orders, sorted by request date descending.
    */
   static filterSorted(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
     return this.filter(orders, filter).sort((a, b) => b.requestDate.localeCompare(a.requestDate))
   }
 
-  /** Cantidad de pedidos por estado, en el orden fijo del ciclo de vida. */
+  /**
+   * Number of orders per status, in the lifecycle's fixed order.
+   * @param orders - Orders to aggregate.
+   * @returns The order count per status.
+   */
   static getOrdersByStatus(orders: OrderInterface[]): OrdersByStatusDTO[] {
     return STATUSES.map((status) => ({
       status,
@@ -215,7 +281,11 @@ export class OrderService {
     }))
   }
 
-  /** Cantidad de pedidos asignados por creador (excluye pedidos sin creador asignado). */
+  /**
+   * Number of orders assigned per creator (excludes orders with no creator assigned).
+   * @param orders - Orders to aggregate.
+   * @returns The order count per creator, sorted descending.
+   */
   static getOrdersByCreator(orders: OrderInterface[]): OrdersByCreatorDTO[] {
     const counts = new Map<string, number>()
     for (const order of orders) {
@@ -231,7 +301,11 @@ export class OrderService {
       .sort((a, b) => b.count - a.count)
   }
 
-  /** Presupuesto total comprometido por marca. */
+  /**
+   * Total committed budget per brand.
+   * @param orders - Orders to aggregate.
+   * @returns The committed budget per brand, sorted descending.
+   */
   static getBudgetByBrand(orders: OrderInterface[]): BudgetByBrandDTO[] {
     const totals = new Map<string, number>()
     for (const order of orders) {
@@ -246,7 +320,11 @@ export class OrderService {
       .sort((a, b) => b.budget - a.budget)
   }
 
-  /** Cantidad de pedidos y presupuesto por mes de solicitud, ordenado cronológicamente. */
+  /**
+   * Number of orders and budget per request month, sorted chronologically.
+   * @param orders - Orders to aggregate.
+   * @returns The order count and budget per month.
+   */
   static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
     const aggregates = new Map<string, { count: number; budget: number }>()
     for (const order of orders) {
@@ -267,7 +345,11 @@ export class OrderService {
       }))
   }
 
-  /** KPIs de ReportsView, con la misma forma que HomeStat para reusar StatCardGrid. */
+  /**
+   * ReportsView's KPIs, with the same shape as HomeStat to reuse StatCardGrid.
+   * @param orders - Orders to aggregate.
+   * @returns The report KPI cards.
+   */
   static getReportStats(orders: OrderInterface[]): HomeStat[] {
     const totalBudget = orders.reduce((sum, order) => sum + order.budget, 0)
     const approvedCount = orders.filter((order) => order.status === 'approved').length
@@ -275,14 +357,14 @@ export class OrderService {
 
     return [
       { id: 'total', label: 'Orders', value: orders.length, unit: '' },
-      { id: 'presupuesto', label: 'Total budget', value: totalBudget, unit: '$' },
+      { id: 'budget', label: 'Total budget', value: totalBudget, unit: '$' },
       {
-        id: 'promedio',
+        id: 'average',
         label: 'Average budget',
         value: orders.length > 0 ? Math.round(totalBudget / orders.length) : 0,
         unit: '$',
       },
-      { id: 'aprobacion', label: 'Approval rate (%)', value: approvalRate, unit: '' },
+      { id: 'approvalRate', label: 'Approval rate (%)', value: approvalRate, unit: '' },
     ]
   }
 }

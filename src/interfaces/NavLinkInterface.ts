@@ -1,8 +1,8 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 /**
- * Un link del NavBar. Si la ruta exige el rol de administrador lo decide el
- * router (meta.admin de cada ruta): es la única fuente de esa información.
+ * A NavBar link. Whether the route requires the admin role is decided by
+ * the router (each route's meta.admin): it is the only source of that information.
  */
 export interface NavLink {
   name: string

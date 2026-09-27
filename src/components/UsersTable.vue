@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // internal imports
 import type { UserInterface } from '@/interfaces/UserInterface'
@@ -7,15 +7,17 @@ import { confirmDeletion } from '@/utils/confirmDeletion'
 import { formatDate } from '@/utils/formatDate'
 import { formatRole } from '@/utils/labels'
 
+// props
 withDefaults(
   defineProps<{
     users: UserInterface[]
-    /** Id del User de la sesión activa: su fila no ofrece el botón de eliminar. */
+    /** Id of the current session's User: their row does not offer the delete button. */
     currentUserId?: string
   }>(),
   { currentUserId: '' },
 )
 
+// emits
 const emit = defineEmits<{ delete: [id: string] }>()
 
 // functions

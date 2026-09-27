@@ -1,14 +1,14 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 /**
- * AuthService no sigue el patrón `throw new Error(...)` del resto de services
- * (UserService, CreatorService, BrandService, OrderService). login() devuelve
- * { ok, error } porque "credenciales inválidas" no es un dato malformado del
- * programador (como un presupuesto negativo) sino una respuesta legítima y
- * esperada de un formulario de login: la view necesita mostrar el error sin
- * un try/catch. Las validaciones de forma de los otros services SÍ
- * lanzan, porque ahí un dato inválido es un error de programación (DTO mal
- * construido), no una interacción normal del usuario.
+ * AuthService does not follow the `throw new Error(...)` pattern of the other
+ * services (UserService, CreatorService, BrandService, OrderService). login()
+ * returns { ok, error } because "invalid credentials" is not malformed data
+ * from the programmer (like a negative budget) but a legitimate, expected
+ * response of a login form: the view needs to show the error without a
+ * try/catch. The shape validations of the other services DO throw, because
+ * there an invalid value is a programming error (a badly built DTO), not a
+ * normal user interaction.
  */
 
 // internal imports
@@ -20,6 +20,11 @@ import { StorageService } from '@/storage/StorageService'
 import { useSessionStore } from '@/stores/SessionStore'
 
 export class AuthService {
+  /**
+   * Logs a user in by credentials and persists the session.
+   * @param credentials - Email and password to validate.
+   * @returns `{ ok: true }` on success, or `{ ok: false, error }` on failure.
+   */
   static login(credentials: LoginDTO): LoginResult {
     const user = UserService.findByCredentials(credentials)
     if (!user) return { ok: false, error: 'Invalid credentials' }
@@ -28,16 +33,24 @@ export class AuthService {
     return { ok: true }
   }
 
+  /** Logs the current user out and clears the persisted session. */
   static logout(): void {
     useSessionStore().userId = null
     StorageService.clearSession()
   }
 
+  /**
+   * Gets the user of the active session.
+   * @returns The current user, or `undefined` if there is no active session.
+   */
   static getCurrentUser(): UserInterface | undefined {
     return useSessionStore().current
   }
 
-  /** Rol del usuario de la sesión activa; usado por NavBar para decidir qué links mostrar. */
+  /**
+   * Role of the active session's user; used by NavBar to decide which links to show.
+   * @returns `true` if the current user is an admin.
+   */
   static isAdmin(): boolean {
     return useSessionStore().isAdmin
   }

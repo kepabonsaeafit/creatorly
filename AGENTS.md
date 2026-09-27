@@ -84,12 +84,12 @@ La convención de mensajes de commit vive en la sección 10 (Política de git), 
 
 ## 7. Convenciones de archivo (el profesor las revisa en sustentación)
 
-**Encabezado:** primera línea de cada archivo, comentario con el nombre de quien lo escribió — el autor puede ser cualquiera de los 3 integrantes, no asumas que es siempre el mismo.
+**Encabezado:** primera línea de cada archivo, comentario `// Author: Nombre` con el nombre de quien lo escribió — el autor puede ser cualquiera de los 3 integrantes, no asumas que es siempre el mismo.
 
 **Imports agrupados, alfabéticos dentro de cada grupo:**
 
 ```ts
-// Nombre de quien escribe el archivo
+// Author: Nombre de quien escribe el archivo
 
 // external imports
 import { computed, ref } from 'vue';
@@ -100,16 +100,21 @@ import type { PedidoInterface } from '@/interfaces/PedidoInterface';
 import { PedidoService } from '@/services/PedidoService';
 ```
 
-**Secciones dentro de las views** (el profesor pregunta explícitamente por selectores y variables computadas):
+**Secciones dentro de las views y components** (el profesor pregunta explícitamente por selectores y variables computadas), en este orden:
 
 ```ts
+// props
+// emits
 // selectors
-// state
+// reactive variables
 // computed variables
+// watchers
 // functions
 ```
 
-`// selectors` es solo para variables ligadas con `v-model` a un `<select>`; cualquier otra variable reactiva (campos de texto, fechas, número, flags como `error`/`guardando`) va bajo `// state`. Si un archivo no tiene ningún `<select>`, no lleva `// selectors`.
+`// selectors` es solo para variables ligadas con `v-model` a un `<select>`; cualquier otra variable reactiva (campos de texto, fechas, número, flags como `error`/`guardando`) va bajo `// reactive variables`. `// props` va sobre el `defineProps`/`interface Props`, `// emits` sobre el `defineEmits` y `// watchers` sobre cada `watch(...)`. Un archivo solo lleva las secciones que le aplican: si no tiene `<select>`, no lleva `// selectors`; si no recibe props, no lleva `// props`; y así con el resto.
+
+**JSDoc en los services:** cada método público (no `private`) de un service lleva un JSDoc corto en inglés, con `@param` por parámetro, `@returns` si no es `void` y `@throws` cuando el método (o su `validate()`) lanza un `Error`.
 
 **Nombres sin ambigüedad.** Nada de `d`, `p`, `i`, `data`, `temp`. En callbacks: `(pedido) =>`, no `(p) =>`.
 

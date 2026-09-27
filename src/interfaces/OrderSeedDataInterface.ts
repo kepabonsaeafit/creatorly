@@ -1,9 +1,9 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { OrderStatus } from '@/interfaces/OrderInterface'
 
-/** Datos de un pedido ficticio antes de derivarle createdAt/updatedAt en OrderSeeder. */
+/** Data of a fake order before deriving its createdAt/updatedAt in OrderSeeder. */
 export interface OrderSeedData {
   description: string
   budget: number

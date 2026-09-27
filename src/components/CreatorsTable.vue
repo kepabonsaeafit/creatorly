@@ -1,15 +1,17 @@
 <script setup lang="ts">
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // internal imports
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 import { formatCurrency } from '@/utils/formatCurrency'
 
+// props
 withDefaults(defineProps<{ creators: CreatorInterface[]; actionable?: boolean }>(), {
   actionable: false,
 })
 
+// emits
 const emit = defineEmits<{ delete: [id: string] }>()
 
 // functions

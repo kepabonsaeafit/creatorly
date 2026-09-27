@@ -1,9 +1,10 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // internal imports
 import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
 
+// props
 defineProps<{
   columns: ReportTableColumn[]
   rows: Record<string, string>[]

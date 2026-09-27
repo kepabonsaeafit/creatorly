@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import { computed, reactive, ref } from 'vue'
@@ -23,7 +23,7 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
   brandId: undefined,
 })
 
-// state
+// reactive variables
 const text = ref('')
 
 // computed variables

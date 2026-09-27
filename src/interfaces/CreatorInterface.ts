@@ -1,7 +1,7 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 /**
- * Creador UGC del catálogo de la agencia (el talento que produce el contenido).
+ * UGC Creator from the agency catalog (the talent that produces the content).
  */
 export interface CreatorInterface {
   id: string

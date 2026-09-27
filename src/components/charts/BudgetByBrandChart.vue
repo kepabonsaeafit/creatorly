@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import type { ChartData, ChartOptions } from 'chart.js'
@@ -11,6 +11,7 @@ import type { BudgetByBrandDTO } from '@/dtos/BudgetByBrandDTO'
 import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import { formatCurrency } from '@/utils/formatCurrency'
 
+// props
 const props = defineProps<{ items: BudgetByBrandDTO[] }>()
 
 // computed variables
