@@ -4,7 +4,7 @@
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Datos ficticios de creadores. Mismos valores que services/seed.js:39-88. */
+/** Datos ficticios de creadores. */
 export function seedCreadores(): CreadorInterface[] {
   return [
     {

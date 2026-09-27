@@ -30,10 +30,9 @@ function construirPedido(datos: DatosPedidoSeed): PedidoInterface {
 }
 
 /**
- * Datos ficticios de pedidos. Mismos valores que services/seed.js:141-262.
+ * Datos ficticios de pedidos.
  * Recibe marcas/creadores/users ya sembrados para referenciarlos por id,
- * igual que seed.js los captura por posición (seed.js:121-123) antes de
- * construir los pedidos.
+ * capturándolos por posición antes de construir los pedidos.
  */
 export function seedPedidos(
   marcas: MarcaInterface[],

@@ -4,7 +4,7 @@
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Datos ficticios de marcas. Mismos valores que services/seed.js:90-119. */
+/** Datos ficticios de marcas. */
 export function seedMarcas(): MarcaInterface[] {
   return [
     {
