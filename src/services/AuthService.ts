@@ -6,8 +6,7 @@
  * { ok, error } porque "credenciales inválidas" no es un dato malformado del
  * programador (como un presupuesto negativo) sino una respuesta legítima y
  * esperada de un formulario de login: la view necesita mostrar el error sin
- * un try/catch, igual que ya hacía session.js antes de esta migración
- * (session.js:32-38). Las validaciones de forma de los otros services SÍ
+ * un try/catch. Las validaciones de forma de los otros services SÍ
  * lanzan, porque ahí un dato inválido es un error de programación (DTO mal
  * construido), no una interacción normal del usuario.
  */

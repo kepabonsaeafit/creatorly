@@ -4,7 +4,7 @@
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Datos ficticios de usuarios. Mismos valores que services/seed.js:15-37. */
+/** Datos ficticios de usuarios. */
 export function seedUsers(): UserInterface[] {
   return [
     {
