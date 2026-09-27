@@ -2,7 +2,7 @@
 // Felipe Gómez
 
 // external imports
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
@@ -21,14 +21,22 @@ const ESTADOS: EstadoPedido[] = ['solicitado', 'asignado', 'en_produccion', 'ent
 const toast = useToast()
 
 // selectors
-const filtro = reactive<PedidoFiltroDTO>({ estado: undefined, marcaId: undefined, texto: '' })
+const filtro = reactive<Pick<PedidoFiltroDTO, 'estado' | 'marcaId'>>({
+  estado: undefined,
+  marcaId: undefined,
+})
+
+// state
+const texto = ref('')
 
 // computed variables
 const marcas = computed(() => MarcaService.getAll())
 
+const filtroCompleto = computed<PedidoFiltroDTO>(() => ({ ...filtro, texto: texto.value }))
+
 const pedidos = computed(() => {
   const todos = PedidoService.getAll()
-  return PedidoService.filtrarOrdenados(todos, filtro)
+  return PedidoService.filtrarOrdenados(todos, filtroCompleto.value)
 })
 
 const porEstado = computed(() => PedidoService.getPedidosPorEstado(pedidos.value))
@@ -48,7 +56,7 @@ function onEliminar(id: string): void {
 function limpiarFiltros(): void {
   filtro.estado = undefined
   filtro.marcaId = undefined
-  filtro.texto = ''
+  texto.value = ''
 }
 </script>
 
@@ -61,7 +69,7 @@ function limpiarFiltros(): void {
 
     <div class="pedidos__filtros">
       <input
-        v-model="filtro.texto"
+        v-model="texto"
         class="pedidos__filtro-input"
         type="search"
         placeholder="Buscar por descripción…"

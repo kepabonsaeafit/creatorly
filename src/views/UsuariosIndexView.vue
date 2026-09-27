@@ -2,7 +2,7 @@
 // Gerónimo Montes
 
 // external imports
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
@@ -20,20 +20,25 @@ const toast = useToast()
 const ROLES: RolUsuario[] = ['admin', 'coordinador']
 
 // selectors
-const filtro = reactive<UsuarioFiltroDTO>({ rol: undefined, texto: '' })
+const filtro = reactive<Pick<UsuarioFiltroDTO, 'rol'>>({ rol: undefined })
+
+// state
+const texto = ref('')
 
 // computed variables
 const usuarioActual = computed(() => AuthService.getCurrentUser())
 
+const filtroCompleto = computed<UsuarioFiltroDTO>(() => ({ ...filtro, texto: texto.value }))
+
 const usuarios = computed(() => {
   const todos = UserService.getAll()
-  return UserService.filtrar(todos, filtro)
+  return UserService.filtrar(todos, filtroCompleto.value)
 })
 
 // functions
 function limpiarFiltros(): void {
   filtro.rol = undefined
-  filtro.texto = ''
+  texto.value = ''
 }
 
 function onEliminar(id: string): void {
@@ -75,7 +80,7 @@ function onRestablecerDemo(): void {
 
     <div class="usuarios__filtros">
       <input
-        v-model="filtro.texto"
+        v-model="texto"
         class="usuarios__filtro-input"
         type="search"
         placeholder="Buscar por nombre o email…"

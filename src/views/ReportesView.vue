@@ -33,21 +33,31 @@ const OPCIONES_REPORTE: OpcionReporte[] = [
 ]
 
 // selectors
-const filtro = reactive<PedidoFiltroDTO>({
+const filtro = reactive<Pick<PedidoFiltroDTO, 'estado' | 'marcaId' | 'creadorId'>>({
   estado: undefined,
   marcaId: undefined,
   creadorId: undefined,
-  desde: '',
-  hasta: '',
 })
 
 const tipoReporte = ref<TipoReporte>('mes')
+
+// state
+const desde = ref('')
+const hasta = ref('')
 
 // computed variables
 const marcas = computed(() => MarcaService.getAll())
 const creadores = computed(() => CreadorService.getAll())
 
-const pedidosFiltrados = computed(() => PedidoService.filtrar(PedidoService.getAll(), filtro))
+const filtroCompleto = computed<PedidoFiltroDTO>(() => ({
+  ...filtro,
+  desde: desde.value,
+  hasta: hasta.value,
+}))
+
+const pedidosFiltrados = computed(() =>
+  PedidoService.filtrar(PedidoService.getAll(), filtroCompleto.value),
+)
 
 const stats = computed(() => PedidoService.getReportStats(pedidosFiltrados.value))
 const porEstado = computed(() => PedidoService.getPedidosPorEstado(pedidosFiltrados.value))
@@ -116,8 +126,8 @@ function limpiarFiltros(): void {
   filtro.estado = undefined
   filtro.marcaId = undefined
   filtro.creadorId = undefined
-  filtro.desde = ''
-  filtro.hasta = ''
+  desde.value = ''
+  hasta.value = ''
 }
 </script>
 
@@ -149,12 +159,12 @@ function limpiarFiltros(): void {
 
       <label class="reportes__filtro-fecha">
         Desde
-        <input v-model="filtro.desde" class="reportes__filtro-input" type="date" />
+        <input v-model="desde" class="reportes__filtro-input" type="date" />
       </label>
 
       <label class="reportes__filtro-fecha">
         Hasta
-        <input v-model="filtro.hasta" class="reportes__filtro-input" type="date" />
+        <input v-model="hasta" class="reportes__filtro-input" type="date" />
       </label>
 
       <button type="button" class="reportes__limpiar" @click="limpiarFiltros">

@@ -2,7 +2,7 @@
 // Gerónimo Montes
 
 // external imports
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
@@ -13,14 +13,22 @@ import { CreadorService } from '@/services/CreadorService'
 const toast = useToast()
 
 // selectors
-const filtro = reactive<CreadorFiltroDTO>({ nicho: undefined, disponible: undefined, texto: '' })
+const filtro = reactive<Pick<CreadorFiltroDTO, 'nicho' | 'disponible'>>({
+  nicho: undefined,
+  disponible: undefined,
+})
+
+// state
+const texto = ref('')
 
 // computed variables
 const nichos = computed(() => CreadorService.getNichos())
 
+const filtroCompleto = computed<CreadorFiltroDTO>(() => ({ ...filtro, texto: texto.value }))
+
 const creadores = computed(() => {
   const todos = CreadorService.getAll()
-  return CreadorService.filtrar(todos, filtro)
+  return CreadorService.filtrar(todos, filtroCompleto.value)
 })
 
 // functions
@@ -36,7 +44,7 @@ function onEliminar(id: string): void {
 function limpiarFiltros(): void {
   filtro.nicho = undefined
   filtro.disponible = undefined
-  filtro.texto = ''
+  texto.value = ''
 }
 </script>
 
@@ -51,7 +59,7 @@ function limpiarFiltros(): void {
 
     <div class="creadores__filtros">
       <input
-        v-model="filtro.texto"
+        v-model="texto"
         class="creadores__filtro-input"
         type="search"
         placeholder="Buscar por nombre…"
