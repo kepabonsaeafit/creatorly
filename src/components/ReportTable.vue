@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <p v-if="rows.length === 0" class="report-table__vacio">No hay datos para este reporte.</p>
+  <p v-if="rows.length === 0" class="report-table__empty">No hay datos para este reporte.</p>
 
   <table v-else class="report-table">
     <thead>
@@ -28,7 +28,7 @@ defineProps<{
 </template>
 
 <style scoped>
-.report-table__vacio {
+.report-table__empty {
   color: var(--color-text);
   opacity: 0.75;
   padding: 1.5rem 0;

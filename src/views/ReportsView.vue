@@ -130,57 +130,57 @@ function clearFilters(): void {
 </script>
 
 <template>
-  <main class="Panel reportes">
+  <main class="Panel reports">
     <h1>Reportes</h1>
 
-    <div class="reportes__filtros">
-      <select v-model="filters.status" class="reportes__filtro-input">
+    <div class="reports__filters">
+      <select v-model="filters.status" class="reports__filter-input">
         <option :value="undefined">Todos los estados</option>
         <option v-for="option in statusOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
-      <select v-model="filters.brandId" class="reportes__filtro-input">
+      <select v-model="filters.brandId" class="reports__filter-input">
         <option :value="undefined">Todas las marcas</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
         </option>
       </select>
 
-      <select v-model="filters.creatorId" class="reportes__filtro-input">
+      <select v-model="filters.creatorId" class="reports__filter-input">
         <option :value="undefined">Todos los creadores</option>
         <option v-for="creator in creators" :key="creator.id" :value="creator.id">
           {{ creator.name }}
         </option>
       </select>
 
-      <label class="reportes__filtro-fecha">
+      <label class="reports__filter-date">
         Desde
-        <input v-model="from" class="reportes__filtro-input" type="date" />
+        <input v-model="from" class="reports__filter-input" type="date" />
       </label>
 
-      <label class="reportes__filtro-fecha">
+      <label class="reports__filter-date">
         Hasta
-        <input v-model="to" class="reportes__filtro-input" type="date" />
+        <input v-model="to" class="reports__filter-input" type="date" />
       </label>
 
-      <button type="button" class="reportes__limpiar" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="reports__clear" @click="clearFilters">Limpiar filtros</button>
     </div>
 
-    <p v-if="filteredOrders.length === 0" class="reportes__vacio">
+    <p v-if="filteredOrders.length === 0" class="reports__empty">
       No hay pedidos que coincidan con estos filtros.
     </p>
 
     <template v-else>
       <StatCardGrid :stats="stats" />
 
-      <DashboardCard class="reportes__reporte">
-        <div class="reportes__reporte-header">
-          <h2 class="reportes__reporte-titulo">{{ currentReportOption.label }}</h2>
-          <label class="reportes__reporte-selector">
+      <DashboardCard class="reports__report">
+        <div class="reports__report-header">
+          <h2 class="reports__report-title">{{ currentReportOption.label }}</h2>
+          <label class="reports__report-selector">
             Tipo de reporte
-            <select v-model="reportType" class="reportes__filtro-input">
+            <select v-model="reportType" class="reports__filter-input">
               <option v-for="option in REPORT_OPTIONS" :key="option.id" :value="option.id">
                 {{ option.label }}
               </option>
@@ -188,11 +188,11 @@ function clearFilters(): void {
           </label>
         </div>
 
-        <p v-if="reportRows.length === 0" class="reportes__vacio">
+        <p v-if="reportRows.length === 0" class="reports__empty">
           No hay datos para «{{ currentReportOption.label }}» con estos filtros.
         </p>
 
-        <div v-else class="reportes__reporte-cuerpo">
+        <div v-else class="reports__report-body">
           <ReportTable :columns="reportColumns" :rows="reportRows" />
 
           <OrdersByMonthChart v-if="reportType === 'month'" :items="byMonth" />
@@ -202,7 +202,7 @@ function clearFilters(): void {
         </div>
       </DashboardCard>
 
-      <DashboardCard title="Detalle de pedidos" class="reportes__detalle">
+      <DashboardCard title="Detalle de pedidos" class="reports__detail">
         <OrdersTable :orders="filteredOrders" />
       </DashboardCard>
     </template>
@@ -210,7 +210,7 @@ function clearFilters(): void {
 </template>
 
 <style scoped>
-.reportes__filtros {
+.reports__filters {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
@@ -218,7 +218,7 @@ function clearFilters(): void {
   margin: 1.5rem 0;
 }
 
-.reportes__filtro-input {
+.reports__filter-input {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -227,14 +227,14 @@ function clearFilters(): void {
   font: inherit;
 }
 
-.reportes__filtro-fecha {
+.reports__filter-date {
   display: grid;
   gap: 0.25rem;
   font-size: 0.8rem;
   color: var(--color-text);
 }
 
-.reportes__limpiar {
+.reports__clear {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -243,18 +243,18 @@ function clearFilters(): void {
   cursor: pointer;
 }
 
-.reportes__vacio {
+.reports__empty {
   color: var(--color-text);
   opacity: 0.75;
   padding: 2rem 0;
   text-align: center;
 }
 
-.reportes__reporte {
+.reports__report {
   margin-top: 2rem;
 }
 
-.reportes__reporte-header {
+.reports__report-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -263,12 +263,12 @@ function clearFilters(): void {
   margin-bottom: 1.25rem;
 }
 
-.reportes__reporte-titulo {
+.reports__report-title {
   color: var(--color-heading);
   font-size: 1.2rem;
 }
 
-.reportes__reporte-selector {
+.reports__report-selector {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -276,18 +276,18 @@ function clearFilters(): void {
   color: var(--color-text);
 }
 
-.reportes__reporte-cuerpo {
+.reports__report-body {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: 1fr;
 }
 
-.reportes__detalle {
+.reports__detail {
   margin-top: 1.5rem;
 }
 
 @media (min-width: 900px) {
-  .reportes__reporte-cuerpo {
+  .reports__report-body {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
     align-items: start;
   }

@@ -63,24 +63,24 @@ function onSubmit(): void {
 </script>
 
 <template>
-  <form class="pedido-form" @submit.prevent="onSubmit">
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="descripcion">Descripción</label>
+  <form class="order-form" @submit.prevent="onSubmit">
+    <div class="order-form__field">
+      <label class="order-form__label" for="description">Descripción</label>
       <input
-        id="descripcion"
+        id="description"
         v-model="description"
-        class="pedido-form__input"
+        class="order-form__input"
         type="text"
         required
       />
     </div>
 
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="presupuesto">Presupuesto</label>
+    <div class="order-form__field">
+      <label class="order-form__label" for="budget">Presupuesto</label>
       <input
-        id="presupuesto"
+        id="budget"
         v-model.number="budget"
-        class="pedido-form__input"
+        class="order-form__input"
         type="number"
         min="0"
         step="1"
@@ -88,9 +88,9 @@ function onSubmit(): void {
       />
     </div>
 
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="marca">Marca</label>
-      <select id="marca" v-model="brandId" class="pedido-form__input" required>
+    <div class="order-form__field">
+      <label class="order-form__label" for="brand">Marca</label>
+      <select id="brand" v-model="brandId" class="order-form__input" required>
         <option value="" disabled>Selecciona una marca</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
@@ -98,9 +98,9 @@ function onSubmit(): void {
       </select>
     </div>
 
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="creador">Creador</label>
-      <select id="creador" v-model="creatorId" class="pedido-form__input">
+    <div class="order-form__field">
+      <label class="order-form__label" for="creator">Creador</label>
+      <select id="creator" v-model="creatorId" class="order-form__input">
         <option value="">Sin asignar</option>
         <option v-for="creator in creators" :key="creator.id" :value="creator.id">
           {{ creator.name }}
@@ -108,9 +108,9 @@ function onSubmit(): void {
       </select>
     </div>
 
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="coordinador">Coordinador</label>
-      <select id="coordinador" v-model="userId" class="pedido-form__input" required>
+    <div class="order-form__field">
+      <label class="order-form__label" for="coordinator">Coordinador</label>
+      <select id="coordinator" v-model="userId" class="order-form__input" required>
         <option value="" disabled>Selecciona un coordinador</option>
         <option v-for="coordinator in coordinators" :key="coordinator.id" :value="coordinator.id">
           {{ coordinator.name }}
@@ -118,57 +118,57 @@ function onSubmit(): void {
       </select>
     </div>
 
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="fecha-solicitud">Fecha de solicitud</label>
+    <div class="order-form__field">
+      <label class="order-form__label" for="request-date">Fecha de solicitud</label>
       <input
-        id="fecha-solicitud"
+        id="request-date"
         v-model="requestDate"
-        class="pedido-form__input"
+        class="order-form__input"
         type="date"
         required
       />
     </div>
 
-    <div class="pedido-form__field">
-      <label class="pedido-form__label" for="fecha-entrega">Fecha de entrega</label>
-      <input id="fecha-entrega" v-model="deliveryDate" class="pedido-form__input" type="date" />
+    <div class="order-form__field">
+      <label class="order-form__label" for="delivery-date">Fecha de entrega</label>
+      <input id="delivery-date" v-model="deliveryDate" class="order-form__input" type="date" />
     </div>
 
-    <div v-if="editMode" class="pedido-form__field">
-      <label class="pedido-form__label" for="estado">Estado</label>
-      <select id="estado" v-model="status" class="pedido-form__input">
+    <div v-if="editMode" class="order-form__field">
+      <label class="order-form__label" for="status">Estado</label>
+      <select id="status" v-model="status" class="order-form__input">
         <option v-for="option in statusOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
     </div>
 
-    <p v-if="error" class="pedido-form__error">{{ error }}</p>
+    <p v-if="error" class="order-form__error">{{ error }}</p>
 
-    <button class="pedido-form__submit" type="submit" :disabled="saving">
+    <button class="order-form__submit" type="submit" :disabled="saving">
       {{ saving ? 'Guardando…' : editMode ? 'Guardar cambios' : 'Crear pedido' }}
     </button>
   </form>
 </template>
 
 <style scoped>
-.pedido-form {
+.order-form {
   display: grid;
   gap: 1rem;
   max-width: 480px;
 }
 
-.pedido-form__field {
+.order-form__field {
   display: grid;
   gap: 0.35rem;
 }
 
-.pedido-form__label {
+.order-form__label {
   font-size: 0.85rem;
   color: var(--color-text);
 }
 
-.pedido-form__input {
+.order-form__input {
   padding: 0.6rem 0.8rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -177,13 +177,13 @@ function onSubmit(): void {
   font: inherit;
 }
 
-.pedido-form__error {
+.order-form__error {
   color: var(--color-danger);
   font-size: 0.9rem;
   margin: 0;
 }
 
-.pedido-form__submit {
+.order-form__submit {
   margin-top: 0.5rem;
   padding: 0.6rem;
   border: none;
@@ -194,7 +194,7 @@ function onSubmit(): void {
   cursor: pointer;
 }
 
-.pedido-form__submit:disabled {
+.order-form__submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

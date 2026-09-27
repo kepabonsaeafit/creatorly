@@ -31,11 +31,11 @@ function onDelete(id: string): void {
 </script>
 
 <template>
-  <p v-if="orders.length === 0" class="pedidos-table__vacio">
+  <p v-if="orders.length === 0" class="orders-table__empty">
     No hay pedidos que coincidan con estos filtros.
   </p>
 
-  <table v-else class="pedidos-table">
+  <table v-else class="orders-table">
     <thead>
       <tr>
         <th>Descripción</th>
@@ -55,15 +55,15 @@ function onDelete(id: string): void {
         <td>{{ creatorName(order) }}</td>
         <td>{{ formatCurrency(order.budget) }}</td>
         <td>
-          <span class="pedidos-table__badge" :class="`pedidos-table__badge--${order.status}`">
+          <span class="orders-table__badge" :class="`orders-table__badge--${order.status}`">
             {{ formatStatus(order.status) }}
           </span>
         </td>
         <td>{{ formatDate(order.requestDate) }}</td>
         <td>{{ formatDate(order.deliveryDate) }}</td>
-        <td v-if="actionable" class="pedidos-table__acciones">
+        <td v-if="actionable" class="orders-table__actions">
           <RouterLink :to="{ name: 'orders.edit', params: { id: order.id } }">Editar</RouterLink>
-          <button type="button" class="pedidos-table__eliminar" @click="onDelete(order.id)">
+          <button type="button" class="orders-table__delete" @click="onDelete(order.id)">
             Eliminar
           </button>
         </td>
@@ -73,36 +73,36 @@ function onDelete(id: string): void {
 </template>
 
 <style scoped>
-.pedidos-table__vacio {
+.orders-table__empty {
   color: var(--color-text);
   opacity: 0.75;
   padding: 2rem 0;
   text-align: center;
 }
 
-.pedidos-table {
+.orders-table {
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
   display: block;
 }
 
-.pedidos-table th,
-.pedidos-table td {
+.orders-table th,
+.orders-table td {
   text-align: left;
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
 }
 
-.pedidos-table th {
+.orders-table th {
   color: var(--color-text);
   opacity: 0.7;
   font-size: 0.8rem;
   text-transform: uppercase;
 }
 
-.pedidos-table__badge {
+.orders-table__badge {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
@@ -111,19 +111,19 @@ function onDelete(id: string): void {
   color: var(--color-text);
 }
 
-.pedidos-table__badge--delivered,
-.pedidos-table__badge--approved {
+.orders-table__badge--delivered,
+.orders-table__badge--approved {
   background: var(--color-success);
   color: var(--brand-white);
 }
 
-.pedidos-table__acciones {
+.orders-table__actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
 }
 
-.pedidos-table__eliminar {
+.orders-table__delete {
   border: none;
   background: transparent;
   color: var(--color-danger);

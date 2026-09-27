@@ -10,17 +10,17 @@ import { isValidEmail, normalizeEmail } from '@/utils/email'
 import { generateId } from '@/utils/generateId'
 
 export class UserService {
-  private static validate(datos: CreateUserDTO): void {
-    if (!datos.name || typeof datos.name !== 'string') {
+  private static validate(userData: CreateUserDTO): void {
+    if (!userData.name || typeof userData.name !== 'string') {
       throw new Error('User: el nombre es obligatorio')
     }
-    if (!isValidEmail(datos.email ?? '')) {
+    if (!isValidEmail(userData.email ?? '')) {
       throw new Error('User: el email no tiene un formato válido')
     }
-    if (!datos.password || typeof datos.password !== 'string') {
+    if (!userData.password || typeof userData.password !== 'string') {
       throw new Error('User: la contraseña es obligatoria')
     }
-    if (!ROLES.includes(datos.role)) {
+    if (!ROLES.includes(userData.role)) {
       throw new Error(`User: el rol debe ser uno de ${ROLES.join(' | ')}`)
     }
   }
@@ -31,65 +31,65 @@ export class UserService {
 
   /** Usuarios con rol coordinador, para el select de coordinador de OrderForm. */
   static getCoordinators(): UserInterface[] {
-    return this.getAll().filter((usuario) => usuario.role === 'coordinator')
+    return this.getAll().filter((user) => user.role === 'coordinator')
   }
 
   /** Devuelve undefined si no existe, a propósito: el llamador decide cómo manejar la ausencia. */
   static getById(id: string): UserInterface | undefined {
-    return useUserStore().users.find((usuario) => usuario.id === id)
+    return useUserStore().users.find((user) => user.id === id)
   }
 
-  static findByCredentials(credenciales: LoginDTO): UserInterface | undefined {
-    const emailNormalizado = normalizeEmail(credenciales.email ?? '')
+  static findByCredentials(credentials: LoginDTO): UserInterface | undefined {
+    const normalizedEmail = normalizeEmail(credentials.email ?? '')
     return useUserStore().users.find(
-      (usuario) => usuario.email === emailNormalizado && usuario.password === credenciales.password,
+      (user) => user.email === normalizedEmail && user.password === credentials.password,
     )
   }
 
-  static create(datos: CreateUserDTO): UserInterface {
-    const normalizado: CreateUserDTO = {
-      ...datos,
-      role: datos.role ?? 'coordinator',
-      email: normalizeEmail(datos.email),
+  static create(userData: CreateUserDTO): UserInterface {
+    const normalizedData: CreateUserDTO = {
+      ...userData,
+      role: userData.role ?? 'coordinator',
+      email: normalizeEmail(userData.email),
     }
-    this.validate(normalizado)
-    const ahora = new Date().toISOString()
-    const nuevoUsuario: UserInterface = {
-      ...normalizado,
+    this.validate(normalizedData)
+    const now = new Date().toISOString()
+    const newUser: UserInterface = {
+      ...normalizedData,
       id: generateId(),
-      createdAt: ahora,
-      updatedAt: ahora,
+      createdAt: now,
+      updatedAt: now,
     }
-    useUserStore().users.push(nuevoUsuario)
-    return nuevoUsuario
+    useUserStore().users.push(newUser)
+    return newUser
   }
 
-  static update(id: string, cambios: Partial<CreateUserDTO>): UserInterface | undefined {
-    const usuarios = useUserStore().users
-    const indice = usuarios.findIndex((usuario) => usuario.id === id)
-    if (indice === -1) return undefined
-    const combinado: CreateUserDTO = {
-      name: cambios.name ?? usuarios[indice].name,
-      email: cambios.email ?? usuarios[indice].email,
-      password: cambios.password ?? usuarios[indice].password,
-      role: cambios.role ?? usuarios[indice].role,
+  static update(id: string, changes: Partial<CreateUserDTO>): UserInterface | undefined {
+    const users = useUserStore().users
+    const index = users.findIndex((user) => user.id === id)
+    if (index === -1) return undefined
+    const merged: CreateUserDTO = {
+      name: changes.name ?? users[index].name,
+      email: changes.email ?? users[index].email,
+      password: changes.password ?? users[index].password,
+      role: changes.role ?? users[index].role,
     }
-    this.validate(combinado)
-    const actualizado: UserInterface = {
-      ...usuarios[indice],
-      ...combinado,
-      email: normalizeEmail(combinado.email),
+    this.validate(merged)
+    const updated: UserInterface = {
+      ...users[index],
+      ...merged,
+      email: normalizeEmail(merged.email),
       updatedAt: new Date().toISOString(),
     }
-    usuarios[indice] = actualizado
-    return actualizado
+    users[index] = updated
+    return updated
   }
 
   static remove(id: string): boolean {
-    const usuarios = useUserStore().users
-    const indice = usuarios.findIndex((usuario) => usuario.id === id)
-    if (indice === -1) return false
-    usuarios.splice(indice, 1)
+    const users = useUserStore().users
+    const index = users.findIndex((user) => user.id === id)
+    if (index === -1) return false
+    users.splice(index, 1)
     return true
   }
 
@@ -97,23 +97,23 @@ export class UserService {
    * Aplica un UserFilterDTO sobre una lista de usuarios y ordena el
    * resultado por nombre. Usado por UsersIndexView.
    */
-  static filter(usuarios: UserInterface[], filtro: UserFilterDTO): UserInterface[] {
-    return usuarios
-      .filter((usuario) => {
-        if (filtro.role && usuario.role !== filtro.role) return false
-        if (filtro.text) {
-          const texto = filtro.text.trim().toLowerCase()
+  static filter(users: UserInterface[], filter: UserFilterDTO): UserInterface[] {
+    return users
+      .filter((user) => {
+        if (filter.role && user.role !== filter.role) return false
+        if (filter.text) {
+          const text = filter.text.trim().toLowerCase()
           if (
-            texto &&
-            !usuario.name.toLowerCase().includes(texto) &&
-            !usuario.email.toLowerCase().includes(texto)
+            text &&
+            !user.name.toLowerCase().includes(text) &&
+            !user.email.toLowerCase().includes(text)
           ) {
             return false
           }
         }
         return true
       })
-      .sort((primero, segundo) => primero.name.localeCompare(segundo.name))
+      .sort((first, second) => first.name.localeCompare(second.name))
   }
 
   /**
@@ -121,17 +121,17 @@ export class UserService {
    * acceso a esta página y no habría forma de devolvérselo desde la interfaz.
    */
   static validateOwnRoleChange(
-    usuarioActualId: string | undefined,
+    currentUserId: string | undefined,
     id: string,
-    rolNuevo: UserRole,
+    newRole: UserRole,
   ): void {
-    if (id === usuarioActualId && rolNuevo !== 'admin') {
+    if (id === currentUserId && newRole !== 'admin') {
       throw new Error('User: no puedes quitarte el rol de admin mientras es tu propia sesión')
     }
   }
 
-  static validateDeletion(usuarioActualId: string | undefined, id: string): void {
-    if (id === usuarioActualId) {
+  static validateDeletion(currentUserId: string | undefined, id: string): void {
+    if (id === currentUserId) {
       throw new Error('User: no puedes eliminar el usuario con el que iniciaste sesión')
     }
   }

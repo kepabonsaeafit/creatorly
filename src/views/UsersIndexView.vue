@@ -69,41 +69,39 @@ function onResetDemo(): void {
 </script>
 
 <template>
-  <main class="Panel usuarios">
-    <div class="usuarios__header">
+  <main class="Panel users">
+    <div class="users__header">
       <h1>Usuarios</h1>
-      <RouterLink class="usuarios__crear" :to="{ name: 'users.create' }">
-        Nuevo usuario
-      </RouterLink>
+      <RouterLink class="users__create" :to="{ name: 'users.create' }"> Nuevo usuario </RouterLink>
     </div>
 
-    <div class="usuarios__filtros">
+    <div class="users__filters">
       <input
         v-model="text"
-        class="usuarios__filtro-input"
+        class="users__filter-input"
         type="search"
         placeholder="Buscar por nombre o email…"
       />
 
-      <select v-model="filters.role" class="usuarios__filtro-input">
+      <select v-model="filters.role" class="users__filter-input">
         <option :value="undefined">Todos los roles</option>
         <option v-for="option in roleOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
-      <button type="button" class="usuarios__limpiar" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="users__clear" @click="clearFilters">Limpiar filtros</button>
     </div>
 
     <UsersTable :users="users" :current-user-id="currentUser?.id ?? ''" @delete="onDelete" />
 
-    <section class="usuarios__seccion">
-      <h2 class="usuarios__titulo">Datos demo</h2>
-      <p class="usuarios__demo-texto">
+    <section class="users__section">
+      <h2 class="users__title">Datos demo</h2>
+      <p class="users__demo-text">
         Borra todo lo guardado en el navegador y vuelve a sembrar los datos ficticios iniciales.
         Cierra la sesión, porque la siembra genera usuarios nuevos.
       </p>
-      <button type="button" class="usuarios__demo-boton" @click="onResetDemo">
+      <button type="button" class="users__demo-button" @click="onResetDemo">
         Restablecer datos demo
       </button>
     </section>
@@ -111,7 +109,7 @@ function onResetDemo(): void {
 </template>
 
 <style scoped>
-.usuarios__header {
+.users__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,7 +117,7 @@ function onResetDemo(): void {
   flex-wrap: wrap;
 }
 
-.usuarios__crear {
+.users__create {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   background: var(--color-primary);
@@ -127,14 +125,14 @@ function onResetDemo(): void {
   font-weight: 600;
 }
 
-.usuarios__filtros {
+.users__filters {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
   margin: 1.5rem 0;
 }
 
-.usuarios__filtro-input {
+.users__filter-input {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -143,7 +141,7 @@ function onResetDemo(): void {
   font: inherit;
 }
 
-.usuarios__limpiar {
+.users__clear {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -152,25 +150,25 @@ function onResetDemo(): void {
   cursor: pointer;
 }
 
-.usuarios__seccion {
+.users__section {
   margin-top: 2rem;
 }
 
-.usuarios__titulo {
+.users__title {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--color-heading);
   margin-bottom: 1rem;
 }
 
-.usuarios__demo-texto {
+.users__demo-text {
   color: var(--color-text);
   opacity: 0.8;
   max-width: 52ch;
   margin-bottom: 1rem;
 }
 
-.usuarios__demo-boton {
+.users__demo-button {
   padding: 0.5rem 1rem;
   border: 1px solid var(--color-danger);
   border-radius: 6px;

@@ -59,56 +59,56 @@ function clearFilters(): void {
 </script>
 
 <template>
-  <main class="Panel pedidos">
-    <div class="pedidos__header">
+  <main class="Panel orders">
+    <div class="orders__header">
       <h1>Pedidos</h1>
-      <RouterLink class="pedidos__crear" :to="{ name: 'orders.create' }">Nuevo pedido</RouterLink>
+      <RouterLink class="orders__create" :to="{ name: 'orders.create' }">Nuevo pedido</RouterLink>
     </div>
 
-    <div class="pedidos__filtros">
+    <div class="orders__filters">
       <input
         v-model="text"
-        class="pedidos__filtro-input"
+        class="orders__filter-input"
         type="search"
         placeholder="Buscar por descripción…"
       />
 
-      <select v-model="filters.status" class="pedidos__filtro-input">
+      <select v-model="filters.status" class="orders__filter-input">
         <option :value="undefined">Todos los estados</option>
         <option v-for="option in statusOptions" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
-      <select v-model="filters.brandId" class="pedidos__filtro-input">
+      <select v-model="filters.brandId" class="orders__filter-input">
         <option :value="undefined">Todas las marcas</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
         </option>
       </select>
 
-      <button type="button" class="pedidos__limpiar" @click="clearFilters">Limpiar filtros</button>
+      <button type="button" class="orders__clear" @click="clearFilters">Limpiar filtros</button>
     </div>
 
-    <DashboardCard v-if="orders.length > 0" class="pedidos__grafico">
-      <div class="pedidos__grafico-header">
-        <h2 class="pedidos__grafico-titulo">Pedidos por estado</h2>
-        <span class="pedidos__grafico-total">{{ orders.length }} en total</span>
+    <DashboardCard v-if="orders.length > 0" class="orders__chart">
+      <div class="orders__chart-header">
+        <h2 class="orders__chart-title">Pedidos por estado</h2>
+        <span class="orders__chart-total">{{ orders.length }} en total</span>
       </div>
 
-      <div class="pedidos__grafico-cuerpo">
-        <div class="pedidos__grafico-chart">
+      <div class="orders__chart-body">
+        <div class="orders__chart-canvas">
           <OrdersByStatusChart :items="byStatus" :show-legend="false" />
         </div>
 
-        <ul class="pedidos__grafico-leyenda">
-          <li v-for="(row, index) in byStatus" :key="row.status" class="pedidos__grafico-item">
+        <ul class="orders__chart-legend">
+          <li v-for="(row, index) in byStatus" :key="row.status" class="orders__chart-item">
             <span
-              class="pedidos__grafico-punto"
+              class="orders__chart-dot"
               :style="{ backgroundColor: statusPalette[index] }"
             ></span>
-            <span class="pedidos__grafico-label">{{ formatStatus(row.status) }}</span>
-            <span class="pedidos__grafico-valor">{{ row.count }}</span>
+            <span class="orders__chart-label">{{ formatStatus(row.status) }}</span>
+            <span class="orders__chart-value">{{ row.count }}</span>
           </li>
         </ul>
       </div>
@@ -119,7 +119,7 @@ function clearFilters(): void {
 </template>
 
 <style scoped>
-.pedidos__header {
+.orders__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -127,7 +127,7 @@ function clearFilters(): void {
   flex-wrap: wrap;
 }
 
-.pedidos__crear {
+.orders__create {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   background: var(--color-primary);
@@ -135,19 +135,19 @@ function clearFilters(): void {
   font-weight: 600;
 }
 
-.pedidos__filtros {
+.orders__filters {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
   margin: 1.5rem 0;
 }
 
-.pedidos__grafico {
+.orders__chart {
   margin-bottom: 1.5rem;
   max-width: 560px;
 }
 
-.pedidos__grafico-header {
+.orders__chart-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -155,40 +155,40 @@ function clearFilters(): void {
   margin-bottom: 1rem;
 }
 
-.pedidos__grafico-titulo {
+.orders__chart-title {
   color: var(--color-heading);
   font-size: 1.05rem;
 }
 
-.pedidos__grafico-total {
+.orders__chart-total {
   font-size: 0.8rem;
   color: var(--color-text);
   opacity: 0.65;
 }
 
-.pedidos__grafico-cuerpo {
+.orders__chart-body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
-.pedidos__grafico-chart {
+.orders__chart-canvas {
   width: 150px;
   flex-shrink: 0;
 }
 
-.pedidos__grafico-chart :deep(.base-chart) {
+.orders__chart-canvas :deep(.base-chart) {
   height: 150px;
 }
 
-.pedidos__grafico-leyenda {
+.orders__chart-legend {
   display: grid;
   gap: 0.5rem;
   flex: 1;
   list-style: none;
 }
 
-.pedidos__grafico-item {
+.orders__chart-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -196,23 +196,23 @@ function clearFilters(): void {
   color: var(--color-text);
 }
 
-.pedidos__grafico-punto {
+.orders__chart-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.pedidos__grafico-label {
+.orders__chart-label {
   flex: 1;
 }
 
-.pedidos__grafico-valor {
+.orders__chart-value {
   font-weight: 600;
   color: var(--color-heading);
 }
 
-.pedidos__filtro-input {
+.orders__filter-input {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -221,7 +221,7 @@ function clearFilters(): void {
   font: inherit;
 }
 
-.pedidos__limpiar {
+.orders__clear {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;

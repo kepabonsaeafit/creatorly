@@ -43,42 +43,42 @@ function onSubmit(): void {
 </script>
 
 <template>
-  <form class="creador-form" @submit.prevent="onSubmit">
-    <div class="creador-form__field">
-      <label class="creador-form__label" for="nombre">Nombre</label>
-      <input id="nombre" v-model="name" class="creador-form__input" type="text" required />
+  <form class="creator-form" @submit.prevent="onSubmit">
+    <div class="creator-form__field">
+      <label class="creator-form__label" for="name">Nombre</label>
+      <input id="name" v-model="name" class="creator-form__input" type="text" required />
     </div>
 
-    <div class="creador-form__field">
-      <label class="creador-form__label" for="nicho">Nicho</label>
+    <div class="creator-form__field">
+      <label class="creator-form__label" for="niche">Nicho</label>
       <input
-        id="nicho"
+        id="niche"
         v-model="niche"
-        class="creador-form__input"
+        class="creator-form__input"
         type="text"
         placeholder="belleza, gaming, moda…"
         required
       />
     </div>
 
-    <div class="creador-form__field">
-      <label class="creador-form__label" for="tipo-contenido">Tipo de contenido</label>
+    <div class="creator-form__field">
+      <label class="creator-form__label" for="content-type">Tipo de contenido</label>
       <input
-        id="tipo-contenido"
+        id="content-type"
         v-model="contentType"
-        class="creador-form__input"
+        class="creator-form__input"
         type="text"
         placeholder="TikTok, YouTube, Instagram…"
         required
       />
     </div>
 
-    <div class="creador-form__field">
-      <label class="creador-form__label" for="tarifa">Tarifa</label>
+    <div class="creator-form__field">
+      <label class="creator-form__label" for="rate">Tarifa</label>
       <input
-        id="tarifa"
+        id="rate"
         v-model.number="rate"
-        class="creador-form__input"
+        class="creator-form__input"
         type="number"
         min="0"
         step="1"
@@ -86,37 +86,37 @@ function onSubmit(): void {
       />
     </div>
 
-    <div class="creador-form__check">
-      <input id="disponible" v-model="available" type="checkbox" />
-      <label for="disponible">Disponible para nuevos pedidos</label>
+    <div class="creator-form__check">
+      <input id="available" v-model="available" type="checkbox" />
+      <label for="available">Disponible para nuevos pedidos</label>
     </div>
 
-    <p v-if="error" class="creador-form__error">{{ error }}</p>
+    <p v-if="error" class="creator-form__error">{{ error }}</p>
 
-    <button class="creador-form__submit" type="submit" :disabled="saving">
+    <button class="creator-form__submit" type="submit" :disabled="saving">
       {{ saving ? 'Guardando…' : editMode ? 'Guardar cambios' : 'Crear creador' }}
     </button>
   </form>
 </template>
 
 <style scoped>
-.creador-form {
+.creator-form {
   display: grid;
   gap: 1rem;
   max-width: 480px;
 }
 
-.creador-form__field {
+.creator-form__field {
   display: grid;
   gap: 0.35rem;
 }
 
-.creador-form__label {
+.creator-form__label {
   font-size: 0.85rem;
   color: var(--color-text);
 }
 
-.creador-form__input {
+.creator-form__input {
   padding: 0.6rem 0.8rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -125,7 +125,7 @@ function onSubmit(): void {
   font: inherit;
 }
 
-.creador-form__check {
+.creator-form__check {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -133,13 +133,13 @@ function onSubmit(): void {
   color: var(--color-text);
 }
 
-.creador-form__error {
+.creator-form__error {
   color: var(--color-danger);
   font-size: 0.9rem;
   margin: 0;
 }
 
-.creador-form__submit {
+.creator-form__submit {
   margin-top: 0.5rem;
   padding: 0.6rem;
   border: none;
@@ -150,7 +150,7 @@ function onSubmit(): void {
   cursor: pointer;
 }
 
-.creador-form__submit:disabled {
+.creator-form__submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

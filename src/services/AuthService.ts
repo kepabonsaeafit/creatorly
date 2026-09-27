@@ -20,11 +20,11 @@ import { StorageService } from '@/storage/StorageService'
 import { useSessionStore } from '@/stores/SessionStore'
 
 export class AuthService {
-  static login(credenciales: LoginDTO): LoginResult {
-    const usuario = UserService.findByCredentials(credenciales)
-    if (!usuario) return { ok: false, error: 'Credenciales inválidas' }
-    useSessionStore().userId = usuario.id
-    StorageService.setSession(usuario.id)
+  static login(credentials: LoginDTO): LoginResult {
+    const user = UserService.findByCredentials(credentials)
+    if (!user) return { ok: false, error: 'Credenciales inválidas' }
+    useSessionStore().userId = user.id
+    StorageService.setSession(user.id)
     return { ok: true }
   }
 
