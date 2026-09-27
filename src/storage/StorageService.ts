@@ -1,10 +1,9 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 /**
- * Capa de persistencia: única puerta de acceso a LocalStorage del navegador
- * (ADR-0001). No es lógica de negocio: ningún otro módulo nuevo debe usar
- * `localStorage` directamente; los stores hidratan y persisten a través de
- * esta clase.
+ * Persistence layer: the only entry point to the browser's LocalStorage
+ * (ADR-0001). It is not business logic: no other new module should use
+ * `localStorage` directly; stores hydrate and persist through this class.
  */
 
 // internal imports
@@ -20,7 +19,7 @@ export class StorageService {
 
   private static readonly SESSION_KEY = 'creatorly_session'
 
-  /** Lee una colección completa como objetos planos. */
+  /** Reads a full collection as plain objects. */
   static read<T>(name: CollectionName): T[] {
     try {
       const raw = localStorage.getItem(this.KEYS[name])
@@ -30,23 +29,23 @@ export class StorageService {
     }
   }
 
-  /** Reemplaza el contenido completo de una colección. */
+  /** Replaces a collection's full content. */
   static write<T>(name: CollectionName, data: T[]): void {
     localStorage.setItem(this.KEYS[name], JSON.stringify(data))
   }
 
-  /** Indica si una colección ya tiene datos (usado por la siembra del primer arranque). */
+  /** Indicates whether a collection already has data (used by first-boot seeding). */
   static hasData(name: CollectionName): boolean {
     return this.read(name).length > 0
   }
 
-  /** Elimina todos los datos de Creatorly, incluida la sesión. */
+  /** Removes all Creatorly data, including the session. */
   static clearAll(): void {
     Object.values(this.KEYS).forEach((key) => localStorage.removeItem(key))
     localStorage.removeItem(this.SESSION_KEY)
   }
 
-  /** Lee la sesión persistida. */
+  /** Reads the persisted session. */
   static getSession(): SessionRecord | null {
     try {
       const raw = localStorage.getItem(this.SESSION_KEY)
@@ -56,12 +55,12 @@ export class StorageService {
     }
   }
 
-  /** Persiste la sesión activa. Nunca guarda la contraseña. */
+  /** Persists the active session. Never stores the password. */
   static setSession(userId: string): void {
     localStorage.setItem(this.SESSION_KEY, JSON.stringify({ userId }))
   }
 
-  /** Elimina la sesión persistida. */
+  /** Removes the persisted session. */
   static clearSession(): void {
     localStorage.removeItem(this.SESSION_KEY)
   }

@@ -1,11 +1,11 @@
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // internal imports
 import type { UserRole } from '@/interfaces/UserInterface'
 
 /**
- * Filtros opcionales para acotar el catálogo de usuarios en UsersIndexView.
- * No deriva de UserInterface: es un DTO de lectura, no de escritura.
+ * Optional filters to narrow the user catalog in UsersIndexView.
+ * Does not derive from UserInterface: it is a read DTO, not a write one.
  */
 export interface UserFilterDTO {
   role?: UserRole

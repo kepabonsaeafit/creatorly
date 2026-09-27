@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 import './assets/main.css'
 import 'vue-toastification/dist/index.css'

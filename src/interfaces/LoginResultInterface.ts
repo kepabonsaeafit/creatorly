@@ -1,6 +1,6 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Resultado de un intento de inicio de sesión (AuthService.login). */
+/** Result of a login attempt (AuthService.login). */
 export interface LoginResult {
   ok: boolean
   error?: string

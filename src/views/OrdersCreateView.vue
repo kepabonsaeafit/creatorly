@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import { ref } from 'vue'
@@ -14,7 +14,7 @@ import { OrderService } from '@/services/OrderService'
 const router = useRouter()
 const toast = useToast()
 
-// state
+// reactive variables
 const error = ref('')
 const saving = ref(false)
 

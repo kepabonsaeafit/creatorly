@@ -1,11 +1,11 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { OrderStatus } from '@/interfaces/OrderInterface'
 
 /**
- * Agregación de pedidos por estado, para la vista de Reportes.
- * No deriva de OrderInterface: es un DTO de lectura, no de escritura.
+ * Aggregation of orders per status, for the Reports view.
+ * Does not derive from OrderInterface: it is a read DTO, not a write one.
  */
 export interface OrdersByStatusDTO {
   status: OrderStatus

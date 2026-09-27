@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'

@@ -1,7 +1,7 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 /**
- * Marca: el cliente de la agencia, quien solicita el contenido.
+ * Brand: the agency's client, who requests the content.
  */
 export interface BrandInterface {
   id: string

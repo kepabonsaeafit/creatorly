@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { defineStore } from 'pinia'

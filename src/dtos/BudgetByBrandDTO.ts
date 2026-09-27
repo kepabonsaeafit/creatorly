@@ -1,8 +1,8 @@
-// Felipe Gómez
+// Author: Felipe Gómez
 
 /**
- * Agregación de presupuesto comprometido por marca, para la vista de Reportes.
- * No deriva de OrderInterface: es un DTO de lectura, no de escritura.
+ * Aggregation of committed budget per brand, for the Reports view.
+ * Does not derive from OrderInterface: it is a read DTO, not a write one.
  */
 export interface BudgetByBrandDTO {
   brandId: string

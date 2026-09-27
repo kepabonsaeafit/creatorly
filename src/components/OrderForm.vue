@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // external imports
 import { computed, ref } from 'vue'
@@ -13,6 +13,7 @@ import { UserService } from '@/services/UserService'
 import { todayIso } from '@/utils/formatDate'
 import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
+// props
 interface Props {
   initial?: Partial<CreateOrderDTO>
   editMode?: boolean
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   error: '',
 })
 
+// emits
 const emit = defineEmits<{ submit: [orderData: CreateOrderDTO] }>()
 
 // selectors
@@ -35,7 +37,7 @@ const creatorId = ref(props.initial.creatorId ?? '')
 const userId = ref(props.initial.userId ?? '')
 const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
-// state
+// reactive variables
 const description = ref(props.initial.description ?? '')
 const budget = ref(props.initial.budget ?? 0)
 const requestDate = ref(props.initial.requestDate ?? todayIso())

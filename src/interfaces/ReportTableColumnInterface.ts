@@ -1,6 +1,6 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Una columna de ReportTable: clave que busca en cada fila y etiqueta a mostrar. */
+/** A ReportTable column: key looked up in each row and label to display. */
 export interface ReportTableColumn {
   key: string
   label: string

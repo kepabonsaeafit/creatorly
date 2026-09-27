@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'
@@ -8,6 +8,7 @@ import { computed } from 'vue'
 import type { OrderActivity } from '@/interfaces/OrderActivityInterface'
 import { formatDateTime } from '@/utils/formatDate'
 
+// props
 interface Props {
   title: string
   timestamp: string
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'default',
 })
 
+// computed variables
 const formattedTimestamp = computed(() => formatDateTime(props.timestamp))
 </script>
 

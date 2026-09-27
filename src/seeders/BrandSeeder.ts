@@ -1,10 +1,10 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Datos ficticios de marcas. */
+/** Fake brand data. */
 export function seedBrands(): BrandInterface[] {
   return [
     {

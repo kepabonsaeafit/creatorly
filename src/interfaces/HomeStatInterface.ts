@@ -1,6 +1,6 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Una tarjeta de KPI, usada tanto por HomeView como por ReportesView. */
+/** A KPI card, used by both HomeView and ReportsView. */
 export interface HomeStat {
   id: string
   label: string

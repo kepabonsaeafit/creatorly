@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // external imports
 import { computed, reactive, ref } from 'vue'
@@ -18,7 +18,7 @@ const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
   available: undefined,
 })
 
-// state
+// reactive variables
 const text = ref('')
 
 // computed variables

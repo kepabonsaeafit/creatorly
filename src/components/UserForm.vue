@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 // external imports
 import { computed, ref } from 'vue'
@@ -10,6 +10,7 @@ import type { UserRole } from '@/interfaces/UserInterface'
 import { normalizeEmail } from '@/utils/email'
 import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 
+// props
 interface Props {
   initial?: Partial<CreateUserDTO>
   editMode?: boolean
@@ -24,16 +25,17 @@ const props = withDefaults(defineProps<Props>(), {
   error: '',
 })
 
+// emits
 const emit = defineEmits<{ submit: [userData: CreateUserDTO]; cancel: [] }>()
 
 // selectors
 const role = ref<UserRole>(props.initial.role ?? 'coordinator')
 
-// state
+// reactive variables
 const name = ref(props.initial.name ?? '')
 const email = ref(props.initial.email ?? '')
-// La contraseña se guarda en texto plano por diseño del proyecto (UserInterface),
-// así que en edición se precarga y se reenvía completa, igual que el resto de campos.
+// The password is stored in plain text by design (UserInterface), so it is
+// preloaded on edit and resent in full, like the rest of the fields.
 const password = ref(props.initial.password ?? '')
 
 // computed variables

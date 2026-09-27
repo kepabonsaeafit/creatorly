@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { CreateBrandDTO } from '@/dtos/CreateBrandDTO'
@@ -23,14 +23,29 @@ export class BrandService {
     }
   }
 
+  /**
+   * Gets every brand in the store.
+   * @returns All brands.
+   */
   static getAll(): BrandInterface[] {
     return useBrandStore().brands
   }
 
+  /**
+   * Finds a brand by id.
+   * @param id - Id of the brand to look up.
+   * @returns The matching brand, or `undefined` if not found.
+   */
   static getById(id: string): BrandInterface | undefined {
     return useBrandStore().brands.find((brand) => brand.id === id)
   }
 
+  /**
+   * Validates and creates a new brand.
+   * @param brandData - Data required to create the brand.
+   * @returns The created brand, with its id and timestamps.
+   * @throws {Error} If any required field is missing or the email is invalid.
+   */
   static create(brandData: CreateBrandDTO): BrandInterface {
     const normalizedData: CreateBrandDTO = {
       ...brandData,
@@ -48,6 +63,13 @@ export class BrandService {
     return newBrand
   }
 
+  /**
+   * Validates and applies partial changes to a brand.
+   * @param id - Id of the brand to update.
+   * @param changes - Partial fields to change.
+   * @returns The updated brand, or `undefined` if not found.
+   * @throws {Error} If the merged data fails validation.
+   */
   static update(id: string, changes: Partial<CreateBrandDTO>): BrandInterface | undefined {
     const brands = useBrandStore().brands
     const index = brands.findIndex((brand) => brand.id === id)
@@ -69,6 +91,11 @@ export class BrandService {
     return updated
   }
 
+  /**
+   * Removes a brand by id.
+   * @param id - Id of the brand to remove.
+   * @returns `true` if it was removed, `false` if not found.
+   */
   static remove(id: string): boolean {
     const brands = useBrandStore().brands
     const index = brands.findIndex((brand) => brand.id === id)

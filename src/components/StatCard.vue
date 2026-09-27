@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'
@@ -7,6 +7,7 @@ import { computed } from 'vue'
 // internal imports
 import { formatCurrency } from '@/utils/formatCurrency'
 
+// props
 interface Props {
   label: string
   value: number | string
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   unit: '',
 })
 
+// computed variables
 const formattedValue = computed(() => {
   if (props.unit === '$' && typeof props.value === 'number') {
     return formatCurrency(props.value)

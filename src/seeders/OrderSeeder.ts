@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
@@ -8,7 +8,7 @@ import type { OrderSeedData } from '@/interfaces/OrderSeedDataInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Deriva createdAt/updatedAt a partir de requestDate, deliveryDate y el estado. */
+/** Derives createdAt/updatedAt from requestDate, deliveryDate and status. */
 function buildOrder(orderData: OrderSeedData): OrderInterface {
   const createdAt = `${orderData.requestDate}T09:00:00.000Z`
   const updatedAt = FINAL_STATUSES.includes(orderData.status)
@@ -30,9 +30,9 @@ function buildOrder(orderData: OrderSeedData): OrderInterface {
 }
 
 /**
- * Datos ficticios de pedidos.
- * Recibe marcas/creadores/users ya sembrados para referenciarlos por id,
- * capturándolos por posición antes de construir los pedidos.
+ * Fake order data.
+ * Receives already-seeded brands/creators/users to reference them by id,
+ * capturing them by position before building the orders.
  */
 export function seedOrders(
   brands: BrandInterface[],

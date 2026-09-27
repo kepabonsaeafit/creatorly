@@ -1,12 +1,12 @@
-// Felipe Gómez
+// Author: Felipe Gómez
 
 // internal imports
 import type { OrderStatus } from '@/interfaces/OrderInterface'
 
 /**
- * Filtros opcionales para acotar una lista de pedidos, usado tanto por la
- * tabla de OrdersIndexView como por los KPIs y gráficos de ReportsView.
- * No deriva de OrderInterface: es un DTO de lectura, no de escritura.
+ * Optional filters to narrow a list of orders, used both by the
+ * OrdersIndexView table and by the KPIs and charts of ReportsView.
+ * Does not derive from OrderInterface: it is a read DTO, not a write one.
  */
 export interface OrderFilterDTO {
   status?: OrderStatus

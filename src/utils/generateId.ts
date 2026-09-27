@@ -1,9 +1,10 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 /**
- * Genera un UUID v4. `crypto.randomUUID()` solo existe en contextos seguros
- * (HTTPS o localhost); en despliegues por HTTP sin dominio el navegador no lo expone,
- * así que se arma el UUID a mano con `crypto.getRandomValues()`, disponible siempre.
+ * Generates a v4 UUID. `crypto.randomUUID()` only exists in secure contexts
+ * (HTTPS or localhost); on HTTP deployments without a domain the browser does
+ * not expose it, so the UUID is built by hand with `crypto.getRandomValues()`,
+ * which is always available.
  */
 export function generateId(): string {
   if (typeof crypto.randomUUID === 'function') {

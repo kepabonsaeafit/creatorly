@@ -1,18 +1,18 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Estados válidos del ciclo de vida de un Pedido, en el orden fijo del ciclo de vida. */
+/** Valid statuses of an Order's lifecycle, in the lifecycle's fixed order. */
 export const STATUSES = ['requested', 'assigned', 'in_production', 'delivered', 'approved'] as const
 
 export type OrderStatus = (typeof STATUSES)[number]
 
-/** Estados que marcan el cierre del ciclo de vida de un Pedido. */
+/** Statuses that mark the closing of an Order's lifecycle. */
 export const FINAL_STATUSES: readonly OrderStatus[] = ['delivered', 'approved']
 
 /**
- * Pedido: la unidad de trabajo del sistema. Conecta a una Marca (quien solicita),
- * un Creador (quien produce, opcional hasta la asignación) y un User coordinador
- * (quien lo gestiona). Ver ADR-0001: las referencias se guardan por id; el
- * coordinador se referencia con userId.
+ * Order: the system's unit of work. It connects a Brand (who requests it),
+ * a Creator (who produces it, optional until assigned) and a coordinator User
+ * (who manages it). See ADR-0001: references are stored by id; the
+ * coordinator is referenced with userId.
  */
 export interface OrderInterface {
   id: string

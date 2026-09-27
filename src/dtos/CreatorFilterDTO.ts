@@ -1,8 +1,8 @@
-// Gerónimo Montes
+// Author: Gerónimo Montes
 
 /**
- * Filtros opcionales para acotar el catálogo de creadores en CreatorsIndexView.
- * No deriva de CreatorInterface: es un DTO de lectura, no de escritura.
+ * Optional filters to narrow the creator catalog in CreatorsIndexView.
+ * Does not derive from CreatorInterface: it is a read DTO, not a write one.
  */
 export interface CreatorFilterDTO {
   niche?: string

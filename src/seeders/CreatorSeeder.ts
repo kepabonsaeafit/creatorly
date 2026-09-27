@@ -1,10 +1,10 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { generateId } from '@/utils/generateId'
 
-/** Datos ficticios de creadores. */
+/** Fake creator data. */
 export function seedCreators(): CreatorInterface[] {
   return [
     {

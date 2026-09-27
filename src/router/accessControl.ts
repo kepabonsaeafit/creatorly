@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import type { RouteLocationNormalized, RouteLocationRaw } from 'vue-router'
@@ -13,7 +13,7 @@ declare module 'vue-router' {
   }
 }
 
-/** Mismas 3 ramas que el guard viejo de router/index.js. */
+/** Same 3 branches as the old router/index.js guard. */
 export function accessControlGuard(to: RouteLocationNormalized): boolean | RouteLocationRaw {
   const session = useSessionStore()
 

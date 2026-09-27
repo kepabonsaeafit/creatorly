@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { defineStore } from 'pinia'
@@ -18,9 +18,9 @@ export const useSessionStore = defineStore('session', () => {
 
   const isLoggedIn = computed<boolean>(() => current.value !== undefined)
 
-  // Inline, no delegado a un helper de AuthService: AuthService ya importa
-  // este store para login/logout, así que delegar aquí crearía un ciclo de
-  // imports SessionStore -> AuthService -> SessionStore.
+  // Inline, not delegated to an AuthService helper: AuthService already
+  // imports this store for login/logout, so delegating here would create an
+  // import cycle SessionStore -> AuthService -> SessionStore.
   const isAdmin = computed<boolean>(() => current.value?.role === 'admin')
 
   return { userId, current, isLoggedIn, isAdmin }
