@@ -1,89 +1,89 @@
-# Reglas de programación
+# Programming rules
 
-Reglas esenciales del proyecto, por categoría. Si un PR las incumple, se remite a esta página. Esta página es autocontenida: no depende de ningún otro archivo del repo para tener sentido. Cuando el repo incluye `AGENTS.md` (instrucciones específicas para agentes de IA, no siempre presente en `main`), ese archivo amplía el detalle de trabajo con agentes, pero las reglas de código en sí son las mismas para cualquiera que escriba en este proyecto, use o no un agente.
+Essential project rules, by category. If a PR breaks one of them, it gets pointed here. This page is self-contained: it doesn't depend on any other repo file to make sense. When the repo includes `AGENTS.md` (specific instructions for AI agents, not always present on `main`), that file expands on the details of working with agents, but the code rules themselves are the same for anyone writing in this project, whether they use an agent or not.
 
-## Generales
+## General
 
-1. **TypeScript en todo**: archivos `.ts`, SFCs con `<script setup lang="ts">`. Tipos explícitos en todo parámetro y retorno de función o método; `any` está prohibido sin justificación escrita en comentario.
-2. **DRY** (Don't Repeat Yourself) y **ETC** (Easier to Change): si un segundo lugar necesita lo mismo, se extrae a un componente/servicio; se escribe código pensando en cambiarlo.
-3. Código y UI en español (etiquetas, mensajes); identificadores en español cuando sean del dominio (`Creador`, `estado`) y en inglés cuando sean técnicos (`store`, `service`).
+1. **TypeScript everywhere**: `.ts` files, SFCs with `<script setup lang="ts">`. Explicit types on every function or method parameter and return value; `any` is forbidden without a written justification comment.
+2. **DRY** (Don't Repeat Yourself) and **ETC** (Easier to Change): if a second place needs the same thing, extract it into a component/service; write code with change in mind.
+3. **Everything in English**: code, identifiers, UI text, comments, and documentation. The only exception is the proper names in the seed data.
 
-## Rutas
+## Routes
 
-4. Toda ruta está asociada a una vista SFC en `views/`; no hay rutas "sueltas".
-5. Los paths van en minúscula con guiones (`/pedidos/crear`); los nombres de ruta con punto para variantes de un mismo recurso (`pedidos`, `pedidos.create`, `pedidos.edit`).
-6. El acceso se controla en `router/accessControl.ts` (guard) y `router/admin/adminRoutes.ts` (rutas solo-admin agrupadas por nivel de acceso): sesión obligatoria para todo salvo `/login`, y rol `admin` para `/creadores` (y sus 3 rutas) y `/usuarios`.
+4. Every route is tied to an SFC view in `views/`; there are no "loose" routes.
+5. Paths are lowercase with hyphens (`/orders/create`); route names use dots for variants of the same resource (`orders`, `orders.create`, `orders.edit`).
+6. Access is controlled in `router/accessControl.ts` (guard) and `router/admin/adminRoutes.ts` (admin-only routes grouped by access level): a session is required for everything except `/login`, and the `admin` role is required for `/creators` (and its 3 routes) and `/users`.
 
-## Vistas
+## Views
 
-7. Las vistas orquestan: llaman services y componen componentes. **Sin lógica de negocio dentro de la vista.**
-8. **Las views no tocan los stores**: solo hablan con services.
-9. **No se crean composables**: toda la lógica va a `services/`.
-10. **Ningún gráfico dentro de una view**: todo Chart.js vive en `components/charts/`.
+7. Views orchestrate: they call services and compose components. **No business logic inside the view.**
+8. **Views don't touch stores**: they only talk to services.
+9. **No composables**: all logic goes to `services/`.
+10. **No chart inside a view**: all Chart.js lives in `components/charts/`.
 
-## Componentes
+## Components
 
-11. Todo componente reutilizable vive en `components/`, en PascalCase, con props tipadas vía `defineProps<Interface>()` (no validación de props en tiempo de ejecución).
-12. Los componentes reciben datos por props y emiten eventos; no mutan props.
-13. Si dos páginas necesitan el mismo gráfico/tabla/selector, es un componente reutilizable.
-14. Todo gráfico de Chart.js se instancia a través de `components/charts/BaseChart.vue`; ninguna view ni componente de página importa `chart.js` directamente.
+11. Every reusable component lives in `components/`, in PascalCase, with typed props via `defineProps<Interface>()` (no runtime prop validation).
+12. Components receive data via props and emit events; they don't mutate props.
+13. If two pages need the same chart/table/selector, it's a reusable component.
+14. Every Chart.js chart is instantiated through `components/charts/BaseChart.vue`; no view or page component imports `chart.js` directly.
 
-## Arquitectura
+## Architecture
 
-15. Cada entidad del dominio se parte en hasta cinco piezas: `interfaces/` (la forma, sin métodos; también puede exportar, junto al tipo, la lista `as const` de la que deriva —por ejemplo `ESTADOS`, `ROLES`— para que exista una sola fuente) + `dtos/` (de entrada: derivados con `Omit`/`Pick`; de filtro/agregación: interfaces propias) + `stores/` (Pinia, solo el array, cero lógica; excepción: `SessionStore`) + `services/` (clase de métodos estáticos, toda la lógica y validaciones; nada de constantes ni funciones a nivel de módulo, todo va dentro de la clase) + `seeders/` (datos ficticios, objetos planos tipados). `utils/` guarda helpers compartidos sin acceso a stores/LocalStorage (fecha, moneda, estado, ids). El molde, con `Pedido` de ejemplo:
+15. Each domain entity is split into up to five pieces: `interfaces/` (the shape, no methods; it can also export, alongside the type, the `as const` list it derives from — for example `STATUSES`, `ROLES` — so there's a single source) + `dtos/` (input: derived with `Omit`/`Pick`; filter/aggregation: their own interfaces) + `stores/` (Pinia, only the array, zero logic; exception: `SessionStore`) + `services/` (a class of static methods, all the logic and validations; no module-level constants or standalone functions, everything goes inside the class) + `seeders/` (fake data, typed plain objects). `utils/` holds shared helpers with no access to stores/LocalStorage (date, currency, status, ids). The mold, with `Order` as an example:
 
 ```ts
-    // interfaces/PedidoInterface.ts → LA FORMA. Solo atributos, sin métodos.
-    export interface PedidoInterface { id: string; descripcion: string; /* ... */ }
+    // interfaces/OrderInterface.ts → THE SHAPE. Only attributes, no methods.
+    export interface OrderInterface { id: string; description: string; /* ... */ }
 
-    // dtos/CreatePedidoDTO.ts → un tipo derivado por caso de uso, con Omit/Pick.
-    export type CreatePedidoDTO = Omit<PedidoInterface, 'id' | 'createdAt' | 'updatedAt'>;
+    // dtos/CreateOrderDTO.ts → one derived type per use case, with Omit/Pick.
+    export type CreateOrderDTO = Omit<OrderInterface, 'id' | 'createdAt' | 'updatedAt'>;
 
-    // stores/PedidoStore.ts → SOLO EL ARRAY. Cero lógica.
-    export const usePedidoStore = defineStore('pedido', () => {
-      const pedidos = ref<PedidoInterface[]>([]);
-      return { pedidos };
+    // stores/OrderStore.ts → ONLY THE ARRAY. Zero logic.
+    export const useOrderStore = defineStore('order', () => {
+      const orders = ref<OrderInterface[]>([]);
+      return { orders };
     });
 
-    // services/PedidoService.ts → TODA LA LÓGICA. Clase de métodos estáticos.
-    export class PedidoService {
-      static getAll(): PedidoInterface[] { return usePedidoStore().pedidos; }
-      static create(datos: CreatePedidoDTO): PedidoInterface { /* valida, genera id, persiste */ }
+    // services/OrderService.ts → ALL THE LOGIC. Class of static methods.
+    export class OrderService {
+      static getAll(): OrderInterface[] { return useOrderStore().orders; }
+      static create(data: CreateOrderDTO): OrderInterface { /* validates, generates id, persists */ }
     }
 
-    // seeders/PedidoSeeder.ts → datos ficticios, objetos planos tipados (no instancias de clase).
-    export function seedPedidos(marcas: MarcaInterface[], /* creadores, users */): PedidoInterface[] {
+    // seeders/OrderSeeder.ts → fake data, typed plain objects (not class instances).
+    export function seedOrders(brands: BrandInterface[], /* creators, users */): OrderInterface[] {
       return [ /* ... */ ];
     }
 ```
 
-Los stores de entidad guardan solo el array, sin lógica. Excepción: `SessionStore`, que además lee la sesión persistida al crearse y deriva `current`, `isLoggedIn` e `isAdmin` con `computed`.
+Entity stores hold only the array, no logic. Exception: `SessionStore`, which also reads the persisted session on creation and derives `current`, `isLoggedIn`, and `isAdmin` with `computed`.
 
-16. **Un DTO por caso de uso.** Los DTOs de entrada (`Create*`, `Login`) derivan de su interface con `Omit`/`Pick`; los DTOs de filtro y de agregación (reportes y gráficos) son interfaces propias, porque su forma no sale de una entidad. Varios DTOs en un service está bien; un DTO partido en dos, no.
-17. Los ids se generan con `generateId()` (`utils/generateId.ts`), que usa `crypto.randomUUID()` cuando hay contexto seguro y, si no, un respaldo con `crypto.getRandomValues()` (ver ADR-0001). Nunca se llama `crypto.randomUUID()` directo; los pedidos referencian marca/creador/coordinador **por id**, no con objetos anidados.
+16. **One DTO per use case.** Input DTOs (`Create*`, `Login`) derive from their interface with `Omit`/`Pick`; filter and aggregation DTOs (reports and charts) are their own interfaces, because their shape doesn't come from an entity. Multiple DTOs in one service is fine; one DTO split into two isn't.
+17. Ids are generated with `generateId()` (`utils/generateId.ts`), which uses `crypto.randomUUID()` in secure contexts and, otherwise, falls back to `crypto.getRandomValues()` (see ADR-0001). `crypto.randomUUID()` is never called directly; orders reference brand/creator/coordinator **by id**, not with nested objects.
 
-## Datos
+## Data
 
-18. **Nadie toca `localStorage` directamente**: siempre vía `storage/StorageService.ts`.
-19. Claves de LocalStorage con prefijo `creatorly_` (`creatorly_users`, `creatorly_pedidos`, `creatorly_session`…).
-20. La siembra de datos ficticios ocurre solo si LocalStorage está vacío, en `PiniaConfig` (`generar()`/`persistir()`). El botón "Restablecer datos demo" en `/usuarios` llama a `resetDemoData()` de `PiniaConfig`, que siembra exactamente igual, y después la vista cierra la sesión con `AuthService.logout()`.
-21. La sesión **nunca** guarda la contraseña del usuario.
+18. **Nobody touches `localStorage` directly**: always through `storage/StorageService.ts`.
+19. LocalStorage keys prefixed with `creatorly_` (`creatorly_users`, `creatorly_orders`, `creatorly_session`…).
+20. Fake data seeding only happens if LocalStorage is empty, in `PiniaConfig` (`generate()`/`persist()`). The "Reset demo data" button in `/users` calls `resetDemoData()` from `PiniaConfig`, which seeds exactly the same way, and then the view logs out the session with `AuthService.logout()`.
+21. The session **never** stores the user's password.
 
-## Git y PRs
+## Git and PRs
 
-22. Nada de pushes directos a `main`: todo por rama + Pull Request. Push y PR requieren autorización explícita del integrante dueño de esa rama; aprobar y mergear a `main` sigue siendo autoridad del arquitecto, igual que instalar o actualizar dependencias.
-23. Commits convencionales: tipo en inglés + descripción en español (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`), cuerpo en viñetas de hechos técnicos verificables — nada de narración del proceso ni mensajes dirigidos a alguien.
-24. Antes de cada commit: `npm run lint`, `npm run format` y `npm run type-check` en verde (si `format` modifica archivos, esos cambios van en el mismo commit). `npm run build` en verde antes de abrir el PR.
+22. No direct pushes to `main`: everything through branch + Pull Request. Push and PR require explicit authorization from the team member who owns that branch; approving and merging to `main` remains the architect's authority, same as installing or updating dependencies.
+23. Conventional commits: type in English + description in Spanish (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`), body in bullets of verifiable technical facts — no narration of the process and no messages addressed to a person.
+24. Before every commit: `npm run lint`, `npm run format`, and `npm run type-check` clean (if `format` modifies files, those changes go in the same commit). `npm run build` clean before opening the PR.
 
-## Cómo agregar una entidad nueva (con o sin agente de IA)
+## How to add a new entity (with or without an AI agent)
 
-El patrón de la sección Arquitectura no depende de tener un agente que lo aplique por ti. Para agregar una entidad nueva a mano, en este orden:
+The Architecture section's pattern doesn't depend on having an agent apply it for you. To add a new entity by hand, in this order:
 
-1. **`interfaces/NombreInterface.ts`** — solo los atributos, sin métodos. Revisa primero si ya existe una pieza equivalente para otra entidad y cópiale la forma.
-2. **`dtos/CreateNombreDTO.ts`** — un `Omit`/`Pick` sobre la interface, uno por caso de uso; si necesitas un DTO de filtro o de agregación (reportes, gráficos), es una interface propia, porque su forma no sale de la entidad.
-3. **`stores/NombreStore.ts`** — solo el `ref` del array. No le agregues lógica aquí, ni siquiera "por ahora".
-4. **`services/NombreService.ts`** — aquí van las validaciones y toda la lógica (`getAll`, `getById`, `create`, `update`, `remove`, y los métodos propios del dominio que necesites).
-5. Si la entidad necesita datos de siembra, **`seeders/NombreSeeder.ts`** — función que construye y devuelve objetos planos tipados sin leer ni modificar estado externo (stores, LocalStorage), nunca instancias de una clase. No es pura en sentido estricto: genera ids aleatorios con `generateId()`.
-6. Antes de guardar: el archivo lleva tu nombre en la primera línea como comentario, los imports van agrupados (`// external imports` / `// internal imports`) y alfabetizados dentro de cada grupo.
-7. Antes de comitear, corre `npm run lint`, `npm run format` y `npm run type-check` — los tres en verde (si `format` modifica archivos, esos cambios van en el mismo commit). Corre `npm run build` en verde antes de pedir revisión o abrir el PR.
-8. El criterio de aceptación no es "compila": es que puedas explicar cada archivo que creaste en la sustentación individual, sin ayuda. Si no puedes explicar por qué algo quedó donde quedó, revísalo antes de comitear, no después.
+1. **`interfaces/NameInterface.ts`** — only the attributes, no methods. First check if an equivalent piece already exists for another entity and copy its shape.
+2. **`dtos/CreateNameDTO.ts`** — an `Omit`/`Pick` over the interface, one per use case; if you need a filter or aggregation DTO (reports, charts), it's its own interface, because its shape doesn't come from the entity.
+3. **`stores/NameStore.ts`** — only the array's `ref`. Don't add logic here, not even "for now."
+4. **`services/NameService.ts`** — this is where the validations and all the logic go (`getAll`, `getById`, `create`, `update`, `remove`, and whatever domain-specific methods you need).
+5. If the entity needs seed data, **`seeders/NameSeeder.ts`** — a function that builds and returns typed plain objects without reading or modifying external state (stores, LocalStorage), never class instances. Not pure in the strict sense: it generates random ids with `generateId()`.
+6. Before saving: the file carries your name in the first line as a comment, imports are grouped (`// external imports` / `// internal imports`) and alphabetized within each group.
+7. Before committing, run `npm run lint`, `npm run format`, and `npm run type-check` — all three clean (if `format` modifies files, those changes go in the same commit). Run `npm run build` clean before requesting review or opening the PR.
+8. The acceptance criterion isn't "it compiles": it's that you can explain every file you created in the individual defense, unassisted. If you can't explain why something ended up where it did, review it before committing, not after.

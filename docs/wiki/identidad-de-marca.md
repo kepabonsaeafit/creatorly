@@ -1,145 +1,145 @@
-# Identidad de Marca y Sistema de Diseño — Creatorly
+# Brand Identity and Design System — Creatorly
 
-Esta página especifica la **identidad de marca** y el **sistema de diseño (Brand Kit)** de Creatorly. Es la fuente de verdad visual y de componentes para todo el equipo (desarrollo de vistas, componentes reutilizables, gráficos y estilos).
+This page specifies Creatorly's **brand identity** and **design system (Brand Kit)**. It is the visual and component source of truth for the whole team (view development, reusable components, charts, and styles).
 
 ---
 
-## 1. Estrategia y Posicionamiento
+## 1. Strategy and Positioning
 
-| Dimensión | Definición |
+| Dimension | Definition |
 |---|---|
-| **Categoría** | Dashboard interno B2B de operación — gestión de una agencia de creadores UGC |
-| **Audiencia** | Personal interno de la agencia: administradores y coordinadores (no público externo, no marcas, no creadores) |
-| **Personalidad** | Precisa, conectiva, confiable y moderna — herramienta de trabajo profesional |
-| **Metáfora central** | La agencia como tejido conector entre **Marcas** y **Creadores**; cada **Pedido** es el puente que los une a lo largo de su ciclo de vida de 5 estados |
-| **Tagline** | *"El puente entre marcas y creadores."* |
-| **A evitar** | Estética de redes sociales / influencers, iconografía genérica (cámaras, corazones, botones de play) y colores mágicos |
+| **Category** | Internal B2B operations dashboard — management for a UGC creator agency |
+| **Audience** | Agency internal staff: administrators and coordinators (not the external public, not brands, not creators) |
+| **Personality** | Precise, connective, trustworthy, and modern — a professional work tool |
+| **Central metaphor** | The agency as connective tissue between **Brands** and **Creators**; each **Order** is the bridge that joins them across its 5-status lifecycle |
+| **Tagline** | *"The bridge between brands and creators."* |
+| **To avoid** | Social-media / influencer aesthetics, generic iconography (cameras, hearts, play buttons), and magic colors |
 
-> **Nota:** El glosario canónico del dominio vive en `CONTEXT.md` (Agencia, UGC, Creador, Marca, Pedido, roles y ciclo de vida).
-
----
-
-## 2. Logotipo
-
-### 2.1 Concepto
-Monograma de la **C** de Creatorly, construido bajo el método *Monogram + Meaning* combinado con *Negative Space*:
-- El trazo de la **C** se abre en dos extremos: el extremo superior representa la **Marca** y el inferior al **Creador**.
-- Un **rombo** (cuadrado rotado 45°) ocupa la apertura central: representa el **Pedido**, el nodo que siempre conecta a ambas partes.
-- La forma nunca se cierra en un círculo completo porque la relación siempre pasa por un pedido activo administrado por la agencia.
-
-![Logo Creatorly](assets/logo-creatorly.png)
-
-### 2.2 Proceso de diseño
-
-El logo se fue construyendo por iteración visual hasta llegar a la forma final: partimos de la idea de la C abierta con el rombo del Pedido en la apertura (sección 2.1), y fuimos ajustando el arco y el nodo central hasta que la proporción se viera bien — sin colores de más, sin relleno decorativo, buscando esa línea minimalista y tecnológica que pide la personalidad de marca de la sección 1.
-
-El wordmark usa la tipografía `Unbounded 600`.
-
-El resultado final ya está verificado sin recortes (ver el PNG arriba). El código de implementación vive en `NavBar.vue`.
-
-### 2.3 Reglas de uso
-- **Ícono solo:** favicon, avatar y tamaños pequeños (≥16px).
-- **Isotipo + Wordmark:** `[Ícono SVG] Creatorly` para la barra de navegación (`NavBar.vue`), encabezados y pantallas principales.
-- **Color del trazo:** `--brand-primary` (`#7c3aed`) en modo claro; `--brand-primary-dark` (`#a78bfa`) en modo oscuro.
-- **Inmutable:** el rombo central **siempre** mantiene alto contraste (blanco o fondo claro contrastante), nunca se deforma ni se cierra el arco.
+> **Note:** The domain's canonical glossary lives in `CONTEXT.md` (Agency, UGC, Creator, Brand, Order, roles, and lifecycle).
 
 ---
 
-## 3. Sistema de Color y Tokens
+## 2. Logo
 
-Todos los estilos de la aplicación deben utilizar estrictamente las variables CSS definidas en `src/assets/base.css`. Está prohibido quemar valores hexadecimales o `rgb/hsl` directos en las vistas y componentes.
+### 2.1 Concept
+Monogram of the **C** in Creatorly, built with the *Monogram + Meaning* method combined with *Negative Space*:
+- The stroke of the **C** opens into two ends: the top end represents the **Brand** and the bottom end the **Creator**.
+- A **diamond** (a square rotated 45°) occupies the central opening: it represents the **Order**, the node that always connects both parties.
+- The shape never closes into a full circle because the relationship always passes through an active order managed by the agency.
 
-### 3.1 Tokens de Marca y Superficies
+![Creatorly Logo](assets/logo-creatorly.png)
 
-| Token | Valor (Light / Dark) | Uso en la UI |
+### 2.2 Design process
+
+The logo was built through visual iteration until reaching its final form: we started from the idea of the open C with the Order's diamond in the opening (section 2.1), and kept adjusting the arc and the central node until the proportion looked right — no extra colors, no decorative fill, aiming for the minimalist, technical line the brand personality in section 1 calls for.
+
+The wordmark uses the `Unbounded 600` typeface.
+
+The final result has already been verified without clipping (see the PNG above). The implementation code lives in `NavBar.vue`.
+
+### 2.3 Usage rules
+- **Icon only:** favicon, avatar, and small sizes (≥16px).
+- **Logomark + Wordmark:** `[SVG icon] Creatorly` for the navigation bar (`NavBar.vue`), headers, and main screens.
+- **Stroke color:** `--brand-primary` (`#7c3aed`) in light mode; `--brand-primary-dark` (`#a78bfa`) in dark mode.
+- **Immutable:** the central diamond **always** keeps high contrast (white or a contrasting light background), the arc is never deformed or closed.
+
+---
+
+## 3. Color System and Tokens
+
+All application styles must strictly use the CSS variables defined in `src/assets/base.css`. Burning hardcoded hex or `rgb/hsl` values into views and components is forbidden.
+
+### 3.1 Brand and Surface Tokens
+
+| Token | Value (Light / Dark) | UI Usage |
 |---|---|---|
-| `--color-background` | `#ffffff` / `#14121a` | Fondo base de la aplicación y páginas |
-| `--color-background-soft` | `#f8f7fb` / `#1e1b26` | Fondos de tarjetas, paneles y barra de navegación (`NavBar`) |
-| `--color-background-mute` | `#f1f0f5` / `#26222f` | Filas alternas de tablas, inputs deshabilitados |
-| `--color-border` | `rgba(60, 50, 70, 0.12)` / `rgba(160, 150, 180, 0.48)` | Bordes sutiles de tarjetas, inputs, tablas y divisores |
-| `--color-border-hover` | `rgba(60, 50, 70, 0.29)` / `rgba(160, 150, 180, 0.65)` | Bordes al hacer hover o focus |
-| `--color-heading` | `#2c2340` / `#ffffff` | Títulos `h1`, `h2`, `h3` y encabezados |
-| `--color-text` | `#2c2340` / `rgba(237, 233, 245, 0.64)` | Texto general de cuerpo y descripciones |
+| `--color-background` | `#ffffff` / `#14121a` | Base background of the app and pages |
+| `--color-background-soft` | `#f8f7fb` / `#1e1b26` | Card, panel, and navigation bar backgrounds (`NavBar`) |
+| `--color-background-mute` | `#f1f0f5` / `#26222f` | Alternating table rows, disabled inputs |
+| `--color-border` | `rgba(60, 50, 70, 0.12)` / `rgba(160, 150, 180, 0.48)` | Subtle borders of cards, inputs, tables, and dividers |
+| `--color-border-hover` | `rgba(60, 50, 70, 0.29)` / `rgba(160, 150, 180, 0.65)` | Borders on hover or focus |
+| `--color-heading` | `#2c2340` / `#ffffff` | `h1`, `h2`, `h3` titles and headings |
+| `--color-text` | `#2c2340` / `rgba(237, 233, 245, 0.64)` | General body text and descriptions |
 
-### 3.2 Tokens Semánticos vs. Marca
+### 3.2 Semantic Tokens vs. Brand
 
-* **Acento de Marca (`--color-primary`, `--color-primary-soft`):**
+* **Brand accent (`--color-primary`, `--color-primary-soft`):**
   * Light: `#7c3aed` (`rgba(124, 58, 237, 0.12)`).
   * Dark: `#a78bfa` (`rgba(167, 139, 250, 0.16)`).
-  * *Uso:* Botones principales, enlaces activos, bordes de selección y foco interactivo.
-* **Éxito (`--color-success`):** `#2fae60` (Light) / `#3dd68c` (Dark).
-  * *Uso:* Estado `aprobado` del pedido, confirmaciones exitosas.
-* **Peligro / Alerta (`--color-danger`):** `#e0575b` (Light) / `#f28b82` (Dark).
-  * *Uso:* Botón de salida/logout, acciones de eliminación, mensajes de error.
+  * *Use:* Primary buttons, active links, selection borders, and interactive focus.
+* **Success (`--color-success`):** `#2fae60` (Light) / `#3dd68c` (Dark).
+  * *Use:* Order's `approved` status, successful confirmations.
+* **Danger / Warning (`--color-danger`):** `#e0575b` (Light) / `#f28b82` (Dark).
+  * *Use:* Logout button, delete actions, error messages.
 
-> ⚠️ **Regla:** El violeta es el acento de identidad; el verde y rojo son semánticos de estado. No usar violeta para indicar éxito ni verde para decoración.
+> ⚠️ **Rule:** Violet is the identity accent; green and red are status semantics. Don't use violet to indicate success or green for decoration.
 
 ---
 
-## 4. Tipografía: Sistema de Tres Roles
+## 4. Typography: Three-Role System
 
-Para darle carácter visual moderno y técnico al dashboard, la identidad utiliza 3 fuentes con propósitos bien diferenciados:
+To give the dashboard a modern, technical visual character, the identity uses 3 typefaces with clearly differentiated purposes:
 
 ```
 Google Fonts import:
 https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500;600;700&display=swap
 ```
 
-| Rol | Tipografía | Peso | Uso obligatorio |
+| Role | Typeface | Weight | Mandatory use |
 |---|---|---|---|
-| **Display / Marca** | `Unbounded` | `600`, `700` | Logotipo / Wordmark, números grandes en tarjetas KPI |
-| **Interfaz / Lectura** | `Inter` | `400`, `500`, `600` | Textos de UI, botones, campos de formulario, celdas de tablas |
-| **Datos / Código** | `JetBrains Mono` | `400`, `500` | IDs UUID (generados con `generateId()`), labels uppercase, chips de estado, badges de rol (`ADMIN`, `COORDINADOR`) |
+| **Display / Brand** | `Unbounded` | `600`, `700` | Logo / Wordmark, large numbers in KPI cards |
+| **Interface / Reading** | `Inter` | `400`, `500`, `600` | UI text, buttons, form fields, table cells |
+| **Data / Code** | `JetBrains Mono` | `400`, `500` | UUID ids (generated with `generateId()`), uppercase labels, status chips, role badges (`ADMIN`, `COORDINATOR`) |
 
 ---
 
-## 5. Pautas de Componentes de UI (Guía de Implementación)
+## 5. UI Component Guidelines (Implementation Guide)
 
-### 5.1 Tarjetas de Métricas (KPI Cards)
-- **Estructura:** Cuadrícula (grid) limpia.
-- **Número métrico:** Tamaño grande (`1.75rem` - `2.25rem`), `font-family: 'Unbounded', sans-serif`, `font-weight: 600`, color `--color-primary`.
-- **Etiqueta:** `font-family: 'JetBrains Mono', monospace`, `text-transform: uppercase`, tamaño `0.75rem` (`12px`), `letter-spacing: 0.05em`, color `--color-text`.
-- **Contenedor:** Fondo `--color-background-soft`, borde `1px solid var(--color-border)`, `border-radius: 8px`, `padding: 1.25rem`.
+### 5.1 Metric Cards (KPI Cards)
+- **Structure:** Clean grid.
+- **Metric number:** Large size (`1.75rem` - `2.25rem`), `font-family: 'Unbounded', sans-serif`, `font-weight: 600`, color `--color-primary`.
+- **Label:** `font-family: 'JetBrains Mono', monospace`, `text-transform: uppercase`, size `0.75rem` (`12px`), `letter-spacing: 0.05em`, color `--color-text`.
+- **Container:** Background `--color-background-soft`, border `1px solid var(--color-border)`, `border-radius: 8px`, `padding: 1.25rem`.
 
-### 5.2 Badges de Rol de Usuario
-- **Texto:** `ADMIN` o `COORDINADOR`.
-- **Estilo:** `font-family: 'JetBrains Mono', monospace`, `font-size: 0.75rem`, `font-weight: 500`.
-- **Colores:** Fondo `--color-primary-soft`, texto `--color-primary`, `border-radius: 4px`, `padding: 2px 8px`.
+### 5.2 User Role Badges
+- **Text:** `ADMIN` or `COORDINATOR`.
+- **Style:** `font-family: 'JetBrains Mono', monospace`, `font-size: 0.75rem`, `font-weight: 500`.
+- **Colors:** Background `--color-primary-soft`, text `--color-primary`, `border-radius: 4px`, `padding: 2px 8px`.
 
-### 5.3 Chips de Estado de Pedido (Ciclo de Vida)
-El ciclo de vida consta estrictamente de 5 estados en este orden:
-`solicitado → asignado → en_produccion → entregado → aprobado`
+### 5.3 Order Status Chips (Lifecycle)
+The lifecycle consists of exactly 5 statuses in this order:
+`requested → assigned → in_production → delivered → approved`
 
-| Estado | Token de fondo | Token de texto | Nota |
+| Status | Background token | Text token | Note |
 |---|---|---|---|
-| `solicitado` | `--color-background-mute` | `--color-text` | Estado inicial neutro |
-| `asignado` | `--color-primary-soft` | `--color-primary` | Asignado a un creador |
-| `en_produccion` | `--color-primary-soft` | `--color-primary` | En proceso de creación |
-| `entregado` | `rgba(59, 130, 246, 0.12)` | `#3b82f6` (azul info) | Esperando revisión |
-| `aprobado` | `rgba(47, 174, 96, 0.15)` | `--color-success` | **Siempre verde**, nunca violeta |
+| `requested` | `--color-background-mute` | `--color-text` | Neutral initial status |
+| `assigned` | `--color-primary-soft` | `--color-primary` | Assigned to a creator |
+| `in_production` | `--color-primary-soft` | `--color-primary` | Being produced |
+| `delivered` | `rgba(59, 130, 246, 0.12)` | `#3b82f6` (info blue) | Awaiting review |
+| `approved` | `rgba(47, 174, 96, 0.15)` | `--color-success` | **Always green**, never violet |
 
-### 5.4 Gráficos con Chart.js (`BaseChart.vue`)
-Para los gráficos de pedidos y reportes a cargo de Felipe:
-- **Paleta de series para gráficos:**
-  - Serie principal (ej. total pedidos / presupuestos): `rgba(124, 58, 237, 0.85)` (violeta marca).
-  - Serie secundaria o barras comparativas: `rgba(167, 139, 250, 0.5)`.
-  - Estados aprobados / completados: `rgba(47, 174, 96, 0.85)` (verde).
-  - Estados pendientes / cancelados: `rgba(224, 87, 91, 0.85)` (rojo).
-- **Estilo de ejes y leyendas:**
+### 5.4 Charts with Chart.js (`BaseChart.vue`)
+For the orders and reports charts owned by Felipe:
+- **Series palette for charts:**
+  - Primary series (e.g. total orders / budgets): `rgba(124, 58, 237, 0.85)` (brand violet).
+  - Secondary series or comparative bars: `rgba(167, 139, 250, 0.5)`.
+  - Approved / completed statuses: `rgba(47, 174, 96, 0.85)` (green).
+  - Pending / canceled statuses: `rgba(224, 87, 91, 0.85)` (red).
+- **Axis and legend style:**
   - `color`: `var(--color-text)`.
   - `font.family`: `'Inter', sans-serif`.
   - `grid.color`: `var(--color-border)`.
 
-### 5.5 Botones, Formularios y Navegación
-- **Border Radius estándar:** `6px` para botones e inputs; `8px` para tarjetas; `20px` para pills/chips.
-- **Botón Primario:** Fondo `--color-primary`, texto blanco (`#ffffff`), hover con ligera elevación o cambio de opacidad.
-- **Navegación Activa (`router-link-active`):** Peso `600`, color `--color-primary` y borde/acento visual inferior o lateral.
+### 5.5 Buttons, Forms, and Navigation
+- **Standard border radius:** `6px` for buttons and inputs; `8px` for cards; `20px` for pills/chips.
+- **Primary button:** Background `--color-primary`, white text (`#ffffff`), hover with a slight elevation or opacity change.
+- **Active navigation (`router-link-active`):** Weight `600`, color `--color-primary`, and a bottom or side visual border/accent.
 
 ---
 
-## 6. Reglas Anti-Genéricas del Proyecto
+## 6. Anti-Generic Rules of the Project
 
-1. **No a la estética genérica de redes:** Queda descartada la iconografía de cámaras, play buttons, reels, o corazones de "influencer". Creatorly es una herramienta B2B de gestión operativa y presupuestal.
-2. **Un solo color de acento de marca:** El violeta es el único acento institucional. El verde y el rojo se reservan exclusivamente para significado semántico (éxito y peligro).
-3. **No literalizar el puente:** La metáfora del "puente" se expresa en la arquitectura y en el monograma del logo (la C abierta con su nodo), no usando ilustraciones de puentes físicos.
-4. **Respetar los tokens:** Toda regla visual debe consumirse desde `src/assets/base.css` para garantizar compatibilidad total con el modo oscuro y evitar inconsistencias en el diseño.
+1. **No generic social-media aesthetics:** Camera, play-button, reel, or "influencer" heart iconography is off the table. Creatorly is a B2B operational and budget management tool.
+2. **A single brand accent color:** Violet is the only institutional accent. Green and red are reserved exclusively for semantic meaning (success and danger).
+3. **Don't literalize the bridge:** The "bridge" metaphor is expressed in the architecture and in the logo's monogram (the open C with its node), not with illustrations of physical bridges.
+4. **Respect the tokens:** Every visual rule must be consumed from `src/assets/base.css` to guarantee full dark-mode compatibility and avoid design inconsistencies.

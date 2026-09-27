@@ -1,75 +1,75 @@
-# ADR-0004: Migración a TypeScript y patrón interfaces + stores + services
+# ADR-0004: Migration to TypeScript and the interfaces + stores + services pattern
 
-- **Fecha:** 2026-09-02
-- **Estado:** Aceptada
-- **Decide:** Kevin Pabón (arquitecto)
+- **Date:** 2026-09-02
+- **Status:** Accepted
+- **Decided by:** Kevin Pabón (architect)
 
-## Contexto
+## Context
 
-Creatorly se construyó en JavaScript con una arquitectura de clases-modelo: cada entidad (`User`, `Creador`, `Marca`, `Pedido`) era una clase que cargaba a la vez su forma, sus validaciones y su CRUD estático, leyendo y escribiendo directamente contra `services/storage.js`. El tipado se documentaba con JSDoc.
+Creatorly was built in JavaScript with a model-class architecture: each entity (`User`, `Creator`, `Brand`, `Order`) was a class that carried its shape, its validations, and its static CRUD all at once, reading and writing directly against `services/storage.js`. Types were documented with JSDoc.
 
-Esa decisión se tomó leyendo el enunciado "Entregable 1 Parte 1 - Base", que no menciona TypeScript, ni DTOs, ni interfaces, ni una estructura de carpetas específica. Solo pide Vue 3, LocalStorage, páginas, CRUDs y Chart.js.
+That decision was made reading the "Deliverable 1 Part 1 - Base" assignment, which doesn't mention TypeScript, DTOs, interfaces, or a specific folder structure. It only asks for Vue 3, LocalStorage, pages, CRUDs, and Chart.js.
 
-El 2026-09-01 otro equipo del curso sustentó su proyecto y el profesor compartió la rúbrica de calificación. La rúbrica enumera, como ítems calificables: **Store, DTOs, Interfaces, Services, Views, Components, Utils**. Durante la sustentación el profesor revisó archivo por archivo el tipado, el orden de los imports, el nombramiento de variables y la ubicación de los gráficos.
+On 2026-09-01 another team in the course presented their project and the professor shared the grading rubric. The rubric lists, as gradable items: **Store, DTOs, Interfaces, Services, Views, Components, Utils**. During the defense the professor reviewed file by file the typing, the import order, variable naming, and where the charts lived.
 
-Al revisar los tutoriales del curso (`desarrollo-web-tutoriales`), se confirmó que:
+Reviewing the course tutorials (`desarrollo-web-tutoriales`), it was confirmed that:
 
-- Están escritos en TypeScript con `tsconfig` y `vue-tsc`.
-- Su `src/` contiene exactamente `interfaces/`, `dtos/`, `stores/`, `services/`, `utils/`, `components/` y `views/`.
-- El patrón es: interface con solo atributos, store de Pinia que solo guarda el array, y service como clase de métodos estáticos con toda la lógica.
-- Los CRUD se dividen en tres rutas (`BooksIndexView`, `BooksCreateView`, `BooksShowView`).
+- They're written in TypeScript with `tsconfig` and `vue-tsc`.
+- Their `src/` contains exactly `interfaces/`, `dtos/`, `stores/`, `services/`, `utils/`, `components/`, and `views/`.
+- The pattern is: an interface with only attributes, a Pinia store that only holds the array, and a service as a class of static methods with all the logic.
+- CRUDs are split into three routes (`BooksIndexView`, `BooksCreateView`, `BooksShowView`).
 
-El proyecto del equipo que sustentó sigue ese mismo patrón sin desviarse, y obtuvo buena calificación.
+The team that presented follows that same pattern without deviating, and got a good grade.
 
-La conclusión es que la arquitectura evaluada no viene del enunciado escrito sino de la "dictadura de código" acordada en clase, materializada en los tutoriales.
+The conclusion is that the graded architecture doesn't come from the written assignment but from the "code dictatorship" agreed on in class, embodied in the tutorials.
 
-## Decisión
+## Decision
 
-Migrar Creatorly a TypeScript y adoptar el patrón de tres capas de los tutoriales:
+Migrate Creatorly to TypeScript and adopt the tutorials' three-layer pattern:
 
-- **`interfaces/`** — la forma de cada entidad, solo atributos, sin métodos.
-- **`dtos/`** — tipos derivados con `Omit`/`Pick`, uno por caso de uso.
-- **`stores/`** — Pinia, únicamente el array de la entidad, sin lógica.
-- **`services/`** — clases de métodos estáticos con toda la lógica de negocio y las validaciones.
-- **`seeders/`** — datos de siembra, uno por entidad.
-- **`utils/`** — formateadores y helpers.
-- **`components/charts/`** — todos los gráficos Chart.js; ninguna view los importa.
+- **`interfaces/`** — each entity's shape, attributes only, no methods.
+- **`dtos/`** — types derived with `Omit`/`Pick`, one per use case.
+- **`stores/`** — Pinia, only the entity's array, no logic.
+- **`services/`** — classes of static methods with all the business logic and validations.
+- **`seeders/`** — seed data, one per entity.
+- **`utils/`** — formatters and helpers.
+- **`components/charts/`** — all the Chart.js charts; no view imports them.
 
-Se elimina la carpeta `composables/`: su lógica pasa a los services.
+The `composables/` folder is removed: its logic moves to the services.
 
-El plan de ejecución en 7 pasos vive en `PLAN_MIGRACION_TS.md`.
+The 7-step execution plan lives in `PLAN_MIGRACION_TS.md`.
 
-## Alternativas consideradas
+## Alternatives Considered
 
-**Quedarse en JavaScript con JSDoc.** El JSDoc actual es correcto y da autocompletado en el editor, y el enunciado escrito no exige TypeScript. Se descartó porque la rúbrica califica explícitamente DTOs e interfaces, que son construcciones de TypeScript, y porque el profesor revisó el tipado en detalle durante la sustentación. El riesgo de perder esos ítems supera el costo de migrar.
+**Stay in JavaScript with JSDoc.** The current JSDoc is correct and gives editor autocompletion, and the written assignment doesn't require TypeScript. Discarded because the rubric explicitly grades DTOs and interfaces, which are TypeScript constructs, and because the professor reviewed the typing in detail during the defense. The risk of losing those items outweighs the cost of migrating.
 
-**Migrar solo la estructura de carpetas, sin TypeScript.** Se podrían crear `services/` y `utils/` en JS. Se descartó porque `interfaces/` y `dtos/` no tienen equivalente real en JavaScript: un DTO en el patrón del curso es un tipo derivado (`Omit<UserInterface, 'id'>`), y eso no existe sin TS.
+**Migrate only the folder structure, without TypeScript.** `services/` and `utils/` could be created in JS. Discarded because `interfaces/` and `dtos/` have no real equivalent in JavaScript: a DTO in the course's pattern is a derived type (`Omit<UserInterface, 'id'>`), and that doesn't exist without TS.
 
-**Migrar después de terminar las páginas.** Se descartó por lo contrario: migrar más tarde es mucho más caro. Hoy ninguna vista está implementada, así que el trabajo a rehacer es cero.
+**Migrate after finishing the pages.** Discarded for the opposite reason: migrating later is much more expensive. Today no view is implemented, so the rework cost is zero.
 
-## Consecuencias
+## Consequences
 
-**Positivas**
+**Positive**
 
-- La estructura del proyecto coincide con los ítems 8 a 14 de la rúbrica.
-- Los tipos se verifican en tiempo de compilación (`vue-tsc` en el build), no solo en el editor.
-- La separación store/service hace las views delgadas y la lógica testeable y reutilizable.
-- El equipo trabaja sobre el mismo patrón que ya practicó en los tutoriales, en vez de uno propio.
+- The project structure matches items 8 to 14 of the rubric.
+- Types are checked at compile time (`vue-tsc` in the build), not just in the editor.
+- The store/service separation keeps views thin and the logic testable and reusable.
+- The team works on the same pattern already practiced in the tutorials, instead of a homegrown one.
 
-**Negativas**
+**Negative**
 
-- Costo inmediato de migración de la base (modelos, storage, siembra, router, sesión).
-- Felipe y Gerónimo quedan bloqueados hasta que termine el paso 6 del plan.
-- Ambos compañeros deben trabajar en TypeScript, que puede ser nuevo para ellos. Se mitiga con una guía corta del patrón, que además alimenta la página "Reglas de programación" del wiki.
-- Cada entidad pasa de un archivo a tres, lo que aumenta el número de archivos aunque baje el acoplamiento.
+- Immediate cost of migrating the base (models, storage, seeding, router, session).
+- Felipe and Gerónimo are blocked until step 6 of the plan is done.
+- Both teammates have to work in TypeScript, which may be new to them. Mitigated with a short guide to the pattern, which also feeds the wiki's "Programming rules" page.
+- Each entity goes from one file to three, which increases the file count even as coupling drops.
 
-**Sobre el diagrama de clases**
+**On the class diagram**
 
-El diagrama entregado declara `+CRUD()`, `+getters()`, `+setters()` en las cuatro clases. Con interfaces puras esos métodos ya no existen en el código. Se verificó que el equipo que sustentó tiene exactamente el mismo descuadre —diagrama con esos tres métodos, código con interfaces sin métodos— y el profesor no lo penalizó. **El diagrama no se modifica.**
+The submitted diagram declares `+CRUD()`, `+getters()`, `+setters()` on the four classes. With pure interfaces those methods no longer exist in the code. It was verified that the team that presented has exactly the same mismatch — diagram with those three methods, code with methodless interfaces — and the professor didn't penalize it. **The diagram is not modified.** (Pending update: the diagram is being redrawn as part of the correction plan, phase 6.)
 
-Si en la sustentación se pregunta por el descuadre, la explicación es que el diagrama modela el dominio (qué operaciones existen sobre cada entidad) mientras que el código las ubica en la capa de servicios, siguiendo el patrón del curso.
+If the mismatch comes up during the defense, the explanation is that the diagram models the domain (what operations exist on each entity) while the code places them in the service layer, following the course's pattern.
 
-## Impacto en ADRs previos
+## Impact on Previous ADRs
 
-- **ADR-0001** (LocalStorage + referencias por id): sigue vigente. Cambia el nombre del archivo (`storage.js` → `StorageService.ts`) y se agrega `PiniaConfig.ts` para hidratar y persistir los stores.
-- **ADR-0003** (BaseChart propio): sigue vigente y se refuerza. El componente pasa a `components/charts/` y la regla "ninguna view importa Chart.js" queda explícita en la rúbrica del profesor.
+- **ADR-0001** (LocalStorage + references by id): still stands. The file name changes (`storage.js` → `StorageService.ts`) and `PiniaConfig.ts` is added to hydrate and persist the stores.
+- **ADR-0003** (custom BaseChart): still stands and is reinforced. The component moves to `components/charts/` and the rule "no view imports Chart.js" becomes explicit in the professor's rubric.
