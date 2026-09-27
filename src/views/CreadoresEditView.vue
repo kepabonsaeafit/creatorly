@@ -10,6 +10,7 @@ import { useToast } from 'vue-toastification'
 import CreadorForm from '@/components/CreadorForm.vue'
 import type { CreateCreadorDTO } from '@/dtos/CreateCreadorDTO'
 import { CreadorService } from '@/services/CreadorService'
+import { confirmarEliminacion } from '@/utils/confirmarEliminacion'
 
 const route = useRoute()
 const router = useRouter()
@@ -42,7 +43,7 @@ function onSubmit(datos: CreateCreadorDTO): void {
 
 function onEliminar(): void {
   if (!creador.value) return
-  if (!confirm('¿Eliminar este creador? Esta acción no se puede deshacer.')) return
+  if (!confirmarEliminacion('creador')) return
   const eliminado = CreadorService.remove(creador.value.id)
   if (eliminado) {
     toast.success('Creador eliminado correctamente')

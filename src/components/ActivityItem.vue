@@ -5,12 +5,13 @@
 import { computed } from 'vue'
 
 // internal imports
+import type { PedidoActivity } from '@/interfaces/PedidoActivityInterface'
 import { formatDateTime } from '@/utils/formatDate'
 
 interface Props {
   title: string
   timestamp: string
-  type?: 'default' | 'milestone'
+  type?: PedidoActivity['type']
 }
 
 const props = withDefaults(defineProps<Props>(), {

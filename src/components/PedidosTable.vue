@@ -4,6 +4,7 @@
 // internal imports
 import type { PedidoInterface } from '@/interfaces/PedidoInterface'
 import { PedidoService } from '@/services/PedidoService'
+import { confirmarEliminacion } from '@/utils/confirmarEliminacion'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import { formatEstado } from '@/utils/formatEstado'
@@ -24,7 +25,7 @@ function nombreCreador(pedido: PedidoInterface): string {
 }
 
 function onEliminar(id: string): void {
-  if (!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.')) return
+  if (!confirmarEliminacion('pedido')) return
   emit('eliminar', id)
 }
 </script>
@@ -113,7 +114,7 @@ function onEliminar(id: string): void {
 .pedidos-table__badge--entregado,
 .pedidos-table__badge--aprobado {
   background: var(--color-success);
-  color: #ffffff;
+  color: var(--brand-white);
 }
 
 .pedidos-table__acciones {

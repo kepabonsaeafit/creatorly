@@ -98,7 +98,7 @@ function limpiarFiltros(): void {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   background: var(--color-primary);
-  color: #ffffff;
+  color: var(--brand-white);
   font-weight: 600;
 }
 

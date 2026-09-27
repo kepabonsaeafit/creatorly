@@ -4,11 +4,10 @@
 import type { CreateMarcaDTO } from '@/dtos/CreateMarcaDTO'
 import type { MarcaInterface } from '@/interfaces/MarcaInterface'
 import { useMarcaStore } from '@/stores/MarcaStore'
+import { isValidEmail, normalizeEmail } from '@/utils/email'
 import { generateId } from '@/utils/generateId'
 
 export class MarcaService {
-  private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
   private static validate(datos: CreateMarcaDTO): void {
     if (!datos.nombre || typeof datos.nombre !== 'string') {
       throw new Error('Marca: el nombre es obligatorio')
@@ -19,7 +18,7 @@ export class MarcaService {
     if (!datos.contactoNombre || typeof datos.contactoNombre !== 'string') {
       throw new Error('Marca: el nombre del contacto es obligatorio')
     }
-    if (!this.EMAIL_REGEX.test(datos.contactoEmail ?? '')) {
+    if (!isValidEmail(datos.contactoEmail ?? '')) {
       throw new Error('Marca: el email del contacto no tiene un formato válido')
     }
   }
@@ -35,7 +34,7 @@ export class MarcaService {
   static create(datos: CreateMarcaDTO): MarcaInterface {
     const normalizado: CreateMarcaDTO = {
       ...datos,
-      contactoEmail: String(datos.contactoEmail).trim().toLowerCase(),
+      contactoEmail: normalizeEmail(datos.contactoEmail),
     }
     this.validate(normalizado)
     const ahora = new Date().toISOString()
@@ -63,7 +62,7 @@ export class MarcaService {
     const actualizado: MarcaInterface = {
       ...marcas[indice],
       ...combinado,
-      contactoEmail: String(combinado.contactoEmail).trim().toLowerCase(),
+      contactoEmail: normalizeEmail(combinado.contactoEmail),
       updatedAt: new Date().toISOString(),
     }
     marcas[indice] = actualizado

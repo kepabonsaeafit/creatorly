@@ -3,6 +3,7 @@
 
 // internal imports
 import type { CreadorInterface } from '@/interfaces/CreadorInterface'
+import { confirmarEliminacion } from '@/utils/confirmarEliminacion'
 import { formatCurrency } from '@/utils/formatCurrency'
 
 withDefaults(defineProps<{ creadores: CreadorInterface[]; accionable?: boolean }>(), {
@@ -13,7 +14,7 @@ const emit = defineEmits<{ eliminar: [id: string] }>()
 
 // functions
 function onEliminar(id: string): void {
-  if (!confirm('¿Eliminar este creador? Esta acción no se puede deshacer.')) return
+  if (!confirmarEliminacion('creador')) return
   emit('eliminar', id)
 }
 </script>
@@ -102,7 +103,7 @@ function onEliminar(id: string): void {
 
 .creadores-table__badge--disponible {
   background: var(--color-success);
-  color: #ffffff;
+  color: var(--brand-white);
 }
 
 .creadores-table__acciones {
