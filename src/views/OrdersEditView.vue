@@ -31,7 +31,7 @@ function onSubmit(orderData: CreateOrderDTO): void {
   try {
     OrderService.update(order.value.id, orderData)
     toast.success('Pedido actualizado correctamente')
-    router.push({ name: 'pedidos' })
+    router.push({ name: 'orders' })
   } catch (caughtError) {
     error.value =
       caughtError instanceof Error ? caughtError.message : 'No fue posible actualizar el pedido'
@@ -47,7 +47,7 @@ function onDelete(): void {
   const removed = OrderService.remove(order.value.id)
   if (removed) {
     toast.success('Pedido eliminado correctamente')
-    router.push({ name: 'pedidos' })
+    router.push({ name: 'orders' })
   } else {
     toast.error('No fue posible eliminar el pedido')
   }
@@ -62,7 +62,7 @@ function onDelete(): void {
       <button type="button" class="edit-pedido__eliminar" @click="onDelete">Eliminar pedido</button>
     </template>
     <p v-else class="edit-pedido__no-encontrado">
-      No se encontró un pedido con ese id. <RouterLink :to="{ name: 'pedidos' }">Volver</RouterLink>
+      No se encontró un pedido con ese id. <RouterLink :to="{ name: 'orders' }">Volver</RouterLink>
     </p>
   </main>
 </template>

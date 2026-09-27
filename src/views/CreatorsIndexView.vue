@@ -52,7 +52,7 @@ function clearFilters(): void {
   <main class="Panel creadores">
     <div class="creadores__header">
       <h1>Creadores</h1>
-      <RouterLink class="creadores__crear" :to="{ name: 'creadores.create' }">
+      <RouterLink class="creadores__crear" :to="{ name: 'creators.create' }">
         Nuevo creador
       </RouterLink>
     </div>

@@ -2,12 +2,13 @@
 // Gerónimo Montes
 
 // external imports
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
-import { ROLES, type UserRole } from '@/interfaces/UserInterface'
+import type { UserRole } from '@/interfaces/UserInterface'
 import { normalizeEmail } from '@/utils/email'
+import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 
 interface Props {
   initial?: Partial<CreateUserDTO>
@@ -26,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{ submit: [userData: CreateUserDTO]; cancel: [] }>()
 
 // selectors
-const role = ref<UserRole>(props.initial.role ?? 'coordinador')
+const role = ref<UserRole>(props.initial.role ?? 'coordinator')
 
 // state
 const name = ref(props.initial.name ?? '')
@@ -34,6 +35,9 @@ const email = ref(props.initial.email ?? '')
 // La contraseña se guarda en texto plano por diseño del proyecto (UserInterface),
 // así que en edición se precarga y se reenvía completa, igual que el resto de campos.
 const password = ref(props.initial.password ?? '')
+
+// computed variables
+const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))
 
 // functions
 function onSubmit(): void {
@@ -72,7 +76,9 @@ function onSubmit(): void {
     <div class="usuario-form__field">
       <label class="usuario-form__label" for="usuario-rol">Rol</label>
       <select id="usuario-rol" v-model="role" class="usuario-form__input">
-        <option v-for="option in ROLES" :key="option" :value="option">{{ option }}</option>
+        <option v-for="option in roleOptions" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
       </select>
     </div>
 

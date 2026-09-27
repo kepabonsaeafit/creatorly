@@ -34,7 +34,7 @@ function onSubmit(userData: CreateUserDTO): void {
     UserService.validateOwnRoleChange(currentUser.value?.id, user.value.id, userData.role)
     UserService.update(user.value.id, userData)
     toast.success('Usuario actualizado correctamente')
-    router.push({ name: 'usuarios' })
+    router.push({ name: 'users' })
   } catch (caughtError) {
     error.value =
       caughtError instanceof Error ? caughtError.message : 'No fue posible actualizar el usuario'
@@ -45,7 +45,7 @@ function onSubmit(userData: CreateUserDTO): void {
 }
 
 function onCancel(): void {
-  router.push({ name: 'usuarios' })
+  router.push({ name: 'users' })
 }
 
 function onDelete(): void {
@@ -56,7 +56,7 @@ function onDelete(): void {
     const removed = UserService.remove(user.value.id)
     if (removed) {
       toast.success('Usuario eliminado correctamente')
-      router.push({ name: 'usuarios' })
+      router.push({ name: 'users' })
     } else {
       toast.error('No fue posible eliminar el usuario')
     }
@@ -91,7 +91,7 @@ function onDelete(): void {
     </template>
     <p v-else class="edit-usuario__no-encontrado">
       No se encontró un usuario con ese id.
-      <RouterLink :to="{ name: 'usuarios' }">Volver</RouterLink>
+      <RouterLink :to="{ name: 'users' }">Volver</RouterLink>
     </p>
   </main>
 </template>

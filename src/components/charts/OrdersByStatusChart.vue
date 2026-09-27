@@ -9,7 +9,7 @@ import { computed } from 'vue'
 import BaseChart from '@/components/charts/BaseChart.vue'
 import type { OrdersByStatusDTO } from '@/dtos/OrdersByStatusDTO'
 import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
-import { formatStatus } from '@/utils/formatStatus'
+import { formatStatus } from '@/utils/labels'
 
 const props = withDefaults(defineProps<{ items: OrdersByStatusDTO[]; showLegend?: boolean }>(), {
   showLegend: true,

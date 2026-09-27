@@ -50,7 +50,7 @@ function onDelete(id: string): void {
           </span>
         </td>
         <td v-if="actionable" class="creadores-table__acciones">
-          <RouterLink :to="{ name: 'creadores.edit', params: { id: creator.id } }">
+          <RouterLink :to="{ name: 'creators.edit', params: { id: creator.id } }">
             Editar
           </RouterLink>
           <button type="button" class="creadores-table__eliminar" @click="onDelete(creator.id)">

@@ -10,11 +10,10 @@ import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import OrdersTable from '@/components/OrdersTable.vue'
 import type { OrderFilterDTO } from '@/dtos/OrderFilterDTO'
-import { STATUSES } from '@/interfaces/OrderInterface'
 import { BrandService } from '@/services/BrandService'
 import { OrderService } from '@/services/OrderService'
 import { getChartPalette } from '@/utils/chartColors'
-import { formatStatus } from '@/utils/formatStatus'
+import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
 const toast = useToast()
 
@@ -29,6 +28,7 @@ const text = ref('')
 
 // computed variables
 const brands = computed(() => BrandService.getAll())
+const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
 
 const completeFilters = computed<OrderFilterDTO>(() => ({ ...filters, text: text.value }))
 
@@ -62,7 +62,7 @@ function clearFilters(): void {
   <main class="Panel pedidos">
     <div class="pedidos__header">
       <h1>Pedidos</h1>
-      <RouterLink class="pedidos__crear" :to="{ name: 'pedidos.create' }">Nuevo pedido</RouterLink>
+      <RouterLink class="pedidos__crear" :to="{ name: 'orders.create' }">Nuevo pedido</RouterLink>
     </div>
 
     <div class="pedidos__filtros">
@@ -75,8 +75,8 @@ function clearFilters(): void {
 
       <select v-model="filters.status" class="pedidos__filtro-input">
         <option :value="undefined">Todos los estados</option>
-        <option v-for="option in STATUSES" :key="option" :value="option">
-          {{ formatStatus(option) }}
+        <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
 

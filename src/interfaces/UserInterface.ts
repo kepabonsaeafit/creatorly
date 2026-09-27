@@ -1,7 +1,7 @@
 // Kevin Pabón
 
 /** Roles válidos de un User del sistema. */
-export const ROLES = ['admin', 'coordinador'] as const
+export const ROLES = ['admin', 'coordinator'] as const
 
 export type UserRole = (typeof ROLES)[number]
 

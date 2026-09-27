@@ -1,18 +1,12 @@
 // Kevin Pabón
 
 /** Estados válidos del ciclo de vida de un Pedido, en el orden fijo del ciclo de vida. */
-export const STATUSES = [
-  'solicitado',
-  'asignado',
-  'en_produccion',
-  'entregado',
-  'aprobado',
-] as const
+export const STATUSES = ['requested', 'assigned', 'in_production', 'delivered', 'approved'] as const
 
 export type OrderStatus = (typeof STATUSES)[number]
 
 /** Estados que marcan el cierre del ciclo de vida de un Pedido. */
-export const FINAL_STATUSES: readonly OrderStatus[] = ['entregado', 'aprobado']
+export const FINAL_STATUSES: readonly OrderStatus[] = ['delivered', 'approved']
 
 /**
  * Pedido: la unidad de trabajo del sistema. Conecta a una Marca (quien solicita),

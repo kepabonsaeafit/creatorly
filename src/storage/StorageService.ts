@@ -13,9 +13,9 @@ import type { CollectionName, SessionRecord } from '@/interfaces/StorageInterfac
 export class StorageService {
   private static readonly KEYS: Record<CollectionName, string> = {
     users: 'creatorly_users',
-    creadores: 'creatorly_creadores',
-    marcas: 'creatorly_marcas',
-    pedidos: 'creatorly_pedidos',
+    creators: 'creatorly_creators',
+    brands: 'creatorly_brands',
+    orders: 'creatorly_orders',
   }
 
   private static readonly SESSION_KEY = 'creatorly_session'

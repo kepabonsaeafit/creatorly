@@ -5,6 +5,7 @@
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 import { formatDate } from '@/utils/formatDate'
+import { formatRole } from '@/utils/labels'
 
 withDefaults(
   defineProps<{
@@ -43,12 +44,12 @@ function onDelete(id: string): void {
         <td>{{ user.email }}</td>
         <td>
           <span class="usuarios-table__badge" :class="`usuarios-table__badge--${user.role}`">
-            {{ user.role }}
+            {{ formatRole(user.role) }}
           </span>
         </td>
         <td>{{ formatDate(user.createdAt) }}</td>
         <td class="usuarios-table__acciones">
-          <RouterLink :to="{ name: 'usuarios.edit', params: { id: user.id } }"> Editar </RouterLink>
+          <RouterLink :to="{ name: 'users.edit', params: { id: user.id } }"> Editar </RouterLink>
           <button
             v-if="user.id !== currentUserId"
             type="button"

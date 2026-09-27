@@ -25,7 +25,7 @@ function onSubmit(userData: CreateUserDTO): void {
   try {
     UserService.create(userData)
     toast.success('Usuario creado correctamente')
-    router.push({ name: 'usuarios' })
+    router.push({ name: 'users' })
   } catch (caughtError) {
     error.value =
       caughtError instanceof Error ? caughtError.message : 'No fue posible crear el usuario'

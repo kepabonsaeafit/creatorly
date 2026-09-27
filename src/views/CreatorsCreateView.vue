@@ -25,7 +25,7 @@ function onSubmit(creatorData: CreateCreatorDTO): void {
   try {
     CreatorService.create(creatorData)
     toast.success('Creador creado correctamente')
-    router.push({ name: 'creadores' })
+    router.push({ name: 'creators' })
   } catch (caughtError) {
     error.value =
       caughtError instanceof Error ? caughtError.message : 'No fue posible crear el creador'

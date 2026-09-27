@@ -27,9 +27,9 @@ import { generateId } from '@/utils/generateId'
 
 export class OrderService {
   private static readonly ACTIVE_STATUSES: OrderStatus[] = [
-    'solicitado',
-    'asignado',
-    'en_produccion',
+    'requested',
+    'assigned',
+    'in_production',
   ]
 
   private static validate(datos: CreateOrderDTO): void {
@@ -124,7 +124,7 @@ export class OrderService {
     const normalizado: CreateOrderDTO = {
       ...datos,
       deliveryDate: datos.deliveryDate ?? null,
-      status: datos.status ?? 'solicitado',
+      status: datos.status ?? 'requested',
       creatorId: datos.creatorId ?? null,
       requestDate: datos.requestDate ?? todayIso(),
     }
@@ -266,7 +266,7 @@ export class OrderService {
   /** KPIs de ReportsView, con la misma forma que HomeStat para reusar StatCardGrid. */
   static getReportStats(pedidos: OrderInterface[]): HomeStat[] {
     const presupuestoTotal = pedidos.reduce((suma, pedido) => suma + pedido.budget, 0)
-    const aprobados = pedidos.filter((pedido) => pedido.status === 'aprobado').length
+    const aprobados = pedidos.filter((pedido) => pedido.status === 'approved').length
     const tasaAprobacion = pedidos.length > 0 ? Math.round((aprobados / pedidos.length) * 100) : 0
 
     return [

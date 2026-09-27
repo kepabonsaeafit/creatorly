@@ -31,7 +31,7 @@ function onSubmit(creatorData: CreateCreatorDTO): void {
   try {
     CreatorService.update(creator.value.id, creatorData)
     toast.success('Creador actualizado correctamente')
-    router.push({ name: 'creadores' })
+    router.push({ name: 'creators' })
   } catch (caughtError) {
     error.value =
       caughtError instanceof Error ? caughtError.message : 'No fue posible actualizar el creador'
@@ -47,7 +47,7 @@ function onDelete(): void {
   const removed = CreatorService.remove(creator.value.id)
   if (removed) {
     toast.success('Creador eliminado correctamente')
-    router.push({ name: 'creadores' })
+    router.push({ name: 'creators' })
   } else {
     toast.error('No fue posible eliminar el creador')
   }
@@ -71,7 +71,7 @@ function onDelete(): void {
     </template>
     <p v-else class="edit-creador__no-encontrado">
       No se encontró un creador con ese id.
-      <RouterLink :to="{ name: 'creadores' }">Volver</RouterLink>
+      <RouterLink :to="{ name: 'creators' }">Volver</RouterLink>
     </p>
   </main>
 </template>
