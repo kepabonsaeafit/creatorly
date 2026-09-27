@@ -10,6 +10,7 @@ import { ESTADOS, type EstadoPedido } from '@/interfaces/PedidoInterface'
 import { CreadorService } from '@/services/CreadorService'
 import { MarcaService } from '@/services/MarcaService'
 import { UserService } from '@/services/UserService'
+import { todayIso } from '@/utils/formatDate'
 import { formatEstado } from '@/utils/formatEstado'
 
 interface Props {
@@ -37,7 +38,7 @@ const estado = ref<EstadoPedido>(props.initial.estado ?? 'solicitado')
 // state
 const descripcion = ref(props.initial.descripcion ?? '')
 const presupuesto = ref(props.initial.presupuesto ?? 0)
-const fechaSolicitud = ref(props.initial.fechaSolicitud ?? new Date().toISOString().slice(0, 10))
+const fechaSolicitud = ref(props.initial.fechaSolicitud ?? todayIso())
 const fechaEntrega = ref(props.initial.fechaEntrega ?? '')
 
 // computed variables
