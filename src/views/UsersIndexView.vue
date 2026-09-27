@@ -9,15 +9,13 @@ import { useToast } from 'vue-toastification'
 // internal imports
 import UsersTable from '@/components/UsersTable.vue'
 import type { UserFilterDTO } from '@/dtos/UserFilterDTO'
-import type { UserRole } from '@/interfaces/UserInterface'
 import { resetDemoData } from '@/PiniaConfig'
 import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
+import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 
 const router = useRouter()
 const toast = useToast()
-
-const ROLES: UserRole[] = ['admin', 'coordinador']
 
 // selectors
 const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
@@ -27,6 +25,7 @@ const text = ref('')
 
 // computed variables
 const currentUser = computed(() => AuthService.getCurrentUser())
+const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))
 
 const completeFilters = computed<UserFilterDTO>(() => ({ ...filters, text: text.value }))
 
@@ -73,7 +72,7 @@ function onResetDemo(): void {
   <main class="Panel usuarios">
     <div class="usuarios__header">
       <h1>Usuarios</h1>
-      <RouterLink class="usuarios__crear" :to="{ name: 'usuarios.create' }">
+      <RouterLink class="usuarios__crear" :to="{ name: 'users.create' }">
         Nuevo usuario
       </RouterLink>
     </div>
@@ -88,7 +87,9 @@ function onResetDemo(): void {
 
       <select v-model="filters.role" class="usuarios__filtro-input">
         <option :value="undefined">Todos los roles</option>
-        <option v-for="option in ROLES" :key="option" :value="option">{{ option }}</option>
+        <option v-for="option in roleOptions" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
       </select>
 
       <button type="button" class="usuarios__limpiar" @click="clearFilters">Limpiar filtros</button>

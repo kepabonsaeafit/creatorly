@@ -25,7 +25,7 @@ function onSubmit(orderData: CreateOrderDTO): void {
   try {
     OrderService.create(orderData)
     toast.success('Pedido creado correctamente')
-    router.push({ name: 'pedidos' })
+    router.push({ name: 'orders' })
   } catch (caughtError) {
     error.value =
       caughtError instanceof Error ? caughtError.message : 'No fue posible crear el pedido'

@@ -7,7 +7,7 @@ import { OrderService } from '@/services/OrderService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
-import { formatStatus } from '@/utils/formatStatus'
+import { formatStatus } from '@/utils/labels'
 
 withDefaults(defineProps<{ orders: OrderInterface[]; actionable?: boolean }>(), {
   actionable: false,
@@ -62,7 +62,7 @@ function onDelete(id: string): void {
         <td>{{ formatDate(order.requestDate) }}</td>
         <td>{{ formatDate(order.deliveryDate) }}</td>
         <td v-if="actionable" class="pedidos-table__acciones">
-          <RouterLink :to="{ name: 'pedidos.edit', params: { id: order.id } }">Editar</RouterLink>
+          <RouterLink :to="{ name: 'orders.edit', params: { id: order.id } }">Editar</RouterLink>
           <button type="button" class="pedidos-table__eliminar" @click="onDelete(order.id)">
             Eliminar
           </button>
@@ -111,8 +111,8 @@ function onDelete(id: string): void {
   color: var(--color-text);
 }
 
-.pedidos-table__badge--entregado,
-.pedidos-table__badge--aprobado {
+.pedidos-table__badge--delivered,
+.pedidos-table__badge--approved {
   background: var(--color-success);
   color: var(--brand-white);
 }

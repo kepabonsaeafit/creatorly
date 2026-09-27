@@ -44,14 +44,14 @@ function generateSeed(): SeedData {
 /** Escribe las cuatro colecciones en LocalStorage. */
 function persistSeed(datos: SeedData): void {
   StorageService.write('users', datos.users)
-  StorageService.write('creadores', datos.creators)
-  StorageService.write('marcas', datos.brands)
-  StorageService.write('pedidos', datos.orders)
+  StorageService.write('creators', datos.creators)
+  StorageService.write('brands', datos.brands)
+  StorageService.write('orders', datos.orders)
 }
 
 /** Siembra si la "base de datos" está vacía. */
 function ensureSeeded(): void {
-  if (!StorageService.hasData('users') && !StorageService.hasData('pedidos')) {
+  if (!StorageService.hasData('users') && !StorageService.hasData('orders')) {
     persistSeed(generateSeed())
   }
 }
@@ -95,12 +95,12 @@ export function initPinia(): void {
   const { orders } = storeToRefs(useOrderStore())
 
   hydrate(users, 'users')
-  hydrate(creators, 'creadores')
-  hydrate(brands, 'marcas')
-  hydrate(orders, 'pedidos')
+  hydrate(creators, 'creators')
+  hydrate(brands, 'brands')
+  hydrate(orders, 'orders')
 
   persist(users, 'users')
-  persist(creators, 'creadores')
-  persist(brands, 'marcas')
-  persist(orders, 'pedidos')
+  persist(creators, 'creators')
+  persist(brands, 'brands')
+  persist(orders, 'orders')
 }

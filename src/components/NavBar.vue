@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 // internal imports
 import type { NavLink } from '@/interfaces/NavLinkInterface'
 import { AuthService } from '@/services/AuthService'
+import { formatRole } from '@/utils/labels'
 
 const router = useRouter()
 
@@ -15,10 +16,10 @@ const router = useRouter()
 /** Catálogo completo de links; el router decide cuáles exigen el rol de administrador. */
 const LINKS: NavLink[] = [
   { name: 'home', label: 'Home' },
-  { name: 'pedidos', label: 'Pedidos' },
-  { name: 'reportes', label: 'Reportes' },
-  { name: 'creadores', label: 'Creadores' },
-  { name: 'usuarios', label: 'Usuarios' },
+  { name: 'orders', label: 'Pedidos' },
+  { name: 'reports', label: 'Reportes' },
+  { name: 'creators', label: 'Creadores' },
+  { name: 'users', label: 'Usuarios' },
 ]
 
 // computed variables
@@ -102,7 +103,7 @@ function logout(): void {
       <span class="navbar__avatar" aria-hidden="true">{{ initials }}</span>
       <span class="navbar__user-info">
         <span class="navbar__user-name">{{ currentUser.name }}</span>
-        <span class="navbar__user-role">{{ currentUser.role }}</span>
+        <span class="navbar__user-role">{{ formatRole(currentUser.role) }}</span>
       </span>
       <button type="button" class="navbar__logout" @click="logout">
         <svg class="navbar__logout-icon" viewBox="0 0 16 16" aria-hidden="true">

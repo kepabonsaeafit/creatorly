@@ -6,12 +6,12 @@ import { computed, ref } from 'vue'
 
 // internal imports
 import type { CreateOrderDTO } from '@/dtos/CreateOrderDTO'
-import { type OrderStatus, STATUSES } from '@/interfaces/OrderInterface'
+import type { OrderStatus } from '@/interfaces/OrderInterface'
 import { BrandService } from '@/services/BrandService'
 import { CreatorService } from '@/services/CreatorService'
 import { UserService } from '@/services/UserService'
 import { todayIso } from '@/utils/formatDate'
-import { formatStatus } from '@/utils/formatStatus'
+import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
 interface Props {
   initial?: Partial<CreateOrderDTO>
@@ -33,7 +33,7 @@ const emit = defineEmits<{ submit: [orderData: CreateOrderDTO] }>()
 const brandId = ref(props.initial.brandId ?? '')
 const creatorId = ref(props.initial.creatorId ?? '')
 const userId = ref(props.initial.userId ?? '')
-const status = ref<OrderStatus>(props.initial.status ?? 'solicitado')
+const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
 // state
 const description = ref(props.initial.description ?? '')
@@ -45,6 +45,7 @@ const deliveryDate = ref(props.initial.deliveryDate ?? '')
 const brands = computed(() => BrandService.getAll())
 const creators = computed(() => CreatorService.getAll())
 const coordinators = computed(() => UserService.getCoordinators())
+const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
 
 // functions
 function onSubmit(): void {
@@ -136,8 +137,8 @@ function onSubmit(): void {
     <div v-if="editMode" class="pedido-form__field">
       <label class="pedido-form__label" for="estado">Estado</label>
       <select id="estado" v-model="status" class="pedido-form__input">
-        <option v-for="option in STATUSES" :key="option" :value="option">
-          {{ formatStatus(option) }}
+        <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
     </div>

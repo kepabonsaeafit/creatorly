@@ -14,14 +14,13 @@ import OrdersTable from '@/components/OrdersTable.vue'
 import ReportTable from '@/components/ReportTable.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
 import type { OrderFilterDTO } from '@/dtos/OrderFilterDTO'
-import { STATUSES } from '@/interfaces/OrderInterface'
 import type { ReportOption, ReportType } from '@/interfaces/ReportInterface'
 import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
 import { BrandService } from '@/services/BrandService'
 import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
 import { formatCurrency } from '@/utils/formatCurrency'
-import { formatStatus } from '@/utils/formatStatus'
+import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
 const REPORT_OPTIONS: ReportOption[] = [
   { id: 'month', label: 'Pedidos por mes' },
@@ -46,6 +45,7 @@ const to = ref('')
 // computed variables
 const brands = computed(() => BrandService.getAll())
 const creators = computed(() => CreatorService.getAll())
+const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
 
 const completeFilters = computed<OrderFilterDTO>(() => ({
   ...filters,
@@ -136,8 +136,8 @@ function clearFilters(): void {
     <div class="reportes__filtros">
       <select v-model="filters.status" class="reportes__filtro-input">
         <option :value="undefined">Todos los estados</option>
-        <option v-for="option in STATUSES" :key="option" :value="option">
-          {{ formatStatus(option) }}
+        <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
 

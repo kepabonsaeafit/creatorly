@@ -31,7 +31,7 @@ export class UserService {
 
   /** Usuarios con rol coordinador, para el select de coordinador de OrderForm. */
   static getCoordinators(): UserInterface[] {
-    return this.getAll().filter((usuario) => usuario.role === 'coordinador')
+    return this.getAll().filter((usuario) => usuario.role === 'coordinator')
   }
 
   /** Devuelve undefined si no existe, a propósito: el llamador decide cómo manejar la ausencia. */
@@ -49,7 +49,7 @@ export class UserService {
   static create(datos: CreateUserDTO): UserInterface {
     const normalizado: CreateUserDTO = {
       ...datos,
-      role: datos.role ?? 'coordinador',
+      role: datos.role ?? 'coordinator',
       email: normalizeEmail(datos.email),
     }
     this.validate(normalizado)
