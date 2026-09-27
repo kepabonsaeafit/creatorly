@@ -79,7 +79,12 @@ function onEliminar(): void {
         @submit="onSubmit"
         @cancelar="onCancelar"
       />
-      <button type="button" class="edit-usuario__eliminar" @click="onEliminar">
+      <button
+        v-if="usuario.id !== usuarioActual?.id"
+        type="button"
+        class="edit-usuario__eliminar"
+        @click="onEliminar"
+      >
         Eliminar usuario
       </button>
     </template>
