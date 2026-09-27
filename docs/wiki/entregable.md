@@ -1,80 +1,80 @@
-# Entregable 1 Parte 1
+# Deliverable 1 Part 1
 
-> 📌 **Nota para el equipo:** las imágenes referenciadas (`assets/…`) están en `docs/wiki/assets/` del repo. Al publicar este wiki en GitHub, subirlas con la interfaz del wiki (arrastrar la imagen al editor) y ajustar las rutas.
+> 📌 **Note for the team:** the referenced images (`assets/…`) are in `docs/wiki/assets/` in the repo. When publishing this wiki on GitHub, upload them through the wiki UI (drag the image into the editor) and adjust the paths.
 
-## 1. Logo del equipo
+## 1. Team logo
 
-El logotipo de **Creatorly** utiliza el concepto *Monogram + Meaning* combinado con *Negative Space*:
-- **Concepto:** Representa un monograma de la **C** de Creatorly cuyos dos extremos simbolizan a las dos partes involucradas (**Marca** arriba y **Creador** abajo). En el espacio negativo de apertura se ubica un **rombo (nodo a 45°)** que representa el **Pedido** como el conector indispensable gestionado por la agencia.
-- **Tipografía Wordmark:** `Unbounded 600`.
-- **Colores:** Trazo en `--color-primary` (`#7c3aed`) y nodo central en blanco (`#ffffff`).
-- **Especificación técnica y SVG:** Ver detalle completo en [Identidad de Marca y Sistema de Diseño](identidad-de-marca).
+**Creatorly**'s logotype uses the *Monogram + Meaning* concept combined with *Negative Space*:
+- **Concept:** Represents a monogram of the **C** in Creatorly whose two ends symbolize the two parties involved (**Brand** on top and **Creator** on the bottom). In the negative space of the opening sits a **diamond (node at 45°)** representing the **Order** as the indispensable connector managed by the agency.
+- **Wordmark typeface:** `Unbounded 600`.
+- **Colors:** Stroke in `--color-primary` (`#7c3aed`) and center node in white (`#ffffff`).
+- **Technical spec and SVG:** See full detail in [Brand Identity and Design System](identidad-de-marca).
 
-![Logo Creatorly](assets/logo-creatorly.png)
+![Creatorly Logo](assets/logo-creatorly.png)
 
-## 2. Modelo verbal definitivo
+## 2. Final verbal model
 
-**¿Qué es?** Creatorly es una herramienta interna (dashboard tipo SPA) para que una agencia de contenido UGC (User Generated Content) administre su operación diaria: su catálogo de creadores, las marcas que le solicitan contenido, y los pedidos que conectan a ambos — desde que la marca hace la solicitud hasta que el creador entrega el contenido.
+**What is it?** Creatorly is an internal tool (SPA dashboard) for a UGC (User Generated Content) agency to manage its daily operation: its creators catalog, the brands that request content from it, and the orders that connect both — from the moment a brand makes the request until the creator delivers the content.
 
-**Problema que resuelve.** La agencia funciona como intermediario entre las marcas que necesitan contenido y los creadores que lo producen. Sin una herramienta central, esa coordinación (qué marca pidió qué, a qué creador se asignó, en qué estado va, cuánto se pactó) vive dispersa en chats de WhatsApp, hojas de cálculo y notas sueltas. El dashboard centraliza toda esa operación en un solo lugar.
+**Problem it solves.** The agency works as an intermediary between the brands that need content and the creators who produce it. Without a central tool, that coordination (which brand requested what, which creator it was assigned to, what status it's in, what budget was agreed) lives scattered across WhatsApp chats, spreadsheets, and loose notes. The dashboard centralizes that whole operation in one place.
 
-**Alcance (versión inicial).** El sistema se enfoca en la operación interna de la agencia: gestión del catálogo de creadores, gestión de las marcas/clientes, y el ciclo de vida de los pedidos de contenido (solicitud → asignación → producción → entrega), con su presupuesto y su seguimiento de estado. Los datos se simulan en LocalStorage del navegador. Extensión futura prevista: medición del rendimiento del contenido publicado (vistas, engagement), a evaluar con el profesor.
+**Scope (initial version).** The system focuses on the agency's internal operation: managing the creators catalog, managing brands/clients, and the content orders lifecycle (request → assignment → production → delivery), with its budget and status tracking. Data is simulated in the browser's LocalStorage. Planned future extension: measuring published content performance (views, engagement), to be evaluated with the professor.
 
-**Actores involucrados.**
-- *Administrador de la agencia:* acceso total; gestiona creadores, marcas y usuarios internos. Es quien accede a las páginas restringidas (solo-admin).
-- *Coordinador de contenido (usuario estándar):* gestiona los pedidos que tiene a cargo y consulta los reportes del sistema.
+**Actors involved.**
+- *Agency administrator:* full access; manages creators, brands, and internal users. The only one who accesses the restricted (admin-only) pages.
+- *Content coordinator (standard user):* manages the orders in their charge and checks the system's reports.
 
-**Beneficio de la propuesta.** Un solo lugar donde la agencia puede ver todos sus pedidos filtrables por marca, creador o estado, con tablas y gráficos (Chart.js) que muestran cuántos pedidos hay por estado o por mes y cuánto presupuesto se ha comprometido. Esto apoya decisiones concretas como a qué creador asignar el próximo pedido o qué marca es la más activa.
+**Value proposition.** A single place where the agency can see all its orders, filterable by brand, creator, or status, with tables and charts (Chart.js) showing how many orders exist per status or per month and how much budget has been committed. This supports concrete decisions like which creator to assign the next order to or which brand is the most active.
 
-## 3. Diagrama de clases
+## 3. Class diagram
 
-![Diagrama de clases](./assets/diagrama-clases.png)
+![Class diagram](./assets/diagrama-clases.png)
 
-El sistema se modela con exactamente **4 clases**. **Pedido** es la clase central del dominio: relaciona a la **Marca** que solicita el contenido, al **Creador** al que se asigna, y al **User** (coordinador) que lo gestiona internamente.
+The system is modeled with exactly **4 classes**. **Order** is the central domain class: it relates the **Brand** requesting the content, the **Creator** it's assigned to, and the **User** (coordinator) who manages it internally.
 
-| Clase | Atributos |
+| Class | Attributes |
 |---|---|
-| **User** | id, nombre, email, password, rol (`admin` \| `coordinador`), createdAt, updatedAt |
-| **Creador** | id, nombre, nicho, tipoContenido, tarifa, disponible, createdAt, updatedAt |
-| **Marca** | id, nombre, industria, contactoNombre, contactoEmail, createdAt, updatedAt |
-| **Pedido** | id, descripcion, presupuesto, fechaSolicitud, fechaEntrega, estado, createdAt, updatedAt, marca, creador, coordinador |
+| **User** | id, name, email, password, role (`admin` \| `coordinator`), createdAt, updatedAt |
+| **Creator** | id, name, niche, contentType, rate, available, createdAt, updatedAt |
+| **Brand** | id, name, industry, contactName, contactEmail, createdAt, updatedAt |
+| **Order** | id, description, budget, requestDate, deliveryDate, status, createdAt, updatedAt, brand, creator, coordinator |
 
-**Relaciones y cardinalidades:**
-- Un User (coordinador) gestiona muchos Pedido → 1 a 0..*
-- Un Creador es asignado a muchos Pedido → 1 a 0..*
-- Una Marca solicita muchos Pedido → 1 a 0..*
-- Se usa 0..* (y no 1..*) porque un creador o una marca recién registrados pueden existir sin pedidos asociados aún.
+**Relationships and cardinalities:**
+- A User (coordinator) manages many Orders → 1 to 0..*
+- A Creator is assigned to many Orders → 1 to 0..*
+- A Brand requests many Orders → 1 to 0..*
+- 0..* (rather than 1..*) is used because a newly registered creator or brand can exist without any associated orders yet.
 
-## 4. Diagrama de arquitectura
+## 4. Architecture diagram
 
-Mapa de módulos: cada caja es una carpeta real de `src/`, cada fila dentro es un archivo real. Las flechas dicen "usa/importa" (A → B significa que A importa algo de B), verificado import por import contra el código.
+Module map: each box is a real folder in `src/`, each row inside it a real file. Arrows mean "uses/imports" (A → B means A imports something from B), verified import by import against the code.
 
-![Diagrama de arquitectura completo](assets/diagrama-arq-completo.png)
+![Full architecture diagram](assets/diagrama-arq-completo.png)
 
-Detalle por partes (el diagrama completo es muy grande para leerse de corrido):
+Detail by parts (the full diagram is too large to read straight through):
 
-![Arquitectura parte 1: entrada, router, main.ts, PiniaConfig](assets/diagrama-arq-pt1.png)
+![Architecture part 1: entry, router, main.ts, PiniaConfig](assets/diagrama-arq-pt1.png)
 
-![Arquitectura parte 2: vistas, componentes, charts](assets/diagrama-arq-pt2.png)
+![Architecture part 2: views, components, charts](assets/diagrama-arq-pt2.png)
 
-![Arquitectura parte 3: services, utils, dtos, seeders, stores](assets/diagrama-arq-pt3.png)
+![Architecture part 3: services, utils, dtos, seeders, stores](assets/diagrama-arq-pt3.png)
 
-![Arquitectura parte 4: dtos, interfaces, seeders, stores, LocalStorage](assets/diagrama-arq-pt4.png)
+![Architecture part 4: dtos, interfaces, seeders, stores, LocalStorage](assets/diagrama-arq-pt4.png)
 
-[Link del diagrama](https://lucid.app/lucidchart/9f425ba0-8f21-44b7-b40a-330e12673750/edit?viewport_loc=-12152%2C4670%2C4484%2C1947%2Cp1&invitationId=inv_f07ff397-f817-46c1-89ba-60e26ed17a5c)
+[Diagram link](https://lucid.app/lucidchart/9f425ba0-8f21-44b7-b40a-330e12673750/edit?viewport_loc=-12152%2C4670%2C4484%2C1947%2Cp1&invitationId=inv_f07ff397-f817-46c1-89ba-60e26ed17a5c)
 
-Capas (de afuera hacia adentro): `main.ts` arranca Pinia (`PiniaConfig.ts`) y el `router` → **vistas** (`views/`, una por ruta) → **componentes reutilizables** (`components/`, con los gráficos Chart.js aislados en `components/charts/`) → **services** (toda la lógica, tipada con `interfaces/` y `dtos/`) → **stores de Pinia** (solo el array de cada entidad; excepción: `SessionStore`) → **`storage/StorageService`** (única puerta a LocalStorage) → **LocalStorage** (persistencia simulada). Tres excepciones documentadas: el guard del router (`accessControl.ts`) lee `SessionStore` directamente en vez de pasar por un service; `UsuariosIndexView` (botón de "restablecer datos demo") llama a `resetDemoData()` de `PiniaConfig` (que no es un service), la cual escribe a la vez en `StorageService` y directamente en los 4 stores, para no depender del timing del watcher que normalmente persiste los cambios, y después la vista cierra la sesión con `AuthService.logout()`; y `AuthService` (login/logout) junto con `SessionStore` leen y escriben la sesión directamente en `StorageService`, porque iniciar y cerrar sesión es un caso de uso del service, no un CRUD de colección persistido por el watcher de `PiniaConfig`. El servidor solo entrega estáticos; toda la ejecución ocurre en el navegador del cliente.
+Layers (from outside in): `main.ts` starts Pinia (`PiniaConfig.ts`) and the `router` → **views** (`views/`, one per route) → **reusable components** (`components/`, with the Chart.js charts isolated in `components/charts/`) → **services** (all the logic, typed with `interfaces/` and `dtos/`) → **Pinia stores** (only each entity's array; exception: `SessionStore`) → **`storage/StorageService`** (the only door to LocalStorage) → **LocalStorage** (simulated persistence). Three documented exceptions: the router guard (`accessControl.ts`) reads `SessionStore` directly instead of going through a service; `UsersIndexView` (the "reset demo data" button) calls `resetDemoData()` from `PiniaConfig` (which is not a service), which writes to `StorageService` and directly to the 4 stores at the same time, so it doesn't depend on the timing of the watcher that normally persists changes, and afterward the view logs out the session with `AuthService.logout()`; and `AuthService` (login/logout) together with `SessionStore` read and write the session directly to `StorageService`, because logging in and out is a service use case, not a collection CRUD persisted by `PiniaConfig`'s watcher. The server only serves static files; all execution happens in the client's browser.
 
-## Anexo: capturas de las páginas
+## Appendix: page screenshots
 
-> Los sketches originales de la Fase 0 quedaron desactualizados frente a la app real ya implementada.
+> The original Phase 0 sketches became outdated compared to the already-implemented real app.
 
-| # | Página | Captura |
+| # | Page | Screenshot |
 |---|---|---|
-| 1 | Home | ![Home admin](assets/home-admin.png)<br>![Home coordinador](assets/home-coord.png) |
+| 1 | Home | ![Home admin](assets/home-admin.png)<br>![Home coordinator](assets/home-coord.png) |
 | 2 | Login | ![Login](assets/login-version1.png) |
-| 3 | Pedidos (CRUD #2 + selector/tabla/Chart.js) | ![Pedidos filtrado por estado](assets/pedidos-sketch1.png)<br>![Pedidos filtrado por marca](assets/pedidos-sketch2.png) |
-| 4 | Crear / Editar Pedido | ![Crear pedido](assets/crear-pedido.png)<br>![Editar pedido](assets/editar-pedido.png) |
-| 5 | Creadores (solo-admin, CRUD #1) | ![Creadores](assets/creadores-admin.png) |
-| 6 | Reportes (selector/tabla/Chart.js) | ![Reportes: pedidos por mes](assets/reportes-chart1.png)<br>![Reportes: pedidos por estado](assets/reportes-chart2.png)<br>![Reportes: pedidos por creador](assets/reportes-chart3.png)<br>![Reportes: presupuesto por marca](assets/reportes-chart4.png) |
-| 7 | Usuarios (solo-admin) | ![Usuarios](assets/usuarios-admin.png) |
+| 3 | Orders (CRUD #2 + selector/table/Chart.js) | ![Orders filtered by status](assets/pedidos-sketch1.png)<br>![Orders filtered by brand](assets/pedidos-sketch2.png) |
+| 4 | Create / Edit Order | ![Create order](assets/crear-pedido.png)<br>![Edit order](assets/editar-pedido.png) |
+| 5 | Creators (admin-only, CRUD #1) | ![Creators](assets/creadores-admin.png) |
+| 6 | Reports (selector/table/Chart.js) | ![Reports: orders by month](assets/reportes-chart1.png)<br>![Reports: orders by status](assets/reportes-chart2.png)<br>![Reports: orders by creator](assets/reportes-chart3.png)<br>![Reports: budget by brand](assets/reportes-chart4.png) |
+| 7 | Users (admin-only) | ![Users](assets/usuarios-admin.png) |

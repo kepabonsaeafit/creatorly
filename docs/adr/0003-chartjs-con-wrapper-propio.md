@@ -1,16 +1,16 @@
-# Chart.js directo con wrapper propio (BaseChart.vue) en vez de vue-chartjs
+# Chart.js directly with a custom wrapper (BaseChart.vue) instead of vue-chartjs
 
-> **Actualizado por ADR-0004 (2026-09-02):** la decisión sigue vigente y se refuerza. Cambia la ubicación del componente y se hace explícita la regla de que ningún gráfico vive dentro de una view.
+> **Updated by ADR-0004 (2026-09-02):** the decision still stands and is reinforced. The component's location changes and the rule that no chart lives inside a view is made explicit.
 
-El enunciado exige Chart.js como librería gráfica obligatoria. Decidimos usar `chart.js` directamente y construir nuestro propio componente wrapper `components/charts/BaseChart.vue` — monta el canvas, recibe `type` + `data` + `options` tipados y destruye la instancia al desmontar — en lugar de añadir la librería `vue-chartjs`. Menos dependencias, control total del ciclo de vida del gráfico, y el wrapper cuenta como uno de los componentes reutilizables que el enunciado exige. La segunda librería JS obligatoria queda pendiente de la respuesta del profesor sobre si `vue-toastification`, ya instalada en el proyecto, cuenta como tal.
+The course requirements mandate Chart.js as the required charting library. We decided to use `chart.js` directly and build our own wrapper component `components/charts/BaseChart.vue` — it mounts the canvas, receives typed `type` + `data` + `options`, and destroys the instance on unmount — instead of adding the `vue-chartjs` library. Fewer dependencies, full control over the chart's lifecycle, and the wrapper counts as one of the reusable components the assignment requires. The second required JS library is still pending the professor's answer on whether `vue-toastification`, already installed in the project, counts as one.
 
 ## Considered Options
 
-- **`vue-chartjs`** — descartado por dependencia extra y menos control del ciclo de vida. Se deja constancia de que es una opción legítima: el equipo que sustentó el 2026-09-01 la usa y no fue penalizado. Si `BaseChart` resulta más costoso de mantener de lo previsto, revisar esta decisión antes de la entrega.
+- **`vue-chartjs`** — discarded due to the extra dependency and less control over the lifecycle. Noted for the record that it's a legitimate option: the team that presented on 2026-09-01 uses it and wasn't penalized. If `BaseChart` turns out costlier to maintain than expected, revisit this decision before the submission.
 
 ## Consequences
 
-- **Ninguna view instancia ni importa Chart.js.** Todo gráfico se compone dentro de `components/charts/`, y las views solo reciben datos de un service y los pasan como props. Esta regla es además un criterio explícito de la rúbrica del profesor.
-- `BaseChart` es responsable de destruir la instancia del chart al desmontarse (Chart.js no limpia solo).
-- Los datos que alimentan cada gráfico se calculan en el service correspondiente y se devuelven tipados como DTO (por ejemplo `PedidosPorEstadoDTO`), no se agregan dentro del componente.
-- Los colores de las series salen de las variables de marca en `src/assets/base.css`; nada de colores mágicos en la configuración de Chart.js.
+- **No view instantiates or imports Chart.js.** Every chart is composed inside `components/charts/`, and views only receive data from a service and pass it as props. This rule is also an explicit criterion of the professor's rubric.
+- `BaseChart` is responsible for destroying the chart instance on unmount (Chart.js doesn't clean up on its own).
+- The data that feeds each chart is computed in the corresponding service and returned typed as a DTO (for example `OrdersByStatusDTO`), not aggregated inside the component.
+- Series colors come from the brand variables in `src/assets/base.css`; no magic colors in the Chart.js configuration.

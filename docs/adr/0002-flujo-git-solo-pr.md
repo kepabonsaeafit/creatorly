@@ -1,8 +1,8 @@
-# Flujo de trabajo Git: todo por Pull Request, main protegida
+# Git workflow: everything through Pull Request, protected main
 
-Nada se empuja directo a `main`: todo cambio llega por rama + Pull Request revisado y aprobado por el arquitecto (Kevin), quien además tiene autoridad para revertir commits que incumplan las reglas — exigencia explícita del enunciado del curso. El PR es la barrera de calidad: lint en verde, reglas de programación cumplidas y revisión humana antes del merge.
+Nothing gets pushed straight to `main`: every change arrives through a branch + Pull Request reviewed and approved by the architect (Kevin), who also has authority to revert commits that break the rules — an explicit requirement of the course syllabus. The PR is the quality gate: green lint, code rules met, and human review before merge.
 
 ## Consequences
 
-- Los mensajes de commit usan formato convencional con tipo en inglés y descripción en español (`feat: agrega gráfico de pedidos por estado`).
-- Los agentes de IA que asisten a un integrante pueden hacer commits locales, pero push, PR y merge requieren autorización explícita y por escrito del integrante.
+- Commit messages use conventional format with type in English and description in Spanish (`feat: agrega gráfico de pedidos por estado`).
+- AI agents assisting a team member can make local commits, but push, PR, and merge require explicit, written authorization from that team member.

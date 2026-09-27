@@ -1,106 +1,106 @@
-# AGENTS.md — Instrucciones para agentes de IA en Creatorly
+# AGENTS.md — Instructions for AI agents in Creatorly
 
-> Archivo compartido, committeado en la raíz del repo. Lo lee cualquier agente que asista a **cualquiera de los 3 integrantes del Equipo 7** (Kevin Pabón, Felipe Gómez, Gerónimo Montes) al arrancar — sin importar si esa persona usa agentes de IA de forma habitual o no. `CLAUDE.md` es solo un import de este archivo (`@AGENTS.md`); si se edita este, no hace falta tocar `CLAUDE.md`.
+> Shared file, committed at the repo root. Any agent that assists **any of the 3 members of Team 7** (Kevin Pabón, Felipe Gómez, Gerónimo Montes) reads it on startup — regardless of whether that person uses AI agents regularly or not. `CLAUDE.md` is just an import of this file (`@AGENTS.md`); editing this one doesn't require touching `CLAUDE.md`.
 
-## 1. Qué es este archivo y para quién
+## 1. What this file is and who it's for
 
-Este archivo es el **piso obligatorio para cualquier agente que trabaje en este repo, no el techo**. Cada integrante puede además mantener su propio archivo personal de instrucciones (por ejemplo, `CLAUDE.local.md` de Kevin, excluido del repo vía `.git/info/exclude`) con sus preferencias propias de cómo trabajar con su agente: su ritmo, su cadencia de revisión, su propia bitácora. Un archivo personal puede **sumar reglas más estrictas**, nunca contradecir ni aflojar una regla de este archivo. Si algún día un archivo personal y este se contradicen, **manda este**.
+This file is the **mandatory floor for any agent working in this repo, not the ceiling**. Each team member can also keep their own personal instructions file (for example, Kevin's `CLAUDE.local.md`, excluded from the repo via `.git/info/exclude`) with their own preferences for working with their agent: their pace, their review cadence, their own log. A personal file can **add stricter rules**, never contradict or loosen a rule from this file. If a personal file and this one ever contradict each other, **this one wins**.
 
-Nada en este archivo asume si Kevin, Felipe o Gerónimo usan un agente de IA para su parte del proyecto, ni lo asume distinto entre ellos. Las reglas de abajo aplican igual en cualquier caso.
+Nothing in this file assumes whether Kevin, Felipe, or Gerónimo use an AI agent for their part of the project, nor does it assume it differently between them. The rules below apply equally in any case.
 
-## 2. El proyecto en 30 segundos
+## 2. The project in 30 seconds
 
-**Creatorly** es un dashboard SPA (Vue 3 + Vite + TypeScript) para la operación de una agencia de creadores UGC: catálogo de **Creadores**, **Marcas** clientes y **Pedidos** que las conectan. La "base de datos" es el LocalStorage del navegador con datos semilla. El glosario oficial del dominio está en `CONTEXT.md` — úsalo para hablar del dominio sin ambigüedad; las decisiones de arquitectura ya tomadas están en `docs/adr/`.
+**Creatorly** is a SPA dashboard (Vue 3 + Vite + TypeScript) for running a UGC creator agency: a **Creators** catalog, client **Brands**, and the **Orders** that connect them. The "database" is the browser's LocalStorage with seed data. The official domain glossary is in `CONTEXT.md` — use it to talk about the domain unambiguously; architecture decisions already made live in `docs/adr/`.
 
-## 3. Fuentes de verdad, en orden de lectura
+## 3. Sources of truth, in reading order
 
-1. **Este archivo** — reglas obligatorias de código y de trabajo con agentes.
-2. **`CONTEXT.md`** — glosario del dominio.
-3. **`docs/adr/`** — decisiones de arquitectura ya tomadas, y por qué.
-4. **El código** — si algo de aquí no coincide con lo que hay en `src/`, el código manda y este archivo quedó desactualizado; repórtalo en vez de asumir.
+1. **This file** — mandatory code rules and rules for working with agents.
+2. **`CONTEXT.md`** — domain glossary.
+3. **`docs/adr/`** — architecture decisions already made, and why.
+4. **The code** — if something here doesn't match what's in `src/`, the code wins and this file is out of date; report it instead of assuming.
 
-## 4. Comandos
+## 4. Commands
 
 ```sh
-npm install        # requiere autorización explícita de Kevin — ver sección 10
-npm run dev         # servidor de desarrollo (Vite)
-npm run lint        # oxlint + eslint, ambos con --fix
-npm run format      # prettier sobre src/
-npm run type-check  # vue-tsc: verificación de tipos
-npm run build       # build de producción (incluye type-check)
+npm install         # requires explicit authorization from Kevin — see section 10
+npm run dev         # development server (Vite)
+npm run lint        # oxlint + eslint, both with --fix
+npm run format      # prettier over src/
+npm run type-check  # vue-tsc: type checking
+npm run build       # production build (includes type-check)
 ```
 
-Requisito: **Node 22+** (lo exige `engines` en `package.json`).
+Requirement: **Node 22+** (enforced by `engines` in `package.json`).
 
-## 5. Arquitectura: las cinco piezas del patrón
+## 5. Architecture: the five pieces of the pattern
 
-Cada entidad del dominio se parte en hasta cinco archivos. Este es el molde completo — no negociable, es el que audita el profesor:
+Each domain entity is split into up to five files. This is the full mold — non-negotiable, the one the professor audits:
 
 ```ts
-// interfaces/PedidoInterface.ts → LA FORMA. Solo atributos, sin métodos.
-export interface PedidoInterface { id: string; descripcion: string; /* ... */ }
+// interfaces/OrderInterface.ts → THE SHAPE. Only attributes, no methods.
+export interface OrderInterface { id: string; description: string; /* ... */ }
 
-// dtos/CreatePedidoDTO.ts → un tipo derivado por caso de uso, con Omit/Pick.
-export type CreatePedidoDTO = Omit<PedidoInterface, 'id' | 'createdAt' | 'updatedAt'>;
+// dtos/CreateOrderDTO.ts → one derived type per use case, with Omit/Pick.
+export type CreateOrderDTO = Omit<OrderInterface, 'id' | 'createdAt' | 'updatedAt'>;
 
-// stores/PedidoStore.ts → SOLO EL ARRAY. Cero lógica.
-export const usePedidoStore = defineStore('pedido', () => {
-  const pedidos = ref<PedidoInterface[]>([]);
-  return { pedidos };
+// stores/OrderStore.ts → ONLY THE ARRAY. Zero logic.
+export const useOrderStore = defineStore('order', () => {
+  const orders = ref<OrderInterface[]>([]);
+  return { orders };
 });
 
-// services/PedidoService.ts → TODA LA LÓGICA. Clase de métodos estáticos.
-export class PedidoService {
-  static getAll(): PedidoInterface[] { return usePedidoStore().pedidos; }
-  static create(datos: CreatePedidoDTO): PedidoInterface { /* valida, genera id, persiste */ }
+// services/OrderService.ts → ALL THE LOGIC. Class of static methods.
+export class OrderService {
+  static getAll(): OrderInterface[] { return useOrderStore().orders; }
+  static create(data: CreateOrderDTO): OrderInterface { /* validates, generates id, persists */ }
 }
 
-// seeders/PedidoSeeder.ts → datos ficticios, objetos planos tipados (no instancias de clase).
-export function seedPedidos(marcas: MarcaInterface[], /* creadores, users */): PedidoInterface[] {
+// seeders/OrderSeeder.ts → fake data, typed plain objects (not class instances).
+export function seedOrders(brands: BrandInterface[], /* creators, users */): OrderInterface[] {
   return [ /* ... */ ];
 }
 ```
 
-Los stores de entidad guardan solo el array, sin lógica. Excepción: `SessionStore`, que además lee la sesión persistida al crearse y deriva `current`, `isLoggedIn` e `isAdmin` con `computed`.
+Entity stores hold only the array, no logic. Exception: `SessionStore`, which also reads the persisted session on creation and derives `current`, `isLoggedIn`, and `isAdmin` with `computed`.
 
-Hoy el proyecto real tiene 12 `interfaces/`, 12 `dtos/`, 5 `stores/`, 5 `services/` y 4 `seeders/` — uno por entidad (`User`, `Creador`, `Marca`, `Pedido`), salvo que `PedidoSeeder` recibe las otras tres colecciones ya sembradas como parámetros, para referenciarlas por id (ver ADR-0001), y que `services/` suma `AuthService` además de los cuatro por entidad. De las 12 interfaces, 4 son de entidades y las 8 restantes son tipos de apoyo: `HomeStatInterface` y `PedidoActivityInterface` son formas de datos del Home (y, la primera, también de Reportes); las otras seis salieron de vistas y componentes que las declaraban sueltas (`StorageInterface`, `LoginResultInterface`, `ReportTableColumnInterface`, `ReporteInterface`, `NavLinkInterface`, `DatosPedidoSeedInterface`) y cubren storage, login, la tabla de reportes, los tipos de reporte, la navegación y la siembra de pedidos. `StorageService` vive en `src/storage/`, como capa de persistencia, fuera de `services/`. Las validaciones (presupuesto ≥ 0, estado válido, formato de email, campos obligatorios) viven siempre en el service, nunca en la interface, y nada de constantes ni funciones a nivel de módulo en un service: todo va dentro de la clase (`private static`). Un archivo de `interfaces/` sí puede exportar, junto a su tipo, la lista `as const` de la que ese tipo deriva (`ESTADOS` en `PedidoInterface.ts`, `ROLES` en `UserInterface.ts`) — es la única fuente de esos valores, y services/views/components la importan de ahí en vez de declarar su propia copia. Antes de crear un archivo nuevo, revisa si ya existe una de estas cinco piezas para la entidad que necesitas — el patrón se reusa, no se reinventa por página.
+Today the real project has 12 `interfaces/`, 12 `dtos/`, 5 `stores/`, 5 `services/`, and 4 `seeders/` — one per entity (`User`, `Creator`, `Brand`, `Order`), except that `OrderSeeder` receives the other three already-seeded collections as parameters, to reference them by id (see ADR-0001), and that `services/` adds `AuthService` on top of the four per-entity ones. Of the 12 interfaces, 4 are entity interfaces and the remaining 8 are supporting types: `HomeStatInterface` and `OrderActivityInterface` are Home data shapes (the first one, also of Reports); the other six came from views and components that declared them loosely (`StorageInterface`, `LoginResultInterface`, `ReportTableColumnInterface`, `ReportInterface`, `NavLinkInterface`, `OrderSeedDataInterface`) and cover storage, login, the reports table, report types, navigation, and order seeding. `StorageService` lives in `src/storage/`, as a persistence layer, outside `services/`. Validations (budget ≥ 0, valid status, email format, required fields) always live in the service, never in the interface, and no module-level constants or standalone functions in a service: everything goes inside the class (`private static`). An `interfaces/` file can export, alongside its type, the `as const` list that type derives from (`STATUSES` in `OrderInterface.ts`, `ROLES` in `UserInterface.ts`) — it's the single source for those values, and services/views/components import it from there instead of declaring their own copy. Before creating a new file, check whether one of these five pieces already exists for the entity you need — the pattern is reused, not reinvented per page.
 
-**`utils/`** es la sexta pieza que la rúbrica del profesor menciona explícitamente (ADR-0004: *"interfaces/, dtos/, stores/, services/, utils/"*). Hoy tiene 7 archivos: `chartColors.ts`, `confirmarEliminacion.ts`, `email.ts`, `formatCurrency.ts`, `formatDate.ts`, `formatEstado.ts` y `generateId.ts`. Son helpers compartidos sin acceso a stores ni LocalStorage, reusados por más de una view o component.
+**`utils/`** is the sixth piece the professor's rubric explicitly mentions (ADR-0004: *"interfaces/, dtos/, stores/, services/, utils/"*). Today it has 7 files: `chartColors.ts`, `confirmDeletion.ts`, `email.ts`, `formatCurrency.ts`, `formatDate.ts`, `generateId.ts`, and `labels.ts`. They are shared helpers with no access to stores or LocalStorage, reused by more than one view or component.
 
-## 6. Reglas de código (obligatorias en todo lo que produzcas)
+## 6. Code rules (mandatory in everything you produce)
 
-1. **TypeScript en todo**: archivos `.ts`, SFCs con `<script setup lang="ts">`. Nada de `.js` nuevo.
-2. **Tipos explícitos** en todo parámetro y retorno de función o método. Prohibido `any` sin justificación escrita en comentario.
-3. Una ruta → una vista SFC en `views/`; componentes reutilizables en `components/` (PascalCase). **No se crean composables**: la lógica va a `services/`.
-4. **Nadie toca `localStorage` directamente**: siempre vía `storage/StorageService.ts` (ADR-0001).
-5. **Las views no tocan los stores**: solo hablan con services.
-6. **Un DTO por caso de uso**: los DTOs de entrada (`Create*`, `Login`) derivan de su interface con `Omit`/`Pick`; los DTOs de filtro y de agregación (reportes y gráficos) son interfaces propias, porque su forma no sale de una entidad. Varios DTOs en un service está bien; un DTO partido en dos, no.
-7. Los ids se generan con `generateId()` (`utils/generateId.ts`), que usa `crypto.randomUUID()` cuando hay contexto seguro y, si no, un respaldo con `crypto.getRandomValues()` (ver ADR-0001). Nunca se llama `crypto.randomUUID()` directo; los pedidos referencian marca/creador/coordinador **por id**.
-8. **Ningún gráfico dentro de una view**: todo Chart.js vive en `components/charts/` (ADR-0003) — esto además es un criterio explícito de la rúbrica del profesor, no una preferencia de estilo.
-9. Estilos: variables de marca de `src/assets/base.css`; nada de colores mágicos.
-10. **DRY y ETC**: extrae componentes/servicios antes de duplicar; escribe código fácil de cambiar.
+1. **TypeScript everywhere**: `.ts` files, SFCs with `<script setup lang="ts">`. No new `.js`.
+2. **Explicit types** on every function or method parameter and return value. `any` is forbidden without a written justification comment.
+3. One route → one SFC view in `views/`; reusable components in `components/` (PascalCase). **No composables**: logic goes to `services/`.
+4. **Nobody touches `localStorage` directly**: always through `storage/StorageService.ts` (ADR-0001).
+5. **Views don't touch stores**: they only talk to services.
+6. **One DTO per use case**: input DTOs (`Create*`, `Login`) derive from their interface with `Omit`/`Pick`; filter and aggregation DTOs (reports and charts) are their own interfaces, because their shape doesn't come from an entity. Multiple DTOs in one service is fine; one DTO split into two isn't.
+7. Ids are generated with `generateId()` (`utils/generateId.ts`), which uses `crypto.randomUUID()` in secure contexts and, otherwise, falls back to `crypto.getRandomValues()` (see ADR-0001). `crypto.randomUUID()` is never called directly; orders reference brand/creator/coordinator **by id**.
+8. **No chart inside a view**: all Chart.js lives in `components/charts/` (ADR-0003) — this is also an explicit criterion of the professor's rubric, not a style preference.
+9. Styles: brand variables from `src/assets/base.css`; no magic colors.
+10. **DRY and ETC**: extract components/services before duplicating; write code that's easy to change.
 
-La convención de mensajes de commit vive en la sección 10 (Política de git), no aquí — es una regla de proceso, no de código.
+The commit message convention lives in section 10 (Git policy), not here — it's a process rule, not a code rule.
 
-## 7. Convenciones de archivo (el profesor las revisa en sustentación)
+## 7. File conventions (the professor reviews these in the defense)
 
-**Encabezado:** primera línea de cada archivo, comentario `// Author: Nombre` con el nombre de quien lo escribió — el autor puede ser cualquiera de los 3 integrantes, no asumas que es siempre el mismo.
+**Header:** first line of every file, comment `// Author: Name` with the name of whoever wrote it — the author can be any of the 3 team members, don't assume it's always the same one.
 
-**Imports agrupados, alfabéticos dentro de cada grupo:**
+**Grouped imports, alphabetical within each group:**
 
 ```ts
-// Author: Nombre de quien escribe el archivo
+// Author: Name of whoever writes the file
 
 // external imports
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 
 // internal imports
-import type { PedidoInterface } from '@/interfaces/PedidoInterface';
-import { PedidoService } from '@/services/PedidoService';
+import type { OrderInterface } from '@/interfaces/OrderInterface';
+import { OrderService } from '@/services/OrderService';
 ```
 
-**Secciones dentro de las views y components** (el profesor pregunta explícitamente por selectores y variables computadas), en este orden:
+**Sections inside views and components** (the professor explicitly asks about selectors and computed variables), in this order:
 
 ```ts
 // props
@@ -112,38 +112,38 @@ import { PedidoService } from '@/services/PedidoService';
 // functions
 ```
 
-`// selectors` es solo para variables ligadas con `v-model` a un `<select>`; cualquier otra variable reactiva (campos de texto, fechas, número, flags como `error`/`guardando`) va bajo `// reactive variables`. `// props` va sobre el `defineProps`/`interface Props`, `// emits` sobre el `defineEmits` y `// watchers` sobre cada `watch(...)`. Un archivo solo lleva las secciones que le aplican: si no tiene `<select>`, no lleva `// selectors`; si no recibe props, no lleva `// props`; y así con el resto.
+`// selectors` is only for variables bound with `v-model` to a `<select>`; any other reactive variable (text fields, dates, numbers, flags like `error`/`saving`) goes under `// reactive variables`. `// props` goes above `defineProps`/`interface Props`, `// emits` above `defineEmits`, and `// watchers` above each `watch(...)`. A file only carries the sections that apply to it: if it has no `<select>`, no `// selectors`; if it receives no props, no `// props`; and so on for the rest.
 
-**JSDoc en los services:** cada método público (no `private`) de un service lleva un JSDoc corto en inglés, con `@param` por parámetro, `@returns` si no es `void` y `@throws` cuando el método (o su `validate()`) lanza un `Error`.
+**JSDoc in services:** every public (non-`private`) method of a service carries a short JSDoc in English, with `@param` per parameter, `@returns` if not `void`, and `@throws` when the method (or its `validate()`) throws an `Error`.
 
-**Nombres sin ambigüedad.** Nada de `d`, `p`, `i`, `data`, `temp`. En callbacks: `(pedido) =>`, no `(p) =>`.
+**Unambiguous names.** No `d`, `p`, `i`, `data`, `temp`. In callbacks: `(order) =>`, not `(o) =>`.
 
-## 8. Cómo debe trabajar un agente en este repo
+## 8. How an agent must work in this repo
 
-Ayudar no es generar y pegar. Cualquier agente que asista a un integrante en este repo debe, en cada tarea:
+Helping isn't generating and pasting. Any agent assisting a team member in this repo must, on every task:
 
-1. **Explicar qué cambió y por qué**, en términos que el integrante pueda repetir sin el agente delante.
-2. **Poder ser cuestionado sobre una decisión de diseño** y dar una razón real — "porque así lo hizo el agente" no es una respuesta válida en sustentación.
-3. **Antes de proponer un commit, correr `npm run lint`, `npm run format` y `npm run type-check` en verde** (si `format` modifica archivos, esos cambios van en el mismo commit); **`npm run build` en verde antes de abrir el PR** — no después, no "lo arreglamos en el siguiente".
-4. Recordar que el criterio de aceptación no es "compila": es que **la persona pueda defender ese código en su nota individual**, que multiplica la del equipo. Un agente que no deja a su integrante en esa posición no terminó la tarea, aunque el build pase.
+1. **Explain what changed and why**, in terms the team member can repeat without the agent present.
+2. **Be able to be questioned about a design decision** and give a real reason — "because the agent did it that way" isn't a valid answer in the defense.
+3. **Before proposing a commit, run `npm run lint`, `npm run format`, and `npm run type-check` clean** (if `format` modifies files, those changes go in the same commit); **`npm run build` clean before opening the PR** — not after, not "we'll fix it in the next one."
+4. Remember the acceptance criterion isn't "it compiles": it's that **the person can defend that code in their individual grade**, which multiplies the team's grade. An agent that doesn't leave its team member in that position hasn't finished the task, even if the build passes.
 
-## 9. Alcance de un agente: qué puede y no puede tocar
+## 9. Scope of an agent: what it can and can't touch
 
-Un agente que trabaja en este repo opera **solo dentro de la rama y el alcance del integrante al que asiste**. No toca, "corrige" ni reescribe código de otro integrante por iniciativa propia, ni siquiera si el cambio parece obviamente correcto o el código ajeno está incompleto — eso pasa por PR y revisión, igual que cualquier otro cambio a `main`, sin excepción por tratarse de código sin terminar o de que quien lo escribió no esté usando IA en ese momento. La barrera es el PR, no si hay un humano o un agente al otro lado del cambio.
+An agent working in this repo operates **only within the branch and scope of the team member it assists**. It doesn't touch, "fix," or rewrite another team member's code on its own initiative, even if the change looks obviously correct or the other person's code is incomplete — that goes through PR and review, just like any other change to `main`, with no exception for unfinished code or for the author not currently using AI. The barrier is the PR, not whether there's a human or an agent on the other side of the change.
 
-## 10. Política de git
+## 10. Git policy
 
-- ✅ **Commits locales permitidos** (en rama, jamás directo en `main`).
-- ✅ **Antes de cualquier commit:** correr `npm run lint`, `npm run format` y `npm run type-check`. Si `format` modifica archivos, esos cambios van incluidos en el mismo commit. **No commitear con lint en rojo ni con errores de tipos.**
-- **Commits:** tipo en inglés + descripción en español (`feat: agrega guard de rutas admin`). Cuerpo en viñetas cortas, solo hechos técnicos verificables — qué se creó/borró/movió, una decisión de diseño con su motivo, una línea de verificación. **Filtro antes de proponer cualquier commit: si una frase describe el código, se queda; si describe la conversación o le habla a una persona ("confirmado con X", "a partir de este commit el equipo puede..."), se va.** Eso vive en la comunicación aparte del equipo, nunca en el mensaje de commit.
-- ❌ **Push y crear PR: requieren autorización explícita y por escrito del integrante para quien trabaja el agente**, pedida antes de ejecutar. Que el entorno muestre un diálogo de permisos y la persona le dé "allow" no es autorización: el agente debe haberla pedido antes, en texto, como parte de su tarea.
-- ❌ **Aprobar y mergear un PR a `main`: siempre Kevin**, como arquitecto del equipo — autoridad que le da el enunciado del curso (ver ADR-0002). Esto no cambia según quién use o no un agente.
-- ❌ **Instalar o actualizar dependencias (`package.json`/`package-lock.json`): autorización explícita y previa de Kevin**, sin importar en qué rama se necesite. Una dependencia nueva afecta el build de los 3 integrantes, no solo la rama de quien la pide — pesa como un merge a `main`, no como un push de rama propia.
-- ⛔ Nunca `push --force`, nunca tocar `main` directo, nunca reescribir historial ya publicado.
-- Al terminar una tarea: listar los archivos tocados y pedir por escrito la autorización para lo que siga (push/PR).
+- ✅ **Local commits allowed** (on branch, never directly on `main`).
+- ✅ **Before any commit:** run `npm run lint`, `npm run format`, and `npm run type-check`. If `format` modifies files, those changes are included in the same commit. **Do not commit with red lint or type errors.**
+- **Commits:** type in English + description in Spanish (`feat: agrega guard de rutas admin`). Body in short bullets, only verifiable technical facts — what was created/deleted/moved, a design decision with its reason, a verification line. **Filter before proposing any commit: if a sentence describes the code, it stays; if it describes the conversation or addresses a person ("confirmed with X", "from this commit on the team can..."), it goes.** That lives in the team's separate communication, never in the commit message.
+- ❌ **Push and creating a PR: require explicit, written authorization from the team member the agent is working for**, requested before executing. The environment showing a permissions dialog and the person clicking "allow" is not authorization: the agent must have requested it beforehand, in text, as part of its task.
+- ❌ **Approving and merging a PR to `main`: always Kevin**, as the team's architect — authority granted by the course syllabus (see ADR-0002). This doesn't change based on who does or doesn't use an agent.
+- ❌ **Installing or updating dependencies (`package.json`/`package-lock.json`): explicit, prior authorization from Kevin**, regardless of which branch needs it. A new dependency affects the build for all 3 team members, not just the branch that requests it — it carries the weight of a merge to `main`, not of a push to one's own branch.
+- ⛔ Never `push --force`, never touch `main` directly, never rewrite already-published history.
+- When finishing a task: list the files touched and ask in writing for authorization for what comes next (push/PR).
 
-## 11. Mantenimiento de este archivo
+## 11. Maintaining this file
 
-Un cambio a este archivo sigue el mismo flujo que cualquier otro archivo del repo: rama + Pull Request, con la aprobación de Kevin como arquitecto — no se edita directo, aunque quien lo proponga esté seguro de que hace falta.
+A change to this file follows the same flow as any other file in the repo: branch + Pull Request, with Kevin's approval as architect — it isn't edited directly, even if whoever proposes it is sure it's needed.
 
-Para agregar un ADR nuevo en `docs/adr/`: se justifica cuando la decisión cumple los tres criterios de siempre — es difícil de revertir, sería sorprendente sin el contexto escrito, y hay un trade-off real que alguien más podría cuestionar en sustentación. Un ADR nuevo también va por PR.
+To add a new ADR in `docs/adr/`: it's justified when the decision meets the usual three criteria — it's hard to reverse, it would be surprising without the written context, and there's a real trade-off someone else could question in the defense. A new ADR also goes through a PR.
