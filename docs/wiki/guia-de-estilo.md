@@ -1,66 +1,86 @@
-# Guía de estilo de programación
+# Programming style guide
 
-Guía **híbrida**: lo que el linter garantiza automáticamente y las convenciones manuales que el linter no puede revisar.
+**Hybrid** guide: what the linter guarantees automatically and the manual conventions the linter can't check.
 
-## Parte automatizada: el linter
+## Automated part: linter and formatter
 
-El proyecto trae tres herramientas configuradas. Corren con un solo comando:
+They're two distinct tools, with distinct responsibilities. The **linter** checks that the code is correct: errors, bad practices, essential Vue and TypeScript rules. The **formatter** only decides how the code looks (indentation, quotes, line width), without changing what it does.
+
+### Linter: oxlint + ESLint
+
+**What it is:** two tools that run together. oxlint is a fast first pass over common errors; ESLint (with `eslint-plugin-vue` and the TypeScript config) does the full review, including Vue rules.
+
+**How it's used:**
 
 ```sh
-npm run lint     # oxlint (rápido) + eslint (completo), ambos con --fix
-npm run format   # prettier sobre src/
+npm run lint   # runs lint:oxlint and lint:eslint, in that order, both with --fix
 ```
 
-**Qué hace cada una:**
+Whatever can be fixed automatically gets fixed; the rest stays as an error and must be corrected by hand.
 
-| Herramienta | Archivo de config | Qué garantiza |
-|---|---|---|
-| **ESLint** + `eslint-plugin-vue` | `eslint.config.js` | Reglas de código correcto y esenciales de Vue (orden de atributos, SFC válido, sin variables sin usar) |
-| **oxlint** | `.oxlintrc.json` | Primera pasada rápida de errores comunes (se ejecuta antes de ESLint) |
-| **Prettier** | `.prettierrc.json` | Formato uniforme: sangría, comillas simples sin punto y coma, ancho de línea, comas finales |
+**Where it's used:** across the whole project (`.`), per `.oxlintrc.json` and `eslint.config.js`.
 
-**Regla de oro:** `npm run lint` debe terminar en verde y sin warnings nuevos antes de abrir cualquier Pull Request. No se discute estilo en los PRs — el linter ya lo decidió.
+**When it's used:** before every commit; nothing gets committed with lint errors.
 
-## Parte manual: convenciones que el linter no revisa
+### Formatter: Prettier
 
-### Estructura de carpetas
+**What it is:** applies uniform formatting to the code without changing its behavior.
+
+**How it's used:**
+
+```sh
+npm run format   # prettier --write over src/
+```
+
+Rewrites the files in place. Config in `.prettierrc.json`: no semicolons, single quotes, 100-character line width.
+
+**Where it's used:** only in `src/`.
+
+**When it's used:** before every commit; if it modifies files, those changes go in the same commit.
+
+**Golden rule:** before every commit, `npm run lint`, `npm run format`, and `npm run type-check` clean (if `format` modifies files, those changes go in the same commit); `npm run build` clean before opening any Pull Request. Style isn't debated in PRs — the linter already decided it.
+
+## Manual part: conventions the linter doesn't check
+
+### Folder structure
 
 ```text
 src/
-├── assets/       # estilos globales (paleta de marca en base.css)
-├── components/   # componentes reutilizables (PascalCase)
-│   └── charts/   # gráficos Chart.js, siempre vía BaseChart.vue
-├── interfaces/   # la forma de cada entidad: User, Creador, Marca, Pedido
-├── dtos/         # tipos derivados por caso de uso (Omit/Pick)
-├── stores/       # stores de Pinia (solo el array, cero lógica)
-├── services/     # toda la lógica; StorageService es la única puerta a LocalStorage
-├── seeders/      # datos ficticios tipados, uno por entidad
-├── utils/        # formateadores puros compartidos (fecha, moneda, estado)
-├── router/       # rutas + guards (admin/ agrupa las rutas solo-admin)
-└── views/        # una vista por ruta (*View.vue)
+├── assets/       # global styles (brand palette in base.css)
+├── components/   # reusable components (PascalCase)
+│   └── charts/   # Chart.js charts, always via BaseChart.vue
+├── interfaces/   # each entity's shape: User, Creator, Brand, Order
+├── dtos/         # input: derived with Omit/Pick; filter/aggregation: their own interfaces
+├── stores/       # Pinia stores (only the array, zero logic; exception: SessionStore)
+├── services/     # all the logic
+├── seeders/      # typed fake data, one per entity
+├── storage/      # StorageService: the only door to LocalStorage
+├── utils/        # shared helpers with no access to stores/LocalStorage (date, currency, status, ids)
+├── router/       # routes + guards (admin/ groups the admin-only routes)
+└── views/        # one view per route (*View.vue)
 ```
 
-### Nombres
+### Names
 
-- **Componentes:** `PascalCase.vue` (`StatCard.vue`, `BaseChart.vue`).
-- **Vistas:** `NombreView.vue` (`PedidosIndexView.vue`, `CreadoresEditView.vue`).
-- **Interfaces:** `NombreInterface.ts` (`PedidoInterface.ts`).
-- **DTOs:** `NombreDTO.ts` (`CreatePedidoDTO.ts`, `PedidoFiltroDTO.ts`).
-- **Services:** `NombreService.ts` (`PedidoService.ts`, `StorageService.ts`).
-- **Seeders:** `NombreSeeder.ts` (`PedidoSeeder.ts`).
-- **Rutas:** paths en minúscula con guiones (`/pedidos/crear`).
-- **CSS:** clases con prefijo del bloque (`stat-card__label`, patrón BEM ligero).
+- **Components:** `PascalCase.vue` (`StatCard.vue`, `BaseChart.vue`).
+- **Views:** `NameView.vue` (`OrdersIndexView.vue`, `CreatorsEditView.vue`).
+- **Interfaces:** `NameInterface.ts` (`OrderInterface.ts`).
+- **DTOs:** `NameDTO.ts` (`CreateOrderDTO.ts`, `OrderFilterDTO.ts`).
+- **Services:** `NameService.ts` (`OrderService.ts`).
+- **Seeders:** `NameSeeder.ts` (`OrderSeeder.ts`).
+- **Routes:** lowercase paths with hyphens (`/orders/create`).
+- **CSS:** classes prefixed by block (`stat-card__label`, light BEM pattern).
 
-### Estilos
+### Styles
 
-- Usar las **variables de marca** de `src/assets/base.css` (`--color-primary`, `--color-success`, etc.); no colores mágicos (`#7c3aed`) en componentes.
-- Estilos `scoped` en cada SFC; solo `assets/` tiene estilos globales.
-- Consultar [Identidad de Marca y Sistema de Diseño](identidad-de-marca) para la guía completa de tokens, tipografía (3 roles), KPI cards y paleta de gráficos Chart.js.
+- Use the **brand variables** from `src/assets/base.css` (`--color-primary`, `--color-success`, etc.); no magic colors (`#7c3aed`) in components.
+- `scoped` styles in every SFC; only `assets/` has global styles.
+- See [Brand Identity and Design System](identidad-de-marca) for the full guide to tokens, typography (3 roles), KPI cards, and the Chart.js chart palette.
 
-### Documentación
+### Documentation
 
-- **Tipos explícitos en TypeScript**, no JSDoc: todo parámetro y retorno de función o método declara su tipo directamente en la firma. `any` está prohibido sin justificación escrita en comentario.
+- **Explicit types in TypeScript**, not JSDoc for shapes: every function or method parameter and return declares its type directly in the signature. `any` is forbidden without a written justification comment.
 
 ### Commits
 
-- Conventional commits con **tipo en inglés + descripción en español**: `feat: agrega gráfico de pedidos por estado`, `fix: corrige guard de rutas admin`, `docs: agrega borradores del wiki`.
+- Conventional commits with **type in English + description in Spanish**: `feat: agrega gráfico de pedidos por estado`, `fix: corrige guard de rutas admin`, `docs: agrega borradores del wiki`.

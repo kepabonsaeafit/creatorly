@@ -1,38 +1,52 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import type { RouteRecordRaw } from 'vue-router'
 
 // internal imports
-import CreadoresCreateView from '@/views/CreadoresCreateView.vue'
-import CreadoresEditView from '@/views/CreadoresEditView.vue'
-import CreadoresIndexView from '@/views/CreadoresIndexView.vue'
-import UsuariosView from '@/views/UsuariosView.vue'
+import CreatorsCreateView from '@/views/CreatorsCreateView.vue'
+import CreatorsEditView from '@/views/CreatorsEditView.vue'
+import CreatorsIndexView from '@/views/CreatorsIndexView.vue'
+import UsersCreateView from '@/views/UsersCreateView.vue'
+import UsersEditView from '@/views/UsersEditView.vue'
+import UsersIndexView from '@/views/UsersIndexView.vue'
 
-/** Rutas solo-admin, agrupadas por nivel de acceso (no por feature). */
+/** Admin-only routes, grouped by access level (not by feature). */
 export const adminRoutes: RouteRecordRaw[] = [
   {
-    path: '/creadores',
-    name: 'creadores',
-    component: CreadoresIndexView,
+    path: '/creators',
+    name: 'creators',
+    component: CreatorsIndexView,
     meta: { admin: true },
   },
   {
-    path: '/creadores/crear',
-    name: 'creadores.create',
-    component: CreadoresCreateView,
+    path: '/creators/create',
+    name: 'creators.create',
+    component: CreatorsCreateView,
     meta: { admin: true },
   },
   {
-    path: '/creadores/:id',
-    name: 'creadores.edit',
-    component: CreadoresEditView,
+    path: '/creators/:id',
+    name: 'creators.edit',
+    component: CreatorsEditView,
     meta: { admin: true },
   },
   {
-    path: '/usuarios',
-    name: 'usuarios',
-    component: UsuariosView,
+    path: '/users',
+    name: 'users',
+    component: UsersIndexView,
+    meta: { admin: true },
+  },
+  {
+    path: '/users/create',
+    name: 'users.create',
+    component: UsersCreateView,
+    meta: { admin: true },
+  },
+  {
+    path: '/users/:id',
+    name: 'users.edit',
+    component: UsersEditView,
     meta: { admin: true },
   },
 ]

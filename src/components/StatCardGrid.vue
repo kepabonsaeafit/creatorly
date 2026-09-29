@@ -1,10 +1,11 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // internal imports
 import StatCard from '@/components/StatCard.vue'
-import type { HomeStat } from '@/services/PedidoService'
+import type { HomeStat } from '@/interfaces/HomeStatInterface'
 
+// props
 defineProps<{ stats: HomeStat[] }>()
 </script>
 

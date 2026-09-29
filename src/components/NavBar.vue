@@ -1,50 +1,52 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 // internal imports
+import type { NavLink } from '@/interfaces/NavLinkInterface'
 import { AuthService } from '@/services/AuthService'
+import { formatRole } from '@/utils/labels'
 
 const router = useRouter()
 
-interface NavLink {
-  name: string
-  label: string
-  admin: boolean
-}
-
-// selectors
-/** Catálogo completo de links; `admin` marca los que exigen el rol de administrador. */
+// reactive variables
+/** Full link catalog; the router decides which ones require the admin role. */
 const LINKS: NavLink[] = [
-  { name: 'home', label: 'Home', admin: false },
-  { name: 'pedidos', label: 'Pedidos', admin: false },
-  { name: 'reportes', label: 'Reportes', admin: false },
-  { name: 'creadores', label: 'Creadores', admin: true },
-  { name: 'usuarios', label: 'Usuarios', admin: true },
+  { name: 'home', label: 'Home' },
+  { name: 'orders', label: 'Orders' },
+  { name: 'reports', label: 'Reports' },
+  { name: 'creators', label: 'Creators' },
+  { name: 'users', label: 'Users' },
 ]
 
 // computed variables
-// El rol sale de AuthService y no del SessionStore: las views y los componentes
-// solo hablan con services (regla 5 de AGENTS.md).
+// The role comes from AuthService, not from SessionStore: views and components
+// only talk to services (rule 5 of AGENTS.md).
 const currentUser = computed(() => AuthService.getCurrentUser())
 
-const iniciales = computed(() => {
-  const nombre = currentUser.value?.nombre ?? ''
-  return nombre
+const initials = computed(() => {
+  const fullName = currentUser.value?.name ?? ''
+  return fullName
     .split(' ')
     .filter(Boolean)
     .slice(0, 2)
-    .map((palabra) => palabra[0]?.toUpperCase())
+    .map((word) => word[0]?.toUpperCase())
     .join('')
 })
 
-const esAdmin = computed(() => currentUser.value?.rol === 'admin')
+const isAdmin = computed(() => AuthService.isAdmin())
 
-/** Un coordinador no ve los links solo-admin; el guard del router los sigue bloqueando igual. */
-const links = computed(() => LINKS.filter((link) => !link.admin || esAdmin.value))
+/**
+ * A coordinator does not see admin-only links; the router guard still
+ * blocks them regardless. The router (each route's meta.admin) is the
+ * only source of which routes are admin-only.
+ */
+const links = computed(() =>
+  LINKS.filter((link) => !router.resolve({ name: link.name }).meta.admin || isAdmin.value),
+)
 
 // functions
 function logout(): void {
@@ -67,7 +69,7 @@ function logout(): void {
         <g transform="scale(0.228571) translate(-47.875,10.125)">
           <path
             d="M 84.6 30.7 A 42 42 0 1 1 84.6 89.3"
-            stroke="#ffffff"
+            stroke="var(--brand-white)"
             stroke-width="15"
             stroke-linecap="round"
             fill="none"
@@ -79,7 +81,7 @@ function logout(): void {
             height="24"
             rx="2"
             transform="rotate(45 88 63)"
-            fill="#ffffff"
+            fill="var(--brand-white)"
           />
         </g>
       </svg>
@@ -98,10 +100,10 @@ function logout(): void {
     </nav>
 
     <div v-if="currentUser" class="navbar__session">
-      <span class="navbar__avatar" aria-hidden="true">{{ iniciales }}</span>
+      <span class="navbar__avatar" aria-hidden="true">{{ initials }}</span>
       <span class="navbar__user-info">
-        <span class="navbar__user-name">{{ currentUser.nombre }}</span>
-        <span class="navbar__user-role">{{ currentUser.rol }}</span>
+        <span class="navbar__user-name">{{ currentUser.name }}</span>
+        <span class="navbar__user-role">{{ formatRole(currentUser.role) }}</span>
       </span>
       <button type="button" class="navbar__logout" @click="logout">
         <svg class="navbar__logout-icon" viewBox="0 0 16 16" aria-hidden="true">
@@ -121,7 +123,7 @@ function logout(): void {
             fill="none"
           />
         </svg>
-        Salir
+        Log out
       </button>
     </div>
   </header>
@@ -217,7 +219,7 @@ function logout(): void {
   height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
-  color: #ffffff;
+  color: var(--brand-white);
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
@@ -263,7 +265,7 @@ function logout(): void {
 .navbar__logout:hover {
   background: var(--color-danger);
   border-color: var(--color-danger);
-  color: #ffffff;
+  color: var(--brand-white);
 }
 
 .navbar__logout-icon {
