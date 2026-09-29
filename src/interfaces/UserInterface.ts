@@ -1,18 +1,20 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
-/** Roles válidos de un User del sistema. */
-export type RolUsuario = 'admin' | 'coordinador'
+/** Valid roles of a system User. */
+export const ROLES = ['admin', 'coordinator'] as const
+
+export type UserRole = (typeof ROLES)[number]
 
 /**
- * Usuario interno del sistema (administrador o coordinador).
- * Ver el glosario del dominio en CONTEXT.md.
+ * Internal system user (administrator or coordinator).
+ * See the domain glossary in CONTEXT.md.
  */
 export interface UserInterface {
   id: string
-  nombre: string
+  name: string
   email: string
   password: string
-  rol: RolUsuario
+  role: UserRole
   createdAt: string
   updatedAt: string
 }

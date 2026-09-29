@@ -1,53 +1,53 @@
 # Creatorly
 
-Lenguaje ubicuo del dashboard interno de una agencia de creadores UGC. Este documento es únicamente el glosario del dominio; las decisiones de implementación viven en `docs/adr/`.
+Ubiquitous language of the internal dashboard for a UGC creator agency. This document is only the domain glossary; implementation decisions live in `docs/adr/`.
 
-## El negocio
+## The business
 
-**Agencia**:
-La organización dueña de Creatorly; intermediaria entre las marcas que necesitan contenido y los creadores que lo producen.
-_Evitar_: la empresa, nosotros.
+**Agency**:
+The organization that owns Creatorly; intermediary between the brands that need content and the creators who produce it.
+_Avoid_: the company, we.
 
 **UGC**:
-Contenido generado por usuarios (User Generated Content): el tipo de contenido que producen los creadores para las marcas.
-_Evitar_: publicidad, marketing de contenidos.
+User Generated Content: the type of content creators produce for brands.
+_Avoid_: advertising, content marketing.
 
-**Creador**:
-El talento UGC del catálogo de la agencia; quien produce el contenido de los pedidos que se le asignan.
-_Evitar_: influencer, talento, perfil.
+**Creator**:
+The UGC talent in the agency's catalog; who produces the content for the orders assigned to them.
+_Avoid_: influencer, talent, profile.
 
-**Marca**:
-El cliente de la agencia; quien solicita el contenido en cuyo nombre se crea cada pedido.
-_Evitar_: cliente, empresa, account.
+**Brand**:
+The agency's client; who requests the content on whose behalf each order is created.
+_Avoid_: client, company, account.
 
-**Pedido**:
-La unidad de trabajo del sistema: una solicitud de contenido de una marca, asignada a un creador y gestionada por un coordinador, con presupuesto y estado.
-_Evitar_: orden, trabajo, solicitud, proyecto.
+**Order**:
+The system's unit of work: a brand's content request, assigned to a creator and managed by a coordinator, with a budget and a status.
+_Avoid_: request, job, project.
 
 ## Roles
 
 **User**:
-Usuario interno del sistema, con credenciales para iniciar sesión.
-_Evitar_: cuenta, perfil.
+Internal system user, with credentials to log in.
+_Avoid_: account, profile.
 
-**Administrador**:
-El rol con acceso total: gestiona creadores, marcas y users, y es el único que entra a las páginas restringidas.
-_Evitar_: superusuario.
+**Administrator**:
+The role with full access: manages creators, brands, and users, and is the only one who can enter restricted pages.
+_Avoid_: superuser.
 
-**Coordinador**:
-El rol estándar: gestiona los pedidos a su cargo y consulta los reportes.
-_Evitar_: usuario estándar, operativo.
+**Coordinator**:
+The standard role: manages the orders in their charge and checks reports.
+_Avoid_: standard user, operator.
 
-## Ciclo de vida
+## Lifecycle
 
-**Estado del Pedido**:
-Una y solo una de estas cinco etapas: `solicitado`, `asignado`, `en_produccion`, `entregado`, `aprobado`.
-_Evitar_: status, fase, paso.
+**Order status**:
+One and only one of these five stages: `requested`, `assigned`, `in_production`, `delivered`, `approved`.
+_Avoid_: state, phase, step.
 
-**Siembra**:
-Los datos ficticios iniciales que pueblan el sistema en el primer arranque, antes de que exista cualquier dato real.
-_Evitar_: mock, fixture, datos de prueba.
+**Seed data**:
+The initial fake data that populates the system on first launch, before any real data exists.
+_Avoid_: mock, fixture, test data.
 
-**Sesión**:
-El estado de un User autenticado mientras usa el sistema.
-_Evitar_: login (ese es el acto de entrar, no el estado).
+**Session**:
+The state of an authenticated User while using the system.
+_Avoid_: login (that's the act of signing in, not the state).

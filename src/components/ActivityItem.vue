@@ -1,24 +1,26 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'
 
+// internal imports
+import type { OrderActivity } from '@/interfaces/OrderActivityInterface'
+import { formatDateTime } from '@/utils/formatDate'
+
+// props
 interface Props {
   title: string
   timestamp: string
-  type?: 'default' | 'milestone' | 'payment'
+  type?: OrderActivity['type']
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'default',
 })
 
-const formattedTimestamp = computed(() =>
-  new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(
-    new Date(props.timestamp),
-  ),
-)
+// computed variables
+const formattedTimestamp = computed(() => formatDateTime(props.timestamp))
 </script>
 
 <template>
@@ -50,10 +52,6 @@ const formattedTimestamp = computed(() =>
 
 .activity-item__dot.milestone {
   background: var(--color-success);
-}
-
-.activity-item__dot.payment {
-  background: var(--color-danger);
 }
 
 .activity-item__title {

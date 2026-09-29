@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import { computed } from 'vue'
@@ -8,28 +8,28 @@ import { computed } from 'vue'
 import ActivityList from '@/components/ActivityList.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
-import { PedidoService } from '@/services/PedidoService'
+import { OrderService } from '@/services/OrderService'
 
 // computed variables
-const stats = computed(() => PedidoService.getStats())
-const recentPedidos = computed(() => PedidoService.getRecentPedidos())
+const stats = computed(() => OrderService.getStats())
+const recentOrders = computed(() => OrderService.getRecentOrders())
 </script>
 
 <template>
   <main class="Panel dashboard">
-    <h1>Panel de Control</h1>
+    <h1>Dashboard</h1>
 
     <StatCardGrid :stats="stats" />
 
     <div class="dashboard__panels">
-      <DashboardCard title="Pedidos recientes">
-        <ActivityList :items="recentPedidos" />
+      <DashboardCard title="Recent orders">
+        <ActivityList :items="recentOrders" />
       </DashboardCard>
 
-      <DashboardCard title="Gráficos del negocio">
+      <DashboardCard title="Business charts">
         <p class="dashboard__hint">
-          Los gráficos (pie, barras y línea con Chart.js) viven en la página
-          <RouterLink to="/reportes">Reportes</RouterLink>.
+          The charts (pie, bar and line with Chart.js) live on the
+          <RouterLink :to="{ name: 'reports' }">Reports</RouterLink> page.
         </p>
       </DashboardCard>
     </div>

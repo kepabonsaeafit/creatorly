@@ -1,19 +1,19 @@
 # Creatorly
 
-**Creatorly** es un dashboard interno (SPA en Vue.js 3) para gestionar la operación de una agencia de creadores de contenido UGC: su catálogo de **creadores**, las **marcas** que les solicitan contenido y los **pedidos** que conectan a ambos — desde la solicitud hasta la entrega — con presupuesto y seguimiento de estado. En esta primera versión los datos se simulan en el LocalStorage del navegador.
+**Creatorly** is an internal dashboard (SPA in Vue.js 3) for managing the operation of a UGC content creator agency: its **creators** catalog, the **brands** that request content from them, and the **orders** that connect both — from request to delivery — with budget and status tracking. In this first version the data is simulated in the browser's LocalStorage.
 
-## Integrantes
+## Team members
 
-| Integrante | Rol en el equipo |
+| Member | Role on the team |
 |---|---|
-| Kevin Pabón | Arquitecto / líder — repo, modelos, rutas, revisión de PRs |
-| Gerónimo Montes | Autenticación, roles y páginas solo-admin |
-| Felipe Gómez | Gráficos Chart.js, pedidos y reportes |
+| Kevin Pabón | Architect / lead — repo, models, routes, PR review |
+| Gerónimo Montes | Authentication, roles, and admin-only pages |
+| Felipe Gómez | Chart.js graphs, orders, and reports |
 
-## Páginas de este wiki
+## Pages in this wiki
 
-- [Entregable 1 Parte 1](entregable) — logo, modelo verbal, diagrama de clases y de arquitectura
-- [Identidad de Marca y Sistema de Diseño](identidad-de-marca) — brand kit, logo SVG, tokens y guía de UI
-- [Guía de estilo de programación](guia-de-estilo) — linter + convenciones manuales
-- [Reglas de programación](reglas-de-programacion) — reglas por categorías
-- [Pantallazos](pantallazos) — capturas de las secciones más importantes
+- [Deliverable 1 Part 1](entregable) — logo, verbal model, class diagram, and architecture diagram
+- [Brand Identity and Design System](identidad-de-marca) — brand kit, SVG logo, tokens, and UI guide
+- [Programming style guide](guia-de-estilo) — linter + manual conventions
+- [Programming rules](reglas-de-programacion) — rules by category
+- [Screenshots](pantallazos) — screenshots of the most important sections

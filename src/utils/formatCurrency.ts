@@ -1,6 +1,6 @@
-// Felipe Gómez
+// Author: Felipe Gómez
 
-/** Formatea un presupuesto en pesos colombianos sin decimales, p. ej. `$3.200.000`. */
+/** Formats a budget in Colombian pesos with no decimals, e.g. `$3.200.000`. */
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
