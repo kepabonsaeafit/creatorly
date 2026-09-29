@@ -65,7 +65,7 @@ The 7-step execution plan lives in `PLAN_MIGRACION_TS.md`.
 
 **On the class diagram**
 
-The submitted diagram declares `+CRUD()`, `+getters()`, `+setters()` on the four classes. With pure interfaces those methods no longer exist in the code. It was verified that the team that presented has exactly the same mismatch — diagram with those three methods, code with methodless interfaces — and the professor didn't penalize it. **The diagram is not modified.** (Pending update: the diagram is being redrawn as part of the correction plan, phase 6.)
+The submitted diagram declares `+CRUD()`, `+getters()`, `+setters()` on the four classes. With pure interfaces those methods no longer exist in the code. It was verified that the team that presented has exactly the same mismatch — diagram with those three methods, code with methodless interfaces — and the professor didn't penalize it. The diagram keeps those three methods on purpose, but it **was redrawn** as part of the Deliverable 1 correction plan to follow the rubric: classes in English (`User`, `Creator`, `Brand`, `Order`), private attributes (`-`), plain association lines without arrows, and multiplicities at each end (`Brand 1 — 0..* Order`, `Creator 0..1 — 0..* Order`, `User 1 — 0..* Order`).
 
 If the mismatch comes up during the defense, the explanation is that the diagram models the domain (what operations exist on each entity) while the code places them in the service layer, following the course's pattern.
 
