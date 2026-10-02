@@ -5,7 +5,7 @@
 import { computed, ref } from 'vue'
 
 // internal imports
-import type { CreateOrderDTO } from '@/dtos/CreateOrderDTO'
+import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
 import { BrandService } from '@/services/BrandService'
 import { CreatorService } from '@/services/CreatorService'

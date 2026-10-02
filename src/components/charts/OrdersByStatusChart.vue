@@ -7,7 +7,7 @@ import { computed } from 'vue'
 
 // internal imports
 import BaseChart from '@/components/charts/BaseChart.vue'
-import type { OrdersByStatusDTO } from '@/dtos/OrdersByStatusDTO'
+import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import { formatStatus } from '@/utils/labels'
 

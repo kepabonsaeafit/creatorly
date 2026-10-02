@@ -8,7 +8,7 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import UsersTable from '@/components/UsersTable.vue'
-import type { UserFilterDTO } from '@/dtos/UserFilterDTO'
+import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import { resetDemoData } from '@/PiniaConfig'
 import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'

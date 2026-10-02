@@ -1,7 +1,7 @@
 // Author: Kevin Pabón
 
 // internal imports
-import type { CreateBrandDTO } from '@/dtos/CreateBrandDTO'
+import type { CreateBrandDTO } from '@/dtos/Brands/CreateBrandDTO'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { useBrandStore } from '@/stores/BrandStore'
 import { isValidEmail, normalizeEmail } from '@/utils/email'

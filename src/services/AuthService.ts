@@ -12,7 +12,7 @@
  */
 
 // internal imports
-import type { LoginDTO } from '@/dtos/LoginDTO'
+import type { LoginDTO } from '@/dtos/Auth/LoginDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 import { StorageService } from '@/storage/StorageService'
