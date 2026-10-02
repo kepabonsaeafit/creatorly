@@ -1,9 +1,9 @@
 // Author: Kevin Pabón
 
 // internal imports
-import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
+import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
 import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
