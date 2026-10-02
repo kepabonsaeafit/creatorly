@@ -14,13 +14,20 @@ import OrdersTable from '@/components/OrdersTable.vue'
 import ReportTable from '@/components/ReportTable.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
 import type { OrderFilterDTO } from '@/dtos/OrderFilterDTO'
-import type { ReportOption, ReportType } from '@/interfaces/ReportInterface'
-import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
 import { BrandService } from '@/services/BrandService'
 import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
+
+/** Report types available in this view. */
+type ReportType = 'month' | 'status' | 'creator' | 'brand'
+
+/** An option of the report-type selector. */
+interface ReportOption {
+  id: ReportType
+  label: string
+}
 
 const REPORT_OPTIONS: ReportOption[] = [
   { id: 'month', label: 'Orders by month' },
@@ -67,7 +74,7 @@ const currentReportOption = computed(
   () => REPORT_OPTIONS.find((option) => option.id === reportType.value) ?? REPORT_OPTIONS[0],
 )
 
-const reportColumns = computed<ReportTableColumn[]>(() => {
+const reportColumns = computed(() => {
   if (reportType.value === 'status') {
     return [
       { key: 'status', label: 'Status' },

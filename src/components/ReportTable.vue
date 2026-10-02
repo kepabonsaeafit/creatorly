@@ -1,8 +1,11 @@
 <script setup lang="ts">
 // Author: Felipe Gómez
 
-// internal imports
-import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
+/** A column: key looked up in each row and label to display. */
+interface ReportTableColumn {
+  key: string
+  label: string
+}
 
 // props
 defineProps<{
