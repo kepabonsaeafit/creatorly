@@ -11,6 +11,7 @@ import CreatorForm from '@/components/CreatorForm.vue'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import { CreatorService } from '@/services/CreatorService'
 
+// non-reactive variables
 const router = useRouter()
 const toast = useToast()
 

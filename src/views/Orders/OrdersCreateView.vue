@@ -11,6 +11,7 @@ import OrderForm from '@/components/OrderForm.vue'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import { OrderService } from '@/services/OrderService'
 
+// non-reactive variables
 const router = useRouter()
 const toast = useToast()
 

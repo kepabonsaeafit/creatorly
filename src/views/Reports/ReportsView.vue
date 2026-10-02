@@ -29,13 +29,6 @@ interface ReportOption {
   label: string
 }
 
-const REPORT_OPTIONS: ReportOption[] = [
-  { id: 'month', label: 'Orders by month' },
-  { id: 'status', label: 'Orders by status' },
-  { id: 'creator', label: 'Orders by creator' },
-  { id: 'brand', label: 'Budget by brand' },
-]
-
 // selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'>>({
   status: undefined,
@@ -44,6 +37,14 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'
 })
 
 const reportType = ref<ReportType>('month')
+
+// non-reactive variables
+const REPORT_OPTIONS: ReportOption[] = [
+  { id: 'month', label: 'Orders by month' },
+  { id: 'status', label: 'Orders by status' },
+  { id: 'creator', label: 'Orders by creator' },
+  { id: 'brand', label: 'Budget by brand' },
+]
 
 // reactive variables
 const from = ref('')

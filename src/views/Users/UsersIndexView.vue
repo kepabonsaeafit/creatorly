@@ -14,11 +14,12 @@ import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
 import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 
-const router = useRouter()
-const toast = useToast()
-
 // selectors
 const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
+
+// non-reactive variables
+const router = useRouter()
+const toast = useToast()
 
 // reactive variables
 const text = ref('')

@@ -12,6 +12,7 @@ import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import { OrderService } from '@/services/OrderService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 
+// non-reactive variables
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()

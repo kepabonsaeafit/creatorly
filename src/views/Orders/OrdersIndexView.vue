@@ -15,13 +15,14 @@ import { OrderService } from '@/services/OrderService'
 import { getChartPalette } from '@/utils/chartColors'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
-const toast = useToast()
-
 // selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
   status: undefined,
   brandId: undefined,
 })
+
+// non-reactive variables
+const toast = useToast()
 
 // reactive variables
 const text = ref('')

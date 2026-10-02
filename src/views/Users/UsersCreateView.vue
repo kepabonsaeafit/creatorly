@@ -11,6 +11,7 @@ import UserForm from '@/components/UserForm.vue'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
 import { UserService } from '@/services/UserService'
 
+// non-reactive variables
 const router = useRouter()
 const toast = useToast()
 
