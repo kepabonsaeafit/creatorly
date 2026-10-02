@@ -1,9 +1,9 @@
 // Author: Kevin Pabón
 
 // internal imports
-import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
-import type { LoginDTO } from '@/dtos/LoginDTO'
-import type { UserFilterDTO } from '@/dtos/UserFilterDTO'
+import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
+import type { LoginDTO } from '@/dtos/Auth/LoginDTO'
+import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import { ROLES, type UserInterface, type UserRole } from '@/interfaces/UserInterface'
 import { useUserStore } from '@/stores/UserStore'
 import { isValidEmail, normalizeEmail } from '@/utils/email'

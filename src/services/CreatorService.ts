@@ -1,8 +1,8 @@
 // Author: Kevin Pabón
 
 // internal imports
-import type { CreateCreatorDTO } from '@/dtos/CreateCreatorDTO'
-import type { CreatorFilterDTO } from '@/dtos/CreatorFilterDTO'
+import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
+import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { useCreatorStore } from '@/stores/CreatorStore'
 import { generateId } from '@/utils/generateId'

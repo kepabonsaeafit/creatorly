@@ -5,7 +5,7 @@
 import { ref } from 'vue'
 
 // internal imports
-import type { CreateCreatorDTO } from '@/dtos/CreateCreatorDTO'
+import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 
 // props
 interface Props {

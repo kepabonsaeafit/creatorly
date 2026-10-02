@@ -7,7 +7,7 @@ import { computed } from 'vue'
 
 // internal imports
 import BaseChart from '@/components/charts/BaseChart.vue'
-import type { BudgetByBrandDTO } from '@/dtos/BudgetByBrandDTO'
+import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import { formatCurrency } from '@/utils/formatCurrency'
 
