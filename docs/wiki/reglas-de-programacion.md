@@ -60,7 +60,7 @@ Essential project rules, by category. If a PR breaks one of them, it gets pointe
 Entity stores hold only the array, no logic. Exception: `SessionStore`, which also reads the persisted session on creation and derives `current`, `isLoggedIn`, and `isAdmin` with `computed`.
 
 16. **One DTO per use case.** Input DTOs (`Create*`, `Login`) derive from their interface with `Omit`/`Pick`; filter and aggregation DTOs (reports and charts) are their own interfaces, because their shape doesn't come from an entity. Multiple DTOs in one service is fine; one DTO split into two isn't.
-17. Ids are generated with `generateId()` (`utils/generateId.ts`), which uses `crypto.randomUUID()` in secure contexts and, otherwise, falls back to `crypto.getRandomValues()` (see ADR-0001). `crypto.randomUUID()` is never called directly; orders reference brand/creator/coordinator **by id**, not with nested objects.
+17. Ids are generated with `generateId()` (`utils/generateId.ts`), which uses `crypto.randomUUID()` in secure contexts and, otherwise, falls back to `crypto.getRandomValues()` (see ADR-0001). `crypto.randomUUID()` is never called directly; orders reference brand/creator/coordinator **by id**, not with nested objects. Seeders don't call it: their ids are plain strings (`'1'`, `'2'`, ...).
 
 ## Data
 
