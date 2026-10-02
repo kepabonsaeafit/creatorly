@@ -13,6 +13,7 @@ import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 
+// non-reactive variables
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()

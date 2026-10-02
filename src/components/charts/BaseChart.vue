@@ -44,9 +44,11 @@ interface Props {
 
 const props = defineProps<Props>()
 
+// non-reactive variables
+let chart: Chart | null = null
+
 // reactive variables
 const canvas = ref<HTMLCanvasElement | null>(null)
-let chart: Chart | null = null
 
 // watchers
 watch(

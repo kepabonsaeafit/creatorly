@@ -15,9 +15,9 @@ interface NavLink {
   label: string
 }
 
+// non-reactive variables
 const router = useRouter()
 
-// reactive variables
 /** Full link catalog; the router decides which ones require the admin role. */
 const LINKS: NavLink[] = [
   { name: 'home', label: 'Home' },

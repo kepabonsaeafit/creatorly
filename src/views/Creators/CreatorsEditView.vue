@@ -12,6 +12,7 @@ import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import { CreatorService } from '@/services/CreatorService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 
+// non-reactive variables
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
