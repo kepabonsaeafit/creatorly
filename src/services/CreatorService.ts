@@ -12,12 +12,15 @@ export class CreatorService {
     if (!creatorData.name || typeof creatorData.name !== 'string') {
       throw new Error('Creator: name is required')
     }
+
     if (!creatorData.niche || typeof creatorData.niche !== 'string') {
       throw new Error('Creator: niche is required')
     }
+
     if (!creatorData.contentType || typeof creatorData.contentType !== 'string') {
       throw new Error('Creator: content type is required')
     }
+
     if (
       typeof creatorData.rate !== 'number' ||
       Number.isNaN(creatorData.rate) ||
@@ -55,7 +58,9 @@ export class CreatorService {
       ...creatorData,
       available: creatorData.available ?? true,
     }
+
     this.validate(normalizedData)
+
     const now = new Date().toISOString()
     const newCreator: CreatorInterface = {
       ...normalizedData,
@@ -64,7 +69,9 @@ export class CreatorService {
       createdAt: now,
       updatedAt: now,
     }
+
     useCreatorStore().creators.push(newCreator)
+
     return newCreator
   }
 
@@ -78,7 +85,9 @@ export class CreatorService {
   static update(id: string, changes: Partial<CreateCreatorDTO>): CreatorInterface | undefined {
     const creators = useCreatorStore().creators
     const index = creators.findIndex((creator) => creator.id === id)
+
     if (index === -1) return undefined
+
     const merged: CreateCreatorDTO = {
       name: changes.name ?? creators[index].name,
       niche: changes.niche ?? creators[index].niche,
@@ -86,14 +95,18 @@ export class CreatorService {
       rate: changes.rate ?? creators[index].rate,
       available: changes.available ?? creators[index].available,
     }
+
     this.validate(merged)
+
     const updated: CreatorInterface = {
       ...creators[index],
       ...merged,
       available: Boolean(merged.available),
       updatedAt: new Date().toISOString(),
     }
+
     creators[index] = updated
+
     return updated
   }
 
@@ -105,8 +118,10 @@ export class CreatorService {
   static remove(id: string): boolean {
     const creators = useCreatorStore().creators
     const index = creators.findIndex((creator) => creator.id === id)
+
     if (index === -1) return false
     creators.splice(index, 1)
+
     return true
   }
 
@@ -124,8 +139,10 @@ export class CreatorService {
         if (filter.available !== undefined && creator.available !== filter.available) return false
         if (filter.text) {
           const text = filter.text.trim().toLowerCase()
+
           if (text && !creator.name.toLowerCase().includes(text)) return false
         }
+
         return true
       })
       .sort((first, second) => first.name.localeCompare(second.name))
@@ -137,6 +154,7 @@ export class CreatorService {
    */
   static getNiches(): string[] {
     const uniqueNiches = new Set(this.getAll().map((creator) => creator.niche))
+
     return [...uniqueNiches].sort((first, second) => first.localeCompare(second))
   }
 }

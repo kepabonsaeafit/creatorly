@@ -32,9 +32,11 @@ export class AuthService {
    */
   static login(credentials: LoginDTO): LoginResult {
     const user = UserService.findByCredentials(credentials)
+
     if (!user) return { ok: false, error: 'Invalid credentials' }
     useSessionStore().userId = user.id
     StorageService.setSession(user.id)
+
     return { ok: true }
   }
 

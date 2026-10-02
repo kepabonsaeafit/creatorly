@@ -14,12 +14,15 @@ export class UserService {
     if (!userData.name || typeof userData.name !== 'string') {
       throw new Error('User: name is required')
     }
+
     if (!isValidEmail(userData.email ?? '')) {
       throw new Error('User: email has an invalid format')
     }
+
     if (!userData.password || typeof userData.password !== 'string') {
       throw new Error('User: password is required')
     }
+
     if (!ROLES.includes(userData.role)) {
       throw new Error(`User: role must be one of ${ROLES.join(' | ')}`)
     }
@@ -58,6 +61,7 @@ export class UserService {
    */
   static findByCredentials(credentials: LoginDTO): UserInterface | undefined {
     const normalizedEmail = normalizeEmail(credentials.email ?? '')
+
     return useUserStore().users.find(
       (user) => user.email === normalizedEmail && user.password === credentials.password,
     )
@@ -75,7 +79,9 @@ export class UserService {
       role: userData.role ?? 'coordinator',
       email: normalizeEmail(userData.email),
     }
+
     this.validate(normalizedData)
+
     const now = new Date().toISOString()
     const newUser: UserInterface = {
       ...normalizedData,
@@ -83,7 +89,9 @@ export class UserService {
       createdAt: now,
       updatedAt: now,
     }
+
     useUserStore().users.push(newUser)
+
     return newUser
   }
 
@@ -97,21 +105,27 @@ export class UserService {
   static update(id: string, changes: Partial<CreateUserDTO>): UserInterface | undefined {
     const users = useUserStore().users
     const index = users.findIndex((user) => user.id === id)
+
     if (index === -1) return undefined
+
     const merged: CreateUserDTO = {
       name: changes.name ?? users[index].name,
       email: changes.email ?? users[index].email,
       password: changes.password ?? users[index].password,
       role: changes.role ?? users[index].role,
     }
+
     this.validate(merged)
+
     const updated: UserInterface = {
       ...users[index],
       ...merged,
       email: normalizeEmail(merged.email),
       updatedAt: new Date().toISOString(),
     }
+
     users[index] = updated
+
     return updated
   }
 
@@ -123,8 +137,10 @@ export class UserService {
   static remove(id: string): boolean {
     const users = useUserStore().users
     const index = users.findIndex((user) => user.id === id)
+
     if (index === -1) return false
     users.splice(index, 1)
+
     return true
   }
 
@@ -141,6 +157,7 @@ export class UserService {
         if (filter.role && user.role !== filter.role) return false
         if (filter.text) {
           const text = filter.text.trim().toLowerCase()
+
           if (
             text &&
             !user.name.toLowerCase().includes(text) &&
@@ -149,6 +166,7 @@ export class UserService {
             return false
           }
         }
+
         return true
       })
       .sort((first, second) => first.name.localeCompare(second.name))
