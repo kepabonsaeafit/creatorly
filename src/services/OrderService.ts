@@ -9,8 +9,6 @@ import type { OrdersByMonthDTO } from '@/dtos/OrdersByMonthDTO'
 import type { OrdersByStatusDTO } from '@/dtos/OrdersByStatusDTO'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import type { HomeStat } from '@/interfaces/HomeStatInterface'
-import type { OrderActivity } from '@/interfaces/OrderActivityInterface'
 import {
   FINAL_STATUSES,
   type OrderInterface,
@@ -24,6 +22,22 @@ import { UserService } from '@/services/UserService'
 import { useOrderStore } from '@/stores/OrderStore'
 import { formatMonthLabel, todayIso } from '@/utils/formatDate'
 import { generateId } from '@/utils/generateId'
+
+/** A KPI card, used by both HomeView and ReportsView. */
+export interface HomeStat {
+  id: string
+  label: string
+  value: number
+  unit: string
+}
+
+/** An item of the recent activity shown in HomeView. */
+export interface OrderActivity {
+  id: string
+  title: string
+  timestamp: string
+  type: 'default' | 'milestone'
+}
 
 export class OrderService {
   private static readonly ACTIVE_STATUSES: OrderStatus[] = [

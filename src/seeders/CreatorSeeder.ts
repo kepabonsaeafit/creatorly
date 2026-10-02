@@ -2,13 +2,12 @@
 
 // internal imports
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import { generateId } from '@/utils/generateId'
 
 /** Fake creator data. */
 export function seedCreators(): CreatorInterface[] {
   return [
     {
-      id: generateId(),
+      id: '1',
       name: 'Valentina Ríos',
       niche: 'beauty',
       contentType: 'TikTok',
@@ -18,7 +17,7 @@ export function seedCreators(): CreatorInterface[] {
       updatedAt: '2026-01-08T10:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '2',
       name: 'Andrés Mesa',
       niche: 'gaming',
       contentType: 'YouTube',
@@ -28,7 +27,7 @@ export function seedCreators(): CreatorInterface[] {
       updatedAt: '2026-01-09T11:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '3',
       name: 'Daniela Kim',
       niche: 'fashion',
       contentType: 'Instagram',
@@ -38,7 +37,7 @@ export function seedCreators(): CreatorInterface[] {
       updatedAt: '2026-01-12T14:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '4',
       name: 'Sebastián Ortiz',
       niche: 'fitness',
       contentType: 'YouTube',
@@ -48,7 +47,7 @@ export function seedCreators(): CreatorInterface[] {
       updatedAt: '2026-01-15T09:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '5',
       name: 'Isabella Cruz',
       niche: 'food',
       contentType: 'TikTok',
@@ -58,7 +57,7 @@ export function seedCreators(): CreatorInterface[] {
       updatedAt: '2026-02-02T16:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '6',
       name: 'Mateo Vargas',
       niche: 'technology',
       contentType: 'Instagram',

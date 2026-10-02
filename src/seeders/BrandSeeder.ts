@@ -2,13 +2,12 @@
 
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
-import { generateId } from '@/utils/generateId'
 
 /** Fake brand data. */
 export function seedBrands(): BrandInterface[] {
   return [
     {
-      id: generateId(),
+      id: '1',
       name: 'Natura Belleza',
       industry: 'beauty and personal care',
       contactName: 'María Fernández',
@@ -17,7 +16,7 @@ export function seedBrands(): BrandInterface[] {
       updatedAt: '2026-01-07T09:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '2',
       name: 'PixelPlay',
       industry: 'video games',
       contactName: 'Carlos Andrade',
@@ -26,7 +25,7 @@ export function seedBrands(): BrandInterface[] {
       updatedAt: '2026-01-20T15:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '3',
       name: 'Áurea Moda',
       industry: 'fashion and accessories',
       contactName: 'Paula Ruiz',
@@ -35,7 +34,7 @@ export function seedBrands(): BrandInterface[] {
       updatedAt: '2026-02-01T08:30:00.000Z',
     },
     {
-      id: generateId(),
+      id: '4',
       name: 'FitPro Suplementos',
       industry: 'fitness and nutrition',
       contactName: 'Diego Salazar',

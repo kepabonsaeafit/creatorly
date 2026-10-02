@@ -3,7 +3,7 @@
 
 // internal imports
 import StatCard from '@/components/StatCard.vue'
-import type { HomeStat } from '@/interfaces/HomeStatInterface'
+import type { HomeStat } from '@/services/OrderService'
 
 // props
 defineProps<{ stats: HomeStat[] }>()

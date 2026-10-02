@@ -5,7 +5,7 @@
 import { computed } from 'vue'
 
 // internal imports
-import type { OrderActivity } from '@/interfaces/OrderActivityInterface'
+import type { OrderActivity } from '@/services/OrderService'
 import { formatDateTime } from '@/utils/formatDate'
 
 // props

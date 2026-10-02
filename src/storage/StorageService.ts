@@ -6,8 +6,13 @@
  * `localStorage` directly; stores hydrate and persist through this class.
  */
 
-// internal imports
-import type { CollectionName, SessionRecord } from '@/interfaces/StorageInterface'
+/** Names of the four collections persisted in LocalStorage. */
+export type CollectionName = 'users' | 'creators' | 'brands' | 'orders'
+
+/** Shape in which the active session is persisted in LocalStorage. */
+export interface SessionRecord {
+  userId: string
+}
 
 export class StorageService {
   private static readonly KEYS: Record<CollectionName, string> = {
