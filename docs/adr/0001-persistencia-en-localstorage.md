@@ -20,4 +20,4 @@ The course requirements demand that the SPA's "database" live in the browser's L
 - `initPinia()` centralizes startup: hydrates the stores from LocalStorage or runs the seed if they're empty, then deep-watches the stores to persist every change.
 - Services read and write against the stores, not against LocalStorage. `StorageService` is the only module that touches the browser API.
 - Relationships by id are resolved in the services (`OrderService.getBrand(order)`), not in the views.
-- No service or seeder calls `crypto.randomUUID()` directly: all of them generate ids with `utils/generateId.ts`, which centralizes the fallback and prevents the insecure-context bug from being reintroduced in a new file.
+- No service calls `crypto.randomUUID()` directly: all of them generate ids with `utils/generateId.ts`, which centralizes the fallback and prevents the insecure-context bug from being reintroduced in a new file. Seeders don't generate ids: their data uses plain `'1'`, `'2'`, ... ids.

@@ -6,13 +6,18 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 // internal imports
-import type { NavLink } from '@/interfaces/NavLinkInterface'
 import { AuthService } from '@/services/AuthService'
 import { formatRole } from '@/utils/labels'
 
+/** A NavBar link; the router decides which ones require the admin role (meta.admin). */
+interface NavLink {
+  name: string
+  label: string
+}
+
+// non-reactive variables
 const router = useRouter()
 
-// reactive variables
 /** Full link catalog; the router decides which ones require the admin role. */
 const LINKS: NavLink[] = [
   { name: 'home', label: 'Home' },

@@ -12,12 +12,17 @@
  */
 
 // internal imports
-import type { LoginDTO } from '@/dtos/LoginDTO'
-import type { LoginResult } from '@/interfaces/LoginResultInterface'
+import type { LoginDTO } from '@/dtos/Auth/LoginDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 import { StorageService } from '@/storage/StorageService'
 import { useSessionStore } from '@/stores/SessionStore'
+
+/** Result of a login attempt (AuthService.login). */
+export interface LoginResult {
+  ok: boolean
+  error?: string
+}
 
 export class AuthService {
   /**
@@ -27,9 +32,11 @@ export class AuthService {
    */
   static login(credentials: LoginDTO): LoginResult {
     const user = UserService.findByCredentials(credentials)
+
     if (!user) return { ok: false, error: 'Invalid credentials' }
     useSessionStore().userId = user.id
     StorageService.setSession(user.id)
+
     return { ok: true }
   }
 

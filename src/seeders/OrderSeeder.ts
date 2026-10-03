@@ -3,10 +3,21 @@
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import { FINAL_STATUSES, type OrderInterface } from '@/interfaces/OrderInterface'
-import type { OrderSeedData } from '@/interfaces/OrderSeedDataInterface'
+import { FINAL_STATUSES, type OrderInterface, type OrderStatus } from '@/interfaces/OrderInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { generateId } from '@/utils/generateId'
+
+/** Data of a fake order before deriving its createdAt/updatedAt in OrderSeeder. */
+interface OrderSeedData {
+  id: string
+  description: string
+  budget: number
+  requestDate: string
+  deliveryDate: string
+  status: OrderStatus
+  brandId: string
+  creatorId: string | null
+  userId: string
+}
 
 /** Derives createdAt/updatedAt from requestDate, deliveryDate and status. */
 function buildOrder(orderData: OrderSeedData): OrderInterface {
@@ -15,7 +26,7 @@ function buildOrder(orderData: OrderSeedData): OrderInterface {
     ? `${orderData.deliveryDate}T15:00:00.000Z`
     : createdAt
   return {
-    id: generateId(),
+    id: orderData.id,
     description: orderData.description,
     budget: orderData.budget,
     requestDate: orderData.requestDate,
@@ -45,6 +56,7 @@ export function seedOrders(
 
   return [
     buildOrder({
+      id: '1',
       description: '3 TikTok videos for facial serum campaign',
       budget: 3200,
       requestDate: '2026-07-02',
@@ -55,6 +67,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
+      id: '2',
       description: 'Series of 4 reels of nighttime skincare routine',
       budget: 2400,
       requestDate: '2026-03-10',
@@ -65,6 +78,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
+      id: '3',
       description: '10-min gameplay with product integration',
       budget: 4100,
       requestDate: '2026-08-01',
@@ -75,6 +89,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
+      id: '4',
       description: '2 stories and 1 post for DLC launch',
       budget: 1800,
       requestDate: '2026-08-10',
@@ -85,6 +100,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
+      id: '5',
       description: 'Seasonal lookbook with 6 Instagram photos',
       budget: 2600,
       requestDate: '2026-06-18',
@@ -95,6 +111,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
+      id: '6',
       description: 'Unboxing and review of the new catalog',
       budget: 2900,
       requestDate: '2026-07-22',
@@ -105,6 +122,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
+      id: '7',
       description: 'Workout routine with supplement stack',
       budget: 3500,
       requestDate: '2026-01-15',
@@ -115,6 +133,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
+      id: '8',
       description: '8-min YouTube video of pre-workout',
       budget: 2200,
       requestDate: '2026-05-06',
@@ -125,6 +144,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
+      id: '9',
       description: 'Easy recipes with gourmet line',
       budget: 1500,
       requestDate: '2026-08-12',
@@ -135,6 +155,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
+      id: '10',
       description: '1-hour live stream playing the new title',
       budget: 3900,
       requestDate: '2026-07-14',
@@ -145,6 +166,7 @@ export function seedOrders(
       userId: sara.id,
     }),
     buildOrder({
+      id: '11',
       description: '5 street style photos with accessories',
       budget: 1700,
       requestDate: '2026-08-05',
@@ -155,6 +177,7 @@ export function seedOrders(
       userId: laura.id,
     }),
     buildOrder({
+      id: '12',
       description: 'Honest review of vegan protein',
       budget: 2000,
       requestDate: '2026-06-20',

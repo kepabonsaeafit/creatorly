@@ -2,13 +2,12 @@
 
 // internal imports
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { generateId } from '@/utils/generateId'
 
 /** Fake user data. */
 export function seedUsers(): UserInterface[] {
   return [
     {
-      id: generateId(),
+      id: '1',
       name: 'Camila Torres',
       email: 'admin@creatorly.com',
       password: '1234',
@@ -17,7 +16,7 @@ export function seedUsers(): UserInterface[] {
       updatedAt: '2026-01-05T08:00:00.000Z',
     },
     {
-      id: generateId(),
+      id: '2',
       name: 'Laura Restrepo',
       email: 'laura@creatorly.com',
       password: '1234',
@@ -26,7 +25,7 @@ export function seedUsers(): UserInterface[] {
       updatedAt: '2026-01-05T08:05:00.000Z',
     },
     {
-      id: generateId(),
+      id: '3',
       name: 'Sara Gómez',
       email: 'sara@creatorly.com',
       password: '1234',

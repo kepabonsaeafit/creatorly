@@ -1,16 +1,14 @@
 // Author: Kevin Pabón
 
 // internal imports
-import type { BudgetByBrandDTO } from '@/dtos/BudgetByBrandDTO'
-import type { CreateOrderDTO } from '@/dtos/CreateOrderDTO'
-import type { OrderFilterDTO } from '@/dtos/OrderFilterDTO'
-import type { OrdersByCreatorDTO } from '@/dtos/OrdersByCreatorDTO'
-import type { OrdersByMonthDTO } from '@/dtos/OrdersByMonthDTO'
-import type { OrdersByStatusDTO } from '@/dtos/OrdersByStatusDTO'
+import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
+import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
+import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
+import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
+import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
+import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import type { HomeStat } from '@/interfaces/HomeStatInterface'
-import type { OrderActivity } from '@/interfaces/OrderActivityInterface'
 import {
   FINAL_STATUSES,
   type OrderInterface,
@@ -25,6 +23,22 @@ import { useOrderStore } from '@/stores/OrderStore'
 import { formatMonthLabel, todayIso } from '@/utils/formatDate'
 import { generateId } from '@/utils/generateId'
 
+/** A KPI card, used by both HomeView and ReportsView. */
+export interface HomeStat {
+  id: string
+  label: string
+  value: number
+  unit: string
+}
+
+/** An item of the recent activity shown in HomeView. */
+export interface OrderActivity {
+  id: string
+  title: string
+  timestamp: string
+  type: 'default' | 'milestone'
+}
+
 export class OrderService {
   private static readonly ACTIVE_STATUSES: OrderStatus[] = [
     'requested',
@@ -36,6 +50,7 @@ export class OrderService {
     if (!orderData.description || typeof orderData.description !== 'string') {
       throw new Error('Order: description is required')
     }
+
     if (
       typeof orderData.budget !== 'number' ||
       Number.isNaN(orderData.budget) ||
@@ -43,15 +58,19 @@ export class OrderService {
     ) {
       throw new Error('Order: budget must be a number >= 0')
     }
+
     if (!STATUSES.includes(orderData.status)) {
       throw new Error(`Order: status must be one of ${STATUSES.join(' | ')}`)
     }
+
     if (!orderData.brandId || typeof orderData.brandId !== 'string') {
       throw new Error('Order: brandId is required')
     }
+
     if (!orderData.userId || typeof orderData.userId !== 'string') {
       throw new Error('Order: userId is required')
     }
+
     if (orderData.creatorId !== null && typeof orderData.creatorId !== 'string') {
       throw new Error('Order: creatorId must be an id or null')
     }
@@ -175,7 +194,9 @@ export class OrderService {
       creatorId: orderData.creatorId ?? null,
       requestDate: orderData.requestDate ?? todayIso(),
     }
+
     this.validate(normalizedData)
+
     const now = new Date().toISOString()
     const newOrder: OrderInterface = {
       ...normalizedData,
@@ -183,7 +204,9 @@ export class OrderService {
       createdAt: now,
       updatedAt: now,
     }
+
     useOrderStore().orders.push(newOrder)
+
     return newOrder
   }
 
@@ -197,7 +220,9 @@ export class OrderService {
   static update(id: string, changes: Partial<CreateOrderDTO>): OrderInterface | undefined {
     const orders = useOrderStore().orders
     const index = orders.findIndex((order) => order.id === id)
+
     if (index === -1) return undefined
+
     const merged: CreateOrderDTO = {
       description: changes.description ?? orders[index].description,
       budget: changes.budget ?? orders[index].budget,
@@ -213,13 +238,17 @@ export class OrderService {
       creatorId: changes.creatorId !== undefined ? changes.creatorId : orders[index].creatorId,
       userId: changes.userId ?? orders[index].userId,
     }
+
     this.validate(merged)
+
     const updated: OrderInterface = {
       ...orders[index],
       ...merged,
       updatedAt: new Date().toISOString(),
     }
+
     orders[index] = updated
+
     return updated
   }
 
@@ -231,8 +260,10 @@ export class OrderService {
   static remove(id: string): boolean {
     const orders = useOrderStore().orders
     const index = orders.findIndex((order) => order.id === id)
+
     if (index === -1) return false
     orders.splice(index, 1)
+
     return true
   }
 
@@ -251,8 +282,10 @@ export class OrderService {
       if (filter.to && order.requestDate > filter.to) return false
       if (filter.text) {
         const text = filter.text.trim().toLowerCase()
+
         if (text && !order.description.toLowerCase().includes(text)) return false
       }
+
       return true
     })
   }
@@ -288,10 +321,12 @@ export class OrderService {
    */
   static getOrdersByCreator(orders: OrderInterface[]): OrdersByCreatorDTO[] {
     const counts = new Map<string, number>()
+
     for (const order of orders) {
       if (!order.creatorId) continue
       counts.set(order.creatorId, (counts.get(order.creatorId) ?? 0) + 1)
     }
+
     return [...counts.entries()]
       .map(([creatorId, count]) => ({
         creatorId,
@@ -308,9 +343,11 @@ export class OrderService {
    */
   static getBudgetByBrand(orders: OrderInterface[]): BudgetByBrandDTO[] {
     const totals = new Map<string, number>()
+
     for (const order of orders) {
       totals.set(order.brandId, (totals.get(order.brandId) ?? 0) + order.budget)
     }
+
     return [...totals.entries()]
       .map(([brandId, budget]) => ({
         brandId,
@@ -327,6 +364,7 @@ export class OrderService {
    */
   static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
     const aggregates = new Map<string, { count: number; budget: number }>()
+
     for (const order of orders) {
       const month = order.requestDate.slice(0, 7)
       const current = aggregates.get(month) ?? { count: 0, budget: 0 }
@@ -335,6 +373,7 @@ export class OrderService {
         budget: current.budget + order.budget,
       })
     }
+
     return [...aggregates.entries()]
       .sort(([monthA], [monthB]) => monthA.localeCompare(monthB))
       .map(([month, values]) => ({

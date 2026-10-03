@@ -49,15 +49,15 @@ src/
 ├── assets/       # global styles (brand palette in base.css)
 ├── components/   # reusable components (PascalCase)
 │   └── charts/   # Chart.js charts, always via BaseChart.vue
-├── interfaces/   # each entity's shape: User, Creator, Brand, Order
-├── dtos/         # input: derived with Omit/Pick; filter/aggregation: their own interfaces
+├── interfaces/   # only the 4 entity shapes: User, Creator, Brand, Order
+├── dtos/         # one folder per entity (Creators/, Orders/, Users/, Brands/, Reports/, Auth/); input: derived with Omit/Pick; filter/aggregation: their own interfaces
 ├── stores/       # Pinia stores (only the array, zero logic; exception: SessionStore)
 ├── services/     # all the logic
 ├── seeders/      # typed fake data, one per entity
 ├── storage/      # StorageService: the only door to LocalStorage
 ├── utils/        # shared helpers with no access to stores/LocalStorage (date, currency, status, ids)
 ├── router/       # routes + guards (admin/ groups the admin-only routes)
-└── views/        # one view per route (*View.vue)
+└── views/        # one view per route (*View.vue), in a folder per entity (Creators/, Orders/, Users/, Reports/, Auth/)
 ```
 
 ### Names
