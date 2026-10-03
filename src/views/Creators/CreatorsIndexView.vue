@@ -7,16 +7,17 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import CreatorsTable from '@/components/CreatorsTable.vue'
-import type { CreatorFilterDTO } from '@/dtos/CreatorFilterDTO'
+import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import { CreatorService } from '@/services/CreatorService'
-
-const toast = useToast()
 
 // selectors
 const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
   niche: undefined,
   available: undefined,
 })
+
+// non-reactive variables
+const toast = useToast()
 
 // reactive variables
 const text = ref('')

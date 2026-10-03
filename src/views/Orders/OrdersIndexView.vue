@@ -9,19 +9,20 @@ import { useToast } from 'vue-toastification'
 import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import OrdersTable from '@/components/OrdersTable.vue'
-import type { OrderFilterDTO } from '@/dtos/OrderFilterDTO'
+import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import { BrandService } from '@/services/BrandService'
 import { OrderService } from '@/services/OrderService'
 import { getChartPalette } from '@/utils/chartColors'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
-
-const toast = useToast()
 
 // selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
   status: undefined,
   brandId: undefined,
 })
+
+// non-reactive variables
+const toast = useToast()
 
 // reactive variables
 const text = ref('')

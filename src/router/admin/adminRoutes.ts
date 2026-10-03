@@ -4,12 +4,12 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 // internal imports
-import CreatorsCreateView from '@/views/CreatorsCreateView.vue'
-import CreatorsEditView from '@/views/CreatorsEditView.vue'
-import CreatorsIndexView from '@/views/CreatorsIndexView.vue'
-import UsersCreateView from '@/views/UsersCreateView.vue'
-import UsersEditView from '@/views/UsersEditView.vue'
-import UsersIndexView from '@/views/UsersIndexView.vue'
+import CreatorsCreateView from '@/views/Creators/CreatorsCreateView.vue'
+import CreatorsEditView from '@/views/Creators/CreatorsEditView.vue'
+import CreatorsIndexView from '@/views/Creators/CreatorsIndexView.vue'
+import UsersCreateView from '@/views/Users/UsersCreateView.vue'
+import UsersEditView from '@/views/Users/UsersEditView.vue'
+import UsersIndexView from '@/views/Users/UsersIndexView.vue'
 
 /** Admin-only routes, grouped by access level (not by feature). */
 export const adminRoutes: RouteRecordRaw[] = [

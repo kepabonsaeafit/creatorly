@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 // internal imports
 import { AuthService } from '@/services/AuthService'
 
+// non-reactive variables
 const router = useRouter()
 
 // reactive variables

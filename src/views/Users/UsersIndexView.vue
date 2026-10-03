@@ -8,17 +8,18 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import UsersTable from '@/components/UsersTable.vue'
-import type { UserFilterDTO } from '@/dtos/UserFilterDTO'
+import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import { resetDemoData } from '@/PiniaConfig'
 import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
 import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 
-const router = useRouter()
-const toast = useToast()
-
 // selectors
 const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
+
+// non-reactive variables
+const router = useRouter()
+const toast = useToast()
 
 // reactive variables
 const text = ref('')

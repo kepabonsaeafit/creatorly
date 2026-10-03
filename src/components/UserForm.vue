@@ -5,7 +5,7 @@
 import { computed, ref } from 'vue'
 
 // internal imports
-import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
+import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
 import type { UserRole } from '@/interfaces/UserInterface'
 import { normalizeEmail } from '@/utils/email'
 import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'

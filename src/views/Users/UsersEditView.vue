@@ -8,11 +8,12 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import UserForm from '@/components/UserForm.vue'
-import type { CreateUserDTO } from '@/dtos/CreateUserDTO'
+import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
 import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 
+// non-reactive variables
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()

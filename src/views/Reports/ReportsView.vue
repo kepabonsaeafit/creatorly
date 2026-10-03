@@ -13,21 +13,21 @@ import DashboardCard from '@/components/DashboardCard.vue'
 import OrdersTable from '@/components/OrdersTable.vue'
 import ReportTable from '@/components/ReportTable.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
-import type { OrderFilterDTO } from '@/dtos/OrderFilterDTO'
-import type { ReportOption, ReportType } from '@/interfaces/ReportInterface'
-import type { ReportTableColumn } from '@/interfaces/ReportTableColumnInterface'
+import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import { BrandService } from '@/services/BrandService'
 import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
-const REPORT_OPTIONS: ReportOption[] = [
-  { id: 'month', label: 'Orders by month' },
-  { id: 'status', label: 'Orders by status' },
-  { id: 'creator', label: 'Orders by creator' },
-  { id: 'brand', label: 'Budget by brand' },
-]
+/** Report types available in this view. */
+type ReportType = 'month' | 'status' | 'creator' | 'brand'
+
+/** An option of the report-type selector. */
+interface ReportOption {
+  id: ReportType
+  label: string
+}
 
 // selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'>>({
@@ -37,6 +37,14 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'
 })
 
 const reportType = ref<ReportType>('month')
+
+// non-reactive variables
+const REPORT_OPTIONS: ReportOption[] = [
+  { id: 'month', label: 'Orders by month' },
+  { id: 'status', label: 'Orders by status' },
+  { id: 'creator', label: 'Orders by creator' },
+  { id: 'brand', label: 'Budget by brand' },
+]
 
 // reactive variables
 const from = ref('')
@@ -67,7 +75,7 @@ const currentReportOption = computed(
   () => REPORT_OPTIONS.find((option) => option.id === reportType.value) ?? REPORT_OPTIONS[0],
 )
 
-const reportColumns = computed<ReportTableColumn[]>(() => {
+const reportColumns = computed(() => {
   if (reportType.value === 'status') {
     return [
       { key: 'status', label: 'Status' },
