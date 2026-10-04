@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // internal imports
+import { HomeModule } from './home/home.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -15,6 +16,7 @@ import { UsersModule } from './users/users.module.js';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    HomeModule,
     UsersModule,
   ],
 })

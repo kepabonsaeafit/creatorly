@@ -12,7 +12,9 @@ async function bootstrap(): Promise<void> {
   const corsOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim());
 
   app.enableCors({
-    origin: corsOrigins?.length ? corsOrigins : ['http://localhost:5173'],
+    origin: corsOrigins?.length
+      ? corsOrigins
+      : ['http://localhost:5173', 'http://localhost', 'http://127.0.0.1'],
   });
 
   app.setGlobalPrefix('api');
