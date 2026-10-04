@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // internal imports
-import { User } from './user.entity.js';
+import { User } from './entities/user.entity.js';
 import { UsersSeeder } from './users.seeder.js';
 import { UsersService } from './users.service.js';
 
