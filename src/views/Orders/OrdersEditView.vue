@@ -2,64 +2,107 @@
 // Author: Felipe Gómez
 
 // external imports
-import { computed, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
 import OrderForm from '@/components/OrderForm.vue'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
+import type { UserInterface } from '@/interfaces/UserInterface'
+import { AuthService } from '@/services/AuthService'
+import { BrandService } from '@/services/BrandService'
+import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
+import { UserService } from '@/services/UserService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 
 // non-reactive variables
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const orderId = Number(route.params.id)
 
 // reactive variables
+const order = ref<OrderInterface | null>(null)
+const brands = ref<BrandInterface[]>([])
+const creators = ref<CreatorInterface[]>([])
+const users = ref<UserInterface[]>([])
+const loading = ref(true)
 const error = ref('')
 const saving = ref(false)
 
-// computed variables
-const order = computed(() => OrderService.getById(String(route.params.id)))
-
 // functions
-function onSubmit(orderData: CreateOrderDTO): void {
-  if (!order.value) return
+onMounted(async () => {
+  try {
+    const [loadedOrder, loadedBrands, loadedCreators, loadedUsers] = await Promise.all([
+      OrderService.getById(orderId),
+      BrandService.getAll(),
+      CreatorService.getAll(),
+      UserService.getAll(),
+    ])
+
+    order.value = loadedOrder
+    brands.value = loadedBrands
+    creators.value = loadedCreators
+    users.value = loadedUsers
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the order'))
+  } finally {
+    loading.value = false
+  }
+})
+
+async function onSubmit(orderData: CreateOrderDTO): Promise<void> {
   error.value = ''
   saving.value = true
+
   try {
-    OrderService.update(order.value.id, orderData)
+    await OrderService.update(orderId, orderData)
     toast.success('Order updated successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
-    error.value =
-      caughtError instanceof Error ? caughtError.message : 'It was not possible to update the order'
+    error.value = AuthService.getErrorMessage(
+      caughtError,
+      'It was not possible to update the order',
+    )
     toast.error(error.value)
   } finally {
     saving.value = false
   }
 }
 
-function onDelete(): void {
-  if (!order.value) return
+async function onDelete(): Promise<void> {
   if (!confirmDeletion('order')) return
-  const removed = OrderService.remove(order.value.id)
-  if (removed) {
+
+  try {
+    await OrderService.remove(orderId)
     toast.success('Order deleted successfully')
     router.push({ name: 'orders' })
-  } else {
-    toast.error('It was not possible to delete the order')
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the order'))
   }
 }
 </script>
 
 <template>
   <main class="Panel">
-    <template v-if="order">
+    <p v-if="loading" class="edit-order__loading">Loading order…</p>
+    <template v-else-if="order">
       <h1>Edit order</h1>
-      <OrderForm edit-mode :initial="order" :saving="saving" :error="error" @submit="onSubmit" />
+      <OrderForm
+        edit-mode
+        :initial="order"
+        :brands="brands"
+        :creators="creators"
+        :users="users"
+        :saving="saving"
+        :error="error"
+        @submit="onSubmit"
+      />
       <button type="button" class="edit-order__delete" @click="onDelete">Delete order</button>
     </template>
     <p v-else class="edit-order__not-found">
@@ -69,6 +112,11 @@ function onDelete(): void {
 </template>
 
 <style scoped>
+.edit-order__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .edit-order__delete {
   margin-top: 1.5rem;
   padding: 0.5rem 1rem;

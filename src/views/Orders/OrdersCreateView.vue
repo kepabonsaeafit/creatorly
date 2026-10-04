@@ -2,34 +2,63 @@
 // Author: Felipe Gómez
 
 // external imports
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
 import OrderForm from '@/components/OrderForm.vue'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import type { UserInterface } from '@/interfaces/UserInterface'
+import { AuthService } from '@/services/AuthService'
+import { BrandService } from '@/services/BrandService'
+import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
+import { UserService } from '@/services/UserService'
 
 // non-reactive variables
 const router = useRouter()
 const toast = useToast()
 
 // reactive variables
+const brands = ref<BrandInterface[]>([])
+const creators = ref<CreatorInterface[]>([])
+const users = ref<UserInterface[]>([])
 const error = ref('')
 const saving = ref(false)
 
 // functions
-function onSubmit(orderData: CreateOrderDTO): void {
+onMounted(async () => {
+  try {
+    const [loadedBrands, loadedCreators, loadedUsers] = await Promise.all([
+      BrandService.getAll(),
+      CreatorService.getAll(),
+      UserService.getAll(),
+    ])
+
+    brands.value = loadedBrands
+    creators.value = loadedCreators
+    users.value = loadedUsers
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the form'))
+  }
+})
+
+async function onSubmit(orderData: CreateOrderDTO): Promise<void> {
   error.value = ''
   saving.value = true
+
   try {
-    OrderService.create(orderData)
+    await OrderService.create(orderData)
     toast.success('Order created successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
-    error.value =
-      caughtError instanceof Error ? caughtError.message : 'It was not possible to create the order'
+    error.value = AuthService.getErrorMessage(
+      caughtError,
+      'It was not possible to create the order',
+    )
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -40,6 +69,13 @@ function onSubmit(orderData: CreateOrderDTO): void {
 <template>
   <main class="Panel">
     <h1>New order</h1>
-    <OrderForm :saving="saving" :error="error" @submit="onSubmit" />
+    <OrderForm
+      :brands="brands"
+      :creators="creators"
+      :users="users"
+      :saving="saving"
+      :error="error"
+      @submit="onSubmit"
+    />
   </main>
 </template>

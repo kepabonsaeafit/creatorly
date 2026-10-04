@@ -11,19 +11,19 @@ export const FINAL_STATUSES: readonly OrderStatus[] = ['delivered', 'approved']
 /**
  * Order: the system's unit of work. It connects a Brand (who requests it),
  * a Creator (who produces it, optional until assigned) and a coordinator User
- * (who manages it). See ADR-0001: references are stored by id; the
+ * (who manages it). See ADR-0005: references are stored by id; the
  * coordinator is referenced with userId.
  */
 export interface OrderInterface {
-  id: string
+  id: number
   description: string
   budget: number
   requestDate: string
   deliveryDate: string | null
   status: OrderStatus
-  brandId: string
-  creatorId: string | null
-  userId: string
+  brandId: number
+  creatorId: number | null
+  userId: number
   createdAt: string
   updatedAt: string
 }

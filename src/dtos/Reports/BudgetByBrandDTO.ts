@@ -5,7 +5,7 @@
  * Does not derive from OrderInterface: it is a read DTO, not a write one.
  */
 export interface BudgetByBrandDTO {
-  brandId: string
+  brandId: number
   brandName: string
   budget: number
 }

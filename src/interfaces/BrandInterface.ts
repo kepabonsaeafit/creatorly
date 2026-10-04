@@ -4,7 +4,7 @@
  * Brand: the agency's client, who requests the content.
  */
 export interface BrandInterface {
-  id: string
+  id: number
   name: string
   industry: string
   contactName: string
