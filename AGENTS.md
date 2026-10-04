@@ -180,6 +180,8 @@ export class OrdersController {
 - **Passwords** are stored as a bcrypt hash in `passwordHash` with `@Column({ select: false })`, and are never returned by the API.
 - **Seeders**: one `*.seeder.ts` per module, an `@Injectable()` that inserts the demo data only when its table is empty. `users`, `creators` and `brands` seed in `onModuleInit`; `orders` seeds in `onApplicationBootstrap`, so the rows it references already exist.
 - **Login** follows https://docs.nestjs.com/security/authentication: `AuthService.signIn`, `JwtModule.register({ global: true, ... })`, a global `AuthGuard` (`APP_GUARD`), `@Public()` for `POST auth/login`, and `@Roles('admin')` + `RolesGuard` for admin-only routes (NestJS authorization guide).
+- **The logged-in user** is read in a controller with `@Request() request: AuthenticatedRequest` (exported from `auth/auth.guard.ts`) and passed to the service as `request.user.sub`; the token payload type is `JwtPayload` (`{ sub, email, role }`, exported from `auth/auth.service.ts`).
+- **Write-side objects are built field by field** in the service (never `repository.create(dto)` straight from the body), so a request can't inject `id` or `passwordHash`; after saving, the entity is reloaded with `findOneByOrFail` so the response carries the relation ids and never the hash.
 - **Imports** between backend files use the `.js` extension (`'./orders.service.js'`), because the project is ESM.
 
 ## 9. API contract
@@ -201,7 +203,9 @@ Base URL: `http://localhost:3000/api`. Every route except `POST /auth/login` req
 | GET | `/orders`, `/orders/:id` | — | `Order[]`, `Order \| null` | logged in |
 | POST · PATCH · DELETE | `/orders`, `/orders/:id` | as users | as users | logged in |
 
-Domain rules enforced by the backend (moved from the Deliverable 1 frontend services): required fields, email format, `rate` and `budget` ≥ 0, valid `status` and `role`; an admin can't remove their own admin role or delete themselves; a user or brand with orders can't be deleted (400); deleting a creator sets `creatorId` to `null` in its orders. Demo login: `admin@creatorly.com` / `1234`.
+Domain rules enforced by the backend (moved from the Deliverable 1 frontend services): required fields, email format, `rate` and `budget` ≥ 0, valid `status` and `role`; an admin can't remove their own admin role or delete themselves; a user or brand with orders can't be deleted (400); deleting a creator sets `creatorId` to `null` in its orders. Referencing a `brandId`, `creatorId` or `userId` that doesn't exist is a 400 (`Order: brand not found`, ...), never a 500. Demo login: `admin@creatorly.com` / `1234` (admin), `laura@creatorly.com` / `1234` (coordinator).
+
+Session in the frontend: after login, keep `access_token` through `StorageService`, send it on every request (header `Authorization: Bearer <token>`, set once in `AuthService` on `axios.defaults.headers.common`), and load the current user with `GET /auth/profile`. The token lasts 1 hour and carries the role at login time: on any 401 the frontend clears the token and goes to the login view.
 
 ## 10. Code rules (mandatory in everything you produce, frontend and backend)
 
