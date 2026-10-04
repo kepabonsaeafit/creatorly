@@ -14,11 +14,11 @@ export const ROLES = ['admin', 'coordinator'] as const;
 
 export type UserRole = (typeof ROLES)[number];
 
-/** Internal system user (administrator or coordinator); the `users` table. */
-@Entity('users')
+/** Internal system user (administrator or coordinator); the `user` table. */
+@Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   name: string;

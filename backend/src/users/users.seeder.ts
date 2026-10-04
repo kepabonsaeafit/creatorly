@@ -1,27 +1,30 @@
 // Author: Felipe Gómez
 
 // external imports
-import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
 
 // internal imports
-import { User } from './user.entity.js';
+import { User } from './entities/user.entity.js';
 
-/** Inserts the initial users when the `users` table is empty, so the app can be logged into. */
+/** Inserts the initial users when the `user` table is empty, so the app can be logged into. */
 @Injectable()
-export class UsersSeeder implements OnApplicationBootstrap {
+export class UsersSeeder implements OnModuleInit {
   private static readonly SALT_ROUNDS = 10;
   // demo password shown on the login screen
   private static readonly DEMO_PASSWORD = '1234';
 
   private readonly logger = new Logger(UsersSeeder.name);
 
-  constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  /** Runs once the app has started; does nothing if users already exist. */
-  async onApplicationBootstrap(): Promise<void> {
+  /** Runs on module init, before any onApplicationBootstrap seeder; does nothing if users exist. */
+  async onModuleInit(): Promise<void> {
     if ((await this.usersRepository.count()) > 0) return;
 
     const passwordHash = await hash(UsersSeeder.DEMO_PASSWORD, UsersSeeder.SALT_ROUNDS);
