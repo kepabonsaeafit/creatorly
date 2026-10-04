@@ -1,6 +1,6 @@
 # Creatorly
 
-**Creatorly** is an internal dashboard (SPA in Vue.js 3) for managing the operation of a UGC content creator agency: its **creators** catalog, the **brands** that request content from them, and the **orders** that connect both — from request to delivery — with budget and status tracking. In this first version the data is simulated in the browser's LocalStorage.
+**Creatorly** is an internal dashboard (SPA in Vue.js 3) for managing the operation of a UGC content creator agency: its **creators** catalog, the **brands** that request content from them, and the **orders** that connect both — from request to delivery — with budget and status tracking. The data lives in the backend (NestJS + SQLite) and the SPA reads and writes it through its REST API.
 
 ## Team members
 
