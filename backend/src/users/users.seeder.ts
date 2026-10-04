@@ -29,9 +29,30 @@ export class UsersSeeder implements OnModuleInit {
 
     const passwordHash = await hash(UsersSeeder.DEMO_PASSWORD, UsersSeeder.SALT_ROUNDS);
     await this.usersRepository.save([
-      { name: 'Camila Torres', email: 'admin@creatorly.com', passwordHash, role: 'admin' },
-      { name: 'Laura Restrepo', email: 'laura@creatorly.com', passwordHash, role: 'coordinator' },
-      { name: 'Sara Gómez', email: 'sara@creatorly.com', passwordHash, role: 'coordinator' },
+      {
+        name: 'Camila Torres',
+        email: 'admin@creatorly.com',
+        passwordHash,
+        role: 'admin',
+        createdAt: new Date('2026-01-05T08:00:00.000Z'),
+        updatedAt: new Date('2026-01-05T08:00:00.000Z'),
+      },
+      {
+        name: 'Laura Restrepo',
+        email: 'laura@creatorly.com',
+        passwordHash,
+        role: 'coordinator',
+        createdAt: new Date('2026-01-05T08:05:00.000Z'),
+        updatedAt: new Date('2026-01-05T08:05:00.000Z'),
+      },
+      {
+        name: 'Sara Gómez',
+        email: 'sara@creatorly.com',
+        passwordHash,
+        role: 'coordinator',
+        createdAt: new Date('2026-01-06T09:30:00.000Z'),
+        updatedAt: new Date('2026-01-06T09:30:00.000Z'),
+      },
     ]);
     this.logger.log('Seeded 3 users');
   }
