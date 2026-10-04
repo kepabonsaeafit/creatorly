@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BrandsModule } from './brands/brands.module.js';
 import { CreatorsModule } from './creators/creators.module.js';
 import { HomeModule } from './home/home.module.js';
+import { OrdersModule } from './orders/orders.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -22,6 +23,7 @@ import { UsersModule } from './users/users.module.js';
     UsersModule,
     CreatorsModule,
     BrandsModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}
