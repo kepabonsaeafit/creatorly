@@ -34,9 +34,10 @@ const role = ref<UserRole>(props.initial.role ?? 'coordinator')
 // reactive variables
 const name = ref(props.initial.name ?? '')
 const email = ref(props.initial.email ?? '')
-// The password is stored in plain text by design (UserInterface), so it is
-// preloaded on edit and resent in full, like the rest of the fields.
-const password = ref(props.initial.password ?? '')
+// The API never returns the password, so it cannot be preloaded: on edit an
+// empty field means "keep the current one" and the view leaves it out of the
+// payload. It is only required when creating.
+const password = ref('')
 
 // computed variables
 const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))
@@ -71,7 +72,8 @@ function onSubmit(): void {
         v-model="password"
         class="user-form__input"
         type="password"
-        required
+        :required="!editMode"
+        :placeholder="editMode ? 'Leave empty to keep the current one' : ''"
       />
     </div>
 

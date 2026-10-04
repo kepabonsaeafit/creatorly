@@ -4,7 +4,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from 'vue-router'
 
 // internal imports
-import { useSessionStore } from '@/stores/SessionStore'
+import { AuthService } from '@/services/AuthService'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -13,18 +13,27 @@ declare module 'vue-router' {
   }
 }
 
-/** Same 3 branches as the old router/index.js guard. */
-export function accessControlGuard(to: RouteLocationNormalized): boolean | RouteLocationRaw {
-  const session = useSessionStore()
+/**
+ * Same 3 branches as before, now asynchronous: after a reload the session
+ * only exists as a token in LocalStorage, so the guard asks AuthService to
+ * restore it (GET /api/auth/profile) before deciding.
+ * @param to - Route being navigated to.
+ * @returns `true` to allow, or the route to redirect to.
+ */
+export async function accessControlGuard(
+  to: RouteLocationNormalized,
+): Promise<boolean | RouteLocationRaw> {
+  const isLoggedIn = await AuthService.restoreSession()
 
   if (to.meta.public) {
-    return session.isLoggedIn ? { name: 'home' } : true
+    return isLoggedIn ? { name: 'home' } : true
   }
-  if (!session.isLoggedIn) {
+  if (!isLoggedIn) {
     return { name: 'login' }
   }
-  if (to.meta.admin && !session.isAdmin) {
+  if (to.meta.admin && !AuthService.isAdmin()) {
     return { name: 'home' }
   }
+
   return true
 }

@@ -2,14 +2,13 @@
 // Author: Gerónimo Montes
 
 // external imports
-import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
 import UsersTable from '@/components/UsersTable.vue'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
-import { resetDemoData } from '@/PiniaConfig'
+import type { UserInterface } from '@/interfaces/UserInterface'
 import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
 import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
@@ -18,10 +17,10 @@ import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
 
 // non-reactive variables
-const router = useRouter()
 const toast = useToast()
 
 // reactive variables
+const allUsers = ref<UserInterface[]>([])
 const text = ref('')
 
 // computed variables
@@ -30,42 +29,32 @@ const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))
 
 const completeFilters = computed<UserFilterDTO>(() => ({ ...filters, text: text.value }))
 
-const users = computed(() => {
-  const allUsers = UserService.getAll()
-  return UserService.filter(allUsers, completeFilters.value)
-})
+const users = computed(() => UserService.filter(allUsers.value, completeFilters.value))
 
 // functions
+async function loadUsers(): Promise<void> {
+  try {
+    allUsers.value = await UserService.getAll()
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the users'))
+  }
+}
+
+onMounted(loadUsers)
+
 function clearFilters(): void {
   filters.role = undefined
   text.value = ''
 }
 
-function onDelete(id: string): void {
+async function onDelete(id: number): Promise<void> {
   try {
-    UserService.validateDeletion(currentUser.value?.id, id)
-    const removed = UserService.remove(id)
-    if (removed) {
-      toast.success('User deleted successfully')
-    } else {
-      toast.error('It was not possible to delete the user')
-    }
+    await UserService.remove(id)
+    toast.success('User deleted successfully')
+    await loadUsers()
   } catch (caughtError) {
-    toast.error(
-      caughtError instanceof Error ? caughtError.message : 'It was not possible to delete the user',
-    )
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the user'))
   }
-}
-
-function onResetDemo(): void {
-  const message =
-    'Reset demo data? This deletes creators, brands, orders and users, ' +
-    'reseeds them, and logs you out.'
-  if (!confirm(message)) return
-  resetDemoData()
-  AuthService.logout()
-  toast.success('Demo data reset: please log in again')
-  router.push({ name: 'login' })
 }
 </script>
 
@@ -94,16 +83,7 @@ function onResetDemo(): void {
       <button type="button" class="users__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <UsersTable :users="users" :current-user-id="currentUser?.id ?? ''" @delete="onDelete" />
-
-    <section class="users__section">
-      <h2 class="users__title">Demo data</h2>
-      <p class="users__demo-text">
-        Deletes everything stored in the browser and reseeds the initial demo data. Logs you out,
-        because the seeding creates new users.
-      </p>
-      <button type="button" class="users__demo-button" @click="onResetDemo">Reset demo data</button>
-    </section>
+    <UsersTable :users="users" :current-user-id="currentUser?.id ?? null" @delete="onDelete" />
   </main>
 </template>
 
@@ -146,33 +126,6 @@ function onResetDemo(): void {
   border-radius: 6px;
   background: transparent;
   color: var(--color-text);
-  cursor: pointer;
-}
-
-.users__section {
-  margin-top: 2rem;
-}
-
-.users__title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--color-heading);
-  margin-bottom: 1rem;
-}
-
-.users__demo-text {
-  color: var(--color-text);
-  opacity: 0.8;
-  max-width: 52ch;
-  margin-bottom: 1rem;
-}
-
-.users__demo-button {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-danger);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--color-danger);
   cursor: pointer;
 }
 </style>

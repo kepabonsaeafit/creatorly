@@ -12,16 +12,16 @@ withDefaults(
   defineProps<{
     users: UserInterface[]
     /** Id of the current session's User: their row does not offer the delete button. */
-    currentUserId?: string
+    currentUserId?: number | null
   }>(),
-  { currentUserId: '' },
+  { currentUserId: null },
 )
 
 // emits
-const emit = defineEmits<{ delete: [id: string] }>()
+const emit = defineEmits<{ delete: [id: number] }>()
 
 // functions
-function onDelete(id: string): void {
+function onDelete(id: number): void {
   if (!confirmDeletion('user')) return
   emit('delete', id)
 }

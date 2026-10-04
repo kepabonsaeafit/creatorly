@@ -2,13 +2,15 @@
 // Author: Gerónimo Montes
 
 // external imports
-import { computed, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
 import CreatorForm from '@/components/CreatorForm.vue'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import { AuthService } from '@/services/AuthService'
 import { CreatorService } from '@/services/CreatorService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 
@@ -16,50 +18,63 @@ import { confirmDeletion } from '@/utils/confirmDeletion'
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const creatorId = Number(route.params.id)
 
 // reactive variables
+const creator = ref<CreatorInterface | null>(null)
+const loading = ref(true)
 const error = ref('')
 const saving = ref(false)
 
-// computed variables
-const creator = computed(() => CreatorService.getById(String(route.params.id)))
-
 // functions
-function onSubmit(creatorData: CreateCreatorDTO): void {
-  if (!creator.value) return
+onMounted(async () => {
+  try {
+    creator.value = await CreatorService.getById(creatorId)
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the creator'))
+  } finally {
+    loading.value = false
+  }
+})
+
+async function onSubmit(creatorData: CreateCreatorDTO): Promise<void> {
   error.value = ''
   saving.value = true
+
   try {
-    CreatorService.update(creator.value.id, creatorData)
+    await CreatorService.update(creatorId, creatorData)
     toast.success('Creator updated successfully')
     router.push({ name: 'creators' })
   } catch (caughtError) {
-    error.value =
-      caughtError instanceof Error
-        ? caughtError.message
-        : 'It was not possible to update the creator'
+    error.value = AuthService.getErrorMessage(
+      caughtError,
+      'It was not possible to update the creator',
+    )
     toast.error(error.value)
   } finally {
     saving.value = false
   }
 }
 
-function onDelete(): void {
-  if (!creator.value) return
+async function onDelete(): Promise<void> {
   if (!confirmDeletion('creator')) return
-  const removed = CreatorService.remove(creator.value.id)
-  if (removed) {
+
+  try {
+    await CreatorService.remove(creatorId)
     toast.success('Creator deleted successfully')
     router.push({ name: 'creators' })
-  } else {
-    toast.error('It was not possible to delete the creator')
+  } catch (caughtError) {
+    toast.error(
+      AuthService.getErrorMessage(caughtError, 'It was not possible to delete the creator'),
+    )
   }
 }
 </script>
 
 <template>
   <main class="Panel">
-    <template v-if="creator">
+    <p v-if="loading" class="edit-creator__loading">Loading creator…</p>
+    <template v-else-if="creator">
       <h1>Edit creator</h1>
       <CreatorForm
         edit-mode
@@ -78,6 +93,11 @@ function onDelete(): void {
 </template>
 
 <style scoped>
+.edit-creator__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .edit-creator__delete {
   margin-top: 1.5rem;
   padding: 0.5rem 1rem;

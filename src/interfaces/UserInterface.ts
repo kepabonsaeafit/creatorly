@@ -10,10 +10,9 @@ export type UserRole = (typeof ROLES)[number]
  * See the domain glossary in CONTEXT.md.
  */
 export interface UserInterface {
-  id: string
+  id: number
   name: string
   email: string
-  password: string
   role: UserRole
   createdAt: string
   updatedAt: string

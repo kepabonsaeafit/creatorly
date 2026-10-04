@@ -1,138 +1,79 @@
 // Author: Kevin Pabón
 
+// external imports
+import axios from 'axios'
+
 // internal imports
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import { useCreatorStore } from '@/stores/CreatorStore'
-import { generateId } from '@/utils/generateId'
 
 export class CreatorService {
-  private static validate(creatorData: CreateCreatorDTO): void {
-    if (!creatorData.name || typeof creatorData.name !== 'string') {
-      throw new Error('Creator: name is required')
-    }
-
-    if (!creatorData.niche || typeof creatorData.niche !== 'string') {
-      throw new Error('Creator: niche is required')
-    }
-
-    if (!creatorData.contentType || typeof creatorData.contentType !== 'string') {
-      throw new Error('Creator: content type is required')
-    }
-
-    if (
-      typeof creatorData.rate !== 'number' ||
-      Number.isNaN(creatorData.rate) ||
-      creatorData.rate < 0
-    ) {
-      throw new Error('Creator: rate must be a number >= 0')
-    }
-  }
+  private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/creators`
 
   /**
-   * Gets every creator in the store.
+   * Gets every creator from the API.
    * @returns All creators.
    */
-  static getAll(): CreatorInterface[] {
-    return useCreatorStore().creators
+  public static async getAll(): Promise<CreatorInterface[]> {
+    const { data } = await axios.get(this.API_URL)
+
+    return data
   }
 
   /**
    * Finds a creator by id.
    * @param id - Id of the creator to look up.
-   * @returns The matching creator, or `undefined` if not found.
+   * @returns The matching creator.
    */
-  static getById(id: string): CreatorInterface | undefined {
-    return useCreatorStore().creators.find((creator) => creator.id === id)
+  public static async getById(id: number): Promise<CreatorInterface> {
+    const { data } = await axios.get(`${this.API_URL}/${id}`)
+
+    return data
   }
 
   /**
-   * Validates and creates a new creator.
+   * Creates a new creator. The backend validates it.
    * @param creatorData - Data required to create the creator.
    * @returns The created creator, with its id and timestamps.
-   * @throws {Error} If any required field is missing or invalid.
    */
-  static create(creatorData: CreateCreatorDTO): CreatorInterface {
-    const normalizedData: CreateCreatorDTO = {
-      ...creatorData,
-      available: creatorData.available ?? true,
-    }
+  public static async create(creatorData: CreateCreatorDTO): Promise<CreatorInterface> {
+    const { data } = await axios.post(this.API_URL, creatorData)
 
-    this.validate(normalizedData)
-
-    const now = new Date().toISOString()
-    const newCreator: CreatorInterface = {
-      ...normalizedData,
-      available: Boolean(normalizedData.available),
-      id: generateId(),
-      createdAt: now,
-      updatedAt: now,
-    }
-
-    useCreatorStore().creators.push(newCreator)
-
-    return newCreator
+    return data
   }
 
   /**
-   * Validates and applies partial changes to a creator.
+   * Applies partial changes to a creator. The backend validates them.
    * @param id - Id of the creator to update.
    * @param changes - Partial fields to change.
-   * @returns The updated creator, or `undefined` if not found.
-   * @throws {Error} If the merged data fails validation.
+   * @returns The updated creator.
    */
-  static update(id: string, changes: Partial<CreateCreatorDTO>): CreatorInterface | undefined {
-    const creators = useCreatorStore().creators
-    const index = creators.findIndex((creator) => creator.id === id)
+  public static async update(
+    id: number,
+    changes: Partial<CreateCreatorDTO>,
+  ): Promise<CreatorInterface> {
+    const { data } = await axios.patch(`${this.API_URL}/${id}`, changes)
 
-    if (index === -1) return undefined
-
-    const merged: CreateCreatorDTO = {
-      name: changes.name ?? creators[index].name,
-      niche: changes.niche ?? creators[index].niche,
-      contentType: changes.contentType ?? creators[index].contentType,
-      rate: changes.rate ?? creators[index].rate,
-      available: changes.available ?? creators[index].available,
-    }
-
-    this.validate(merged)
-
-    const updated: CreatorInterface = {
-      ...creators[index],
-      ...merged,
-      available: Boolean(merged.available),
-      updatedAt: new Date().toISOString(),
-    }
-
-    creators[index] = updated
-
-    return updated
+    return data
   }
 
   /**
    * Removes a creator by id.
    * @param id - Id of the creator to remove.
-   * @returns `true` if it was removed, `false` if not found.
    */
-  static remove(id: string): boolean {
-    const creators = useCreatorStore().creators
-    const index = creators.findIndex((creator) => creator.id === id)
-
-    if (index === -1) return false
-    creators.splice(index, 1)
-
-    return true
+  public static async remove(id: number): Promise<void> {
+    await axios.delete(`${this.API_URL}/${id}`)
   }
 
   /**
-   * Applies a CreatorFilterDTO over a list of creators and sorts the
-   * result by name. Used by CreatorsIndexView.
+   * Applies a CreatorFilterDTO over a list of creators already fetched from
+   * the API and sorts the result by name. Used by CreatorsIndexView.
    * @param creators - Creators to filter.
    * @param filter - Filter criteria.
    * @returns The filtered, name-sorted creators.
    */
-  static filter(creators: CreatorInterface[], filter: CreatorFilterDTO): CreatorInterface[] {
+  public static filter(creators: CreatorInterface[], filter: CreatorFilterDTO): CreatorInterface[] {
     return creators
       .filter((creator) => {
         if (filter.niche && creator.niche !== filter.niche) return false
@@ -149,11 +90,12 @@ export class CreatorService {
   }
 
   /**
-   * Distinct niches present in the catalog, sorted, to populate the filter.
+   * Distinct niches present in a list of creators, sorted, to populate the filter.
+   * @param creators - Creators to read the niches from.
    * @returns The sorted list of distinct niches.
    */
-  static getNiches(): string[] {
-    const uniqueNiches = new Set(this.getAll().map((creator) => creator.niche))
+  public static getNiches(creators: CreatorInterface[]): string[] {
+    const uniqueNiches = new Set(creators.map((creator) => creator.niche))
 
     return [...uniqueNiches].sort((first, second) => first.localeCompare(second))
   }

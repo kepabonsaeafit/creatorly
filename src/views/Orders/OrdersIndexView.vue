@@ -2,7 +2,7 @@
 // Author: Felipe Gómez
 
 // external imports
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
@@ -10,7 +10,12 @@ import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import OrdersTable from '@/components/OrdersTable.vue'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
+import { AuthService } from '@/services/AuthService'
 import { BrandService } from '@/services/BrandService'
+import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
 import { getChartPalette } from '@/utils/chartColors'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
@@ -25,30 +30,48 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
 const toast = useToast()
 
 // reactive variables
+const allOrders = ref<OrderInterface[]>([])
+const brands = ref<BrandInterface[]>([])
+const creators = ref<CreatorInterface[]>([])
 const text = ref('')
 
 // computed variables
-const brands = computed(() => BrandService.getAll())
 const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
 
 const completeFilters = computed<OrderFilterDTO>(() => ({ ...filters, text: text.value }))
 
-const orders = computed(() => {
-  const allOrders = OrderService.getAll()
-  return OrderService.filterSorted(allOrders, completeFilters.value)
-})
+const orders = computed(() => OrderService.filterSorted(allOrders.value, completeFilters.value))
 
 const byStatus = computed(() => OrderService.getOrdersByStatus(orders.value))
 
 const statusPalette = computed(() => getChartPalette())
 
 // functions
-function onDelete(id: string): void {
-  const removed = OrderService.remove(id)
-  if (removed) {
+async function loadOrders(): Promise<void> {
+  try {
+    const [loadedOrders, loadedBrands, loadedCreators] = await Promise.all([
+      OrderService.getAll(),
+      BrandService.getAll(),
+      CreatorService.getAll(),
+    ])
+
+    allOrders.value = loadedOrders
+    brands.value = loadedBrands
+    creators.value = loadedCreators
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the orders'))
+  }
+}
+
+onMounted(loadOrders)
+
+async function onDelete(id: number): Promise<void> {
+  try {
+    await OrderService.remove(id)
     toast.success('Order deleted successfully')
-  } else {
-    toast.error('It was not possible to delete the order')
+    await loadOrders()
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the order'))
   }
 }
 
@@ -115,7 +138,13 @@ function clearFilters(): void {
       </div>
     </DashboardCard>
 
-    <OrdersTable :orders="orders" actionable @delete="onDelete" />
+    <OrdersTable
+      :orders="orders"
+      :brands="brands"
+      :creators="creators"
+      actionable
+      @delete="onDelete"
+    />
   </main>
 </template>
 

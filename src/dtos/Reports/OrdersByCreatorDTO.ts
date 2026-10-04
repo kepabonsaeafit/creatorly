@@ -5,7 +5,7 @@
  * Does not derive from OrderInterface: it is a read DTO, not a write one.
  */
 export interface OrdersByCreatorDTO {
-  creatorId: string
+  creatorId: number
   creatorName: string
   count: number
 }
