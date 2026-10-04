@@ -11,6 +11,7 @@ import { AuthController } from './auth.controller.js';
 import { AuthGuard } from './auth.guard.js';
 import { AuthService } from './auth.service.js';
 import { jwtConstants } from './constants.js';
+import { RolesGuard } from './roles.guard.js';
 
 @Module({
   imports: [
@@ -22,7 +23,12 @@ import { jwtConstants } from './constants.js';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, { provide: APP_GUARD, useClass: AuthGuard }],
+  // global guards run in this order: first the token, then the role
+  providers: [
+    AuthService,
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

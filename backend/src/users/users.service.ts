@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { Order } from '../orders/entities/order.entity.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { ROLES, User } from './entities/user.entity.js';
+import type { UserRole } from './entities/user.entity.js';
 
 @Injectable()
 export class UsersService {
@@ -53,6 +54,22 @@ export class UsersService {
 
     if (existing && existing.id !== ownId) {
       throw new BadRequestException('User: email is already in use');
+    }
+  }
+
+  // an admin can't take the admin role away from their own session
+  private validateOwnRoleChange(id: number, newRole: UserRole, currentUserId: number): void {
+    if (id === currentUserId && newRole !== 'admin') {
+      throw new BadRequestException(
+        'User: you cannot remove the admin role while it is your own session',
+      );
+    }
+  }
+
+  // nobody can delete the user they are logged in as
+  private validateDeletion(id: number, currentUserId: number): void {
+    if (id === currentUserId) {
+      throw new BadRequestException('User: you cannot delete the user you are logged in as');
     }
   }
 
@@ -118,11 +135,17 @@ export class UsersService {
    * otherwise the current hash is kept.
    * @param id - Id of the user to update.
    * @param updateUserDto - Fields to change.
+   * @param currentUserId - Id of the logged-in user (from the token).
    * @returns The updated user (without the password hash).
    * @throws {NotFoundException} If no user has that id.
-   * @throws {BadRequestException} If the merged data fails validation or the email is already in use.
+   * @throws {BadRequestException} If the merged data fails validation, the email is already
+   * in use, or the logged-in admin removes their own admin role.
    */
-  async update(id: number, updateUserDto: Partial<CreateUserDto>): Promise<User> {
+  async update(
+    id: number,
+    updateUserDto: Partial<CreateUserDto>,
+    currentUserId: number,
+  ): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
       select: { id: true, name: true, email: true, role: true, passwordHash: true },
@@ -141,6 +164,7 @@ export class UsersService {
     };
 
     this.validate(merged);
+    this.validateOwnRoleChange(id, merged.role, currentUserId);
     await this.validateUniqueEmail(merged.email, id);
 
     const passwordHash =
@@ -161,17 +185,20 @@ export class UsersService {
   }
 
   /**
-   * Removes a user that manages no orders.
+   * Removes a user that manages no orders and is not the logged-in user.
    * @param id - Id of the user to remove.
+   * @param currentUserId - Id of the logged-in user (from the token).
    * @throws {NotFoundException} If no user has that id.
-   * @throws {BadRequestException} If the user still has orders.
+   * @throws {BadRequestException} If it is the logged-in user, or the user still has orders.
    */
-  async remove(id: number): Promise<void> {
+  async remove(id: number, currentUserId: number): Promise<void> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException('User: not found');
     }
+
+    this.validateDeletion(id, currentUserId);
 
     const orderCount = await this.ordersRepository.count({
       where: { user: { id } },
