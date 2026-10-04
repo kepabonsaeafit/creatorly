@@ -30,7 +30,7 @@ export class User {
   @Column({ select: false })
   passwordHash: string;
 
-  @Column({ type: 'enum', enum: ROLES })
+  @Column({ type: 'simple-enum', enum: ROLES })
   role: UserRole;
 
   @CreateDateColumn()
