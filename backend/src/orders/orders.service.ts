@@ -6,6 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // internal imports
+import { Brand } from '../brands/entities/brand.entity.js';
+import { Creator } from '../creators/entities/creator.entity.js';
+import { User } from '../users/entities/user.entity.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { Order, STATUSES } from './entities/order.entity.js';
 
@@ -14,6 +17,12 @@ export class OrdersService {
   constructor(
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
+    @InjectRepository(Brand)
+    private brandsRepository: Repository<Brand>,
+    @InjectRepository(Creator)
+    private creatorsRepository: Repository<Creator>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
 
   private validate(createOrderDto: CreateOrderDto): void {
@@ -43,6 +52,25 @@ export class OrdersService {
 
     if (createOrderDto.creatorId !== null && typeof createOrderDto.creatorId !== 'number') {
       throw new BadRequestException('Order: creatorId must be an id or null');
+    }
+  }
+
+  // checked before saving, so a missing reference answers 400 instead of a
+  // SQLite FOREIGN KEY failure (500)
+  private async validateReferences(createOrderDto: CreateOrderDto): Promise<void> {
+    if (!(await this.brandsRepository.existsBy({ id: createOrderDto.brandId }))) {
+      throw new BadRequestException('Order: brand not found');
+    }
+
+    if (
+      createOrderDto.creatorId !== null &&
+      !(await this.creatorsRepository.existsBy({ id: createOrderDto.creatorId }))
+    ) {
+      throw new BadRequestException('Order: creator not found');
+    }
+
+    if (!(await this.usersRepository.existsBy({ id: createOrderDto.userId }))) {
+      throw new BadRequestException('Order: user not found');
     }
   }
 
@@ -78,7 +106,8 @@ export class OrdersService {
    * no creator, status 'requested' and today as its request date.
    * @param createOrderDto - Data of the new order.
    * @returns The created order, with its id, timestamps and relation ids.
-   * @throws {BadRequestException} If any required field is missing or invalid.
+   * @throws {BadRequestException} If any required field is missing or invalid, or the
+   * brand, creator or user it references does not exist.
    */
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     const orderData: CreateOrderDto = {
@@ -93,6 +122,7 @@ export class OrdersService {
     };
 
     this.validate(orderData);
+    await this.validateReferences(orderData);
 
     const { brandId, creatorId, userId, ...rest } = orderData;
     const order = this.ordersRepository.create({
@@ -115,7 +145,8 @@ export class OrdersService {
    * @param updateOrderDto - Fields to change.
    * @returns The updated order, with its relation ids.
    * @throws {NotFoundException} If no order has that id.
-   * @throws {BadRequestException} If the merged data fails validation.
+   * @throws {BadRequestException} If the merged data fails validation, or the brand,
+   * creator or user it references does not exist.
    */
   async update(id: number, updateOrderDto: Partial<CreateOrderDto>): Promise<Order> {
     const order = await this.ordersRepository.findOneBy({ id });
@@ -142,6 +173,7 @@ export class OrdersService {
     };
 
     this.validate(merged);
+    await this.validateReferences(merged);
 
     const { brandId, creatorId, userId, ...rest } = merged;
     this.ordersRepository.merge(order, {
