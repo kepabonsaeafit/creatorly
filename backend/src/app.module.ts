@@ -5,10 +5,17 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // internal imports
-import { databaseConfig } from './config/databaseConfig.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forRootAsync({ useFactory: databaseConfig }), UsersModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'better-sqlite3',
+      database: process.env.SQLITE_PATH ?? 'database.sqlite',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    UsersModule,
+  ],
 })
 export class AppModule {}
