@@ -1,5 +1,7 @@
 # Persistence in LocalStorage with references by id
 
+> **Superseded by ADR-0005 (2026-10-04):** data now lives in the backend database (NestJS + SQLite). This record is kept as the history of Deliverable 1 Part 1.
+
 > **Updated by ADR-0004 (2026-09-02):** the underlying decision still stands. File names and the way data is hydrated change, due to the migration to TypeScript with the interfaces + stores + services pattern.
 >
 > **Updated on 2026-09-07:** the HTTP deployment on GCP without a domain of its own revealed that `crypto.randomUUID()` only exists in secure contexts (HTTPS or `localhost`) — in that environment the browser doesn't expose it and throws `TypeError: crypto.randomUUID is not a function`, breaking data seeding on startup. Ids are still generated as UUID v4, but now through `utils/generateId.ts`, which uses `crypto.randomUUID()` when available and otherwise builds the UUID by hand with `crypto.getRandomValues()` (this one does work without a secure context). See details in Consequences.
