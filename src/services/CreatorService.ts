@@ -14,6 +14,7 @@ export class CreatorService {
   /**
    * Gets every creator from the API.
    * @returns All creators.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async getAll(): Promise<CreatorInterface[]> {
     const { data } = await axios.get(this.API_URL)
@@ -24,18 +25,21 @@ export class CreatorService {
   /**
    * Finds a creator by id.
    * @param id - Id of the creator to look up.
-   * @returns The matching creator.
+   * @returns The matching creator, or `null` if none has that id.
+   * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<CreatorInterface> {
+  public static async getById(id: number): Promise<CreatorInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    return data
+    // the API answers an empty body (not JSON null) when no creator has that id
+    return data || null
   }
 
   /**
    * Creates a new creator. The backend validates it.
    * @param creatorData - Data required to create the creator.
    * @returns The created creator, with its id and timestamps.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async create(creatorData: CreateCreatorDTO): Promise<CreatorInterface> {
     const { data } = await axios.post(this.API_URL, creatorData)
@@ -48,6 +52,7 @@ export class CreatorService {
    * @param id - Id of the creator to update.
    * @param changes - Partial fields to change.
    * @returns The updated creator.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async update(
     id: number,
@@ -61,6 +66,7 @@ export class CreatorService {
   /**
    * Removes a creator by id.
    * @param id - Id of the creator to remove.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async remove(id: number): Promise<void> {
     await axios.delete(`${this.API_URL}/${id}`)
