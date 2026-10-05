@@ -55,6 +55,7 @@ export class AuthService {
   /**
    * Loads the logged-in user from GET /api/auth/profile.
    * @returns The current user as the API returns it.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async getProfile(): Promise<UserInterface> {
     const { data } = await axios.get(`${this.API_URL}/profile`)

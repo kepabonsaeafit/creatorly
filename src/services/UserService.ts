@@ -14,6 +14,7 @@ export class UserService {
   /**
    * Gets every user from the API.
    * @returns All users.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async getAll(): Promise<UserInterface[]> {
     const { data } = await axios.get(this.API_URL)
@@ -24,18 +25,21 @@ export class UserService {
   /**
    * Finds a user by id.
    * @param id - Id of the user to look up.
-   * @returns The matching user.
+   * @returns The matching user, or `null` if none has that id.
+   * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<UserInterface> {
+  public static async getById(id: number): Promise<UserInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    return data
+    // the API answers an empty body (not JSON null) when no user has that id
+    return data || null
   }
 
   /**
    * Creates a new user. The backend validates it.
    * @param userData - Data required to create the user.
    * @returns The created user, with its id and timestamps.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async create(userData: CreateUserDTO): Promise<UserInterface> {
     const { data } = await axios.post(this.API_URL, userData)
@@ -49,6 +53,7 @@ export class UserService {
    * @param id - Id of the user to update.
    * @param changes - Partial fields to change.
    * @returns The updated user.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async update(id: number, changes: Partial<CreateUserDTO>): Promise<UserInterface> {
     const { data } = await axios.patch(`${this.API_URL}/${id}`, changes)
@@ -60,6 +65,7 @@ export class UserService {
    * Removes a user by id. The backend rejects deleting the logged-in user
    * and users that still have orders.
    * @param id - Id of the user to remove.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async remove(id: number): Promise<void> {
     await axios.delete(`${this.API_URL}/${id}`)

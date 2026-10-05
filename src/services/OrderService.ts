@@ -49,6 +49,7 @@ export class OrderService {
   /**
    * Gets every order from the API.
    * @returns All orders.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async getAll(): Promise<OrderInterface[]> {
     const { data } = await axios.get(this.API_URL)
@@ -59,12 +60,14 @@ export class OrderService {
   /**
    * Finds an order by id.
    * @param id - Id of the order to look up.
-   * @returns The matching order.
+   * @returns The matching order, or `null` if none has that id.
+   * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<OrderInterface> {
+  public static async getById(id: number): Promise<OrderInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    return data
+    // the API answers an empty body (not JSON null) when no order has that id
+    return data || null
   }
 
   /**
@@ -72,6 +75,7 @@ export class OrderService {
    * referenced brand, creator and coordinator exist.
    * @param orderData - Data required to create the order.
    * @returns The created order, with its id and timestamps.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async create(orderData: CreateOrderDTO): Promise<OrderInterface> {
     const { data } = await axios.post(this.API_URL, orderData)
@@ -84,6 +88,7 @@ export class OrderService {
    * @param id - Id of the order to update.
    * @param changes - Partial fields to change.
    * @returns The updated order.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async update(
     id: number,
@@ -97,6 +102,7 @@ export class OrderService {
   /**
    * Removes an order by id.
    * @param id - Id of the order to remove.
+   * @throws {AxiosError} If the API rejects the request.
    */
   public static async remove(id: number): Promise<void> {
     await axios.delete(`${this.API_URL}/${id}`)
