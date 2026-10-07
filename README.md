@@ -96,6 +96,20 @@ npm run lint         # oxlint over src/
 npm run format       # prettier over src/
 ```
 
+## Deployment (GCP)
+
+The whole system runs on a GCP VM with Docker Compose (ADR-0006): `docker-compose.yml` builds the `backend` image (NestJS + SQLite in the `backend-data` volume, port 3000) and the `frontend` image (Vue compiled and served by nginx, port 80). Both Dockerfiles are multi-stage, so `dist/` is built inside Docker and is never committed.
+
+VM requirements: machine type `e2-medium`, firewall rules for TCP ports 80 and 3000, and Docker with the Compose plugin.
+
+```sh
+git clone https://github.com/kepabonsaeafit/creatorly.git
+cd creatorly
+sudo ./deploy.sh <VM_EXTERNAL_IP>
+```
+
+`deploy.sh` sets the API URL and CORS for that IP, generates the `JWT_SECRET` once in `.env` (ignored by git) and runs `docker compose up -d --build`. Open `http://<VM_EXTERNAL_IP>` in the browser (HTTP, not HTTPS). To update the deployment, `git pull` and run `deploy.sh` again; the data in the volume is kept.
+
 ## To go deeper
 
 - **[AGENTS.md](./AGENTS.md)** — architecture of both projects, API contract, code rules, and AI agent work policy.

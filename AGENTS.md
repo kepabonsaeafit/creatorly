@@ -70,6 +70,14 @@ npm run build       # nest build (it is also the backend's type check)
 
 The database is the file `backend/database.sqlite`, created and seeded on first start and ignored by git. To reset the demo data, stop the server, delete that file and start again.
 
+**Deployment** (repository root, on the GCP VM — ADR-0006):
+
+```sh
+sudo ./deploy.sh <VM_EXTERNAL_IP>   # docker compose up -d --build with the VM's API URL and CORS
+```
+
+`dist/` is never committed in either project: the multi-stage `Dockerfile` (root, frontend) and `backend/Dockerfile` build it inside Docker. `VITE_API_BASE_URL` reaches the frontend image as a build argument; `JWT_SECRET` lives only in the VM's `.env`.
+
 ## 7. Frontend architecture
 
 Each domain entity uses up to four pieces in the frontend. This is the mold the professor audits:
