@@ -15,14 +15,20 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const saving = ref(false)
 
 // functions
-function onSubmit(): void {
-  const result = AuthService.login({ email: email.value, password: password.value })
-  if (result.ok) {
+async function onSubmit(): Promise<void> {
+  error.value = ''
+  saving.value = true
+
+  try {
+    await AuthService.login({ email: email.value, password: password.value })
     router.push({ name: 'home' })
-  } else {
-    error.value = result.error ?? 'It was not possible to log in'
+  } catch (caughtError) {
+    error.value = AuthService.getErrorMessage(caughtError, 'It was not possible to log in')
+  } finally {
+    saving.value = false
   }
 }
 </script>
@@ -55,11 +61,13 @@ function onSubmit(): void {
 
       <p v-if="error" class="login__error">{{ error }}</p>
 
-      <button class="login__submit" type="submit">Log in</button>
+      <button class="login__submit" type="submit" :disabled="saving">
+        {{ saving ? 'Logging in…' : 'Log in' }}
+      </button>
     </form>
 
     <aside class="login__demo">
-      <p>Demo users (seed data):</p>
+      <p>Demo users (seeded by the backend):</p>
       <ul>
         <li>admin@creatorly.com — administrator</li>
         <li>laura@creatorly.com — coordinator</li>

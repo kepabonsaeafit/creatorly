@@ -45,7 +45,7 @@ One and only one of these five stages: `requested`, `assigned`, `in_production`,
 _Avoid_: state, phase, step.
 
 **Seed data**:
-The initial fake data that populates the system on first launch, before any real data exists.
+The initial fake data that populates the system on first launch, before any real data exists. Since ADR-0005 the backend seeders insert it into the database when a table is empty.
 _Avoid_: mock, fixture, test data.
 
 **Session**:

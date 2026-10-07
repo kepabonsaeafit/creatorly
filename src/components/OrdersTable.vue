@@ -2,6 +2,8 @@
 // Author: Felipe Gómez
 
 // internal imports
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
 import { OrderService } from '@/services/OrderService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
@@ -10,23 +12,30 @@ import { formatDate } from '@/utils/formatDate'
 import { formatStatus } from '@/utils/labels'
 
 // props
-withDefaults(defineProps<{ orders: OrderInterface[]; actionable?: boolean }>(), {
-  actionable: false,
-})
+const props = withDefaults(
+  defineProps<{
+    orders: OrderInterface[]
+    /** Brands and creators already fetched by the view, to resolve the id references. */
+    brands: BrandInterface[]
+    creators: CreatorInterface[]
+    actionable?: boolean
+  }>(),
+  { actionable: false },
+)
 
 // emits
-const emit = defineEmits<{ delete: [id: string] }>()
+const emit = defineEmits<{ delete: [id: number] }>()
 
 // functions
 function brandName(order: OrderInterface): string {
-  return OrderService.getBrand(order)?.name ?? 'Brand deleted'
+  return OrderService.getBrand(order, props.brands)?.name ?? 'Brand deleted'
 }
 
 function creatorName(order: OrderInterface): string {
-  return OrderService.getCreator(order)?.name ?? 'Unassigned'
+  return OrderService.getCreator(order, props.creators)?.name ?? 'Unassigned'
 }
 
-function onDelete(id: string): void {
+function onDelete(id: number): void {
   if (!confirmDeletion('order')) return
   emit('delete', id)
 }

@@ -9,6 +9,7 @@ import { useToast } from 'vue-toastification'
 // internal imports
 import UserForm from '@/components/UserForm.vue'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
+import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
 
 // non-reactive variables
@@ -20,16 +21,16 @@ const error = ref('')
 const saving = ref(false)
 
 // functions
-function onSubmit(userData: CreateUserDTO): void {
+async function onSubmit(userData: CreateUserDTO): Promise<void> {
   error.value = ''
   saving.value = true
+
   try {
-    UserService.create(userData)
+    await UserService.create(userData)
     toast.success('User created successfully')
     router.push({ name: 'users' })
   } catch (caughtError) {
-    error.value =
-      caughtError instanceof Error ? caughtError.message : 'It was not possible to create the user'
+    error.value = AuthService.getErrorMessage(caughtError, 'It was not possible to create the user')
     toast.error(error.value)
   } finally {
     saving.value = false

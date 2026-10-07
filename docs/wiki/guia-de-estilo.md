@@ -51,11 +51,10 @@ src/
 │   └── charts/   # Chart.js charts, always via BaseChart.vue
 ├── interfaces/   # only the 4 entity shapes: User, Creator, Brand, Order
 ├── dtos/         # one folder per entity (Creators/, Orders/, Users/, Brands/, Reports/, Auth/); input: derived with Omit/Pick; filter/aggregation: their own interfaces
-├── stores/       # Pinia stores (only the array, zero logic; exception: SessionStore)
-├── services/     # all the logic
-├── seeders/      # typed fake data, one per entity
-├── storage/      # StorageService: the only door to LocalStorage
-├── utils/        # shared helpers with no access to stores/LocalStorage (date, currency, status, ids)
+├── stores/       # SessionStore only: token and current user
+├── services/     # all the logic; CRUD goes to the API with axios
+├── storage/      # StorageService: the only door to LocalStorage, now just the session token
+├── utils/        # shared helpers with no access to stores/storage/API (date, currency, status, labels)
 ├── router/       # routes + guards (admin/ groups the admin-only routes)
 └── views/        # one view per route (*View.vue), in a folder per entity (Creators/, Orders/, Users/, Reports/, Auth/)
 ```
@@ -67,7 +66,6 @@ src/
 - **Interfaces:** `NameInterface.ts` (`OrderInterface.ts`).
 - **DTOs:** `NameDTO.ts` (`CreateOrderDTO.ts`, `OrderFilterDTO.ts`).
 - **Services:** `NameService.ts` (`OrderService.ts`).
-- **Seeders:** `NameSeeder.ts` (`OrderSeeder.ts`).
 - **Routes:** lowercase paths with hyphens (`/orders/create`).
 - **CSS:** classes prefixed by block (`stat-card__label`, light BEM pattern).
 

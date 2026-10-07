@@ -10,8 +10,8 @@ import type { OrderStatus } from '@/interfaces/OrderInterface'
  */
 export interface OrderFilterDTO {
   status?: OrderStatus
-  brandId?: string
-  creatorId?: string
+  brandId?: number
+  creatorId?: number
   from?: string
   to?: string
   text?: string

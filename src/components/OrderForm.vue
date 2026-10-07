@@ -6,9 +6,10 @@ import { computed, ref } from 'vue'
 
 // internal imports
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
-import { BrandService } from '@/services/BrandService'
-import { CreatorService } from '@/services/CreatorService'
+import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 import { todayIso } from '@/utils/formatDate'
 import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
@@ -16,6 +17,10 @@ import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 // props
 interface Props {
   initial?: Partial<CreateOrderDTO>
+  /** Catalogs already fetched from the API by the view that renders the form. */
+  brands: BrandInterface[]
+  creators: CreatorInterface[]
+  users: UserInterface[]
   editMode?: boolean
   saving?: boolean
   error?: string
@@ -32,9 +37,9 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{ submit: [orderData: CreateOrderDTO] }>()
 
 // selectors
-const brandId = ref(props.initial.brandId ?? '')
-const creatorId = ref(props.initial.creatorId ?? '')
-const userId = ref(props.initial.userId ?? '')
+const brandId = ref<number | null>(props.initial.brandId ?? null)
+const creatorId = ref<number | null>(props.initial.creatorId ?? null)
+const userId = ref<number | null>(props.initial.userId ?? null)
 const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
 // reactive variables
@@ -44,18 +49,20 @@ const requestDate = ref(props.initial.requestDate ?? todayIso())
 const deliveryDate = ref(props.initial.deliveryDate ?? '')
 
 // computed variables
-const brands = computed(() => BrandService.getAll())
-const creators = computed(() => CreatorService.getAll())
-const coordinators = computed(() => UserService.getCoordinators())
+const coordinators = computed(() => UserService.getCoordinators(props.users))
 const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
 
 // functions
 function onSubmit(): void {
+  // Both selects are required, so the browser blocks the submit before this;
+  // the guard is what narrows the type from 'number | null' to 'number'.
+  if (brandId.value === null || userId.value === null) return
+
   emit('submit', {
     description: description.value.trim(),
     budget: Number(budget.value),
     brandId: brandId.value,
-    creatorId: creatorId.value || null,
+    creatorId: creatorId.value,
     userId: userId.value,
     requestDate: requestDate.value,
     deliveryDate: deliveryDate.value || null,
@@ -93,7 +100,7 @@ function onSubmit(): void {
     <div class="order-form__field">
       <label class="order-form__label" for="brand">Brand</label>
       <select id="brand" v-model="brandId" class="order-form__input" required>
-        <option value="" disabled>Select a brand</option>
+        <option :value="null" disabled>Select a brand</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">
           {{ brand.name }}
         </option>
@@ -103,7 +110,7 @@ function onSubmit(): void {
     <div class="order-form__field">
       <label class="order-form__label" for="creator">Creator</label>
       <select id="creator" v-model="creatorId" class="order-form__input">
-        <option value="">Unassigned</option>
+        <option :value="null">Unassigned</option>
         <option v-for="creator in creators" :key="creator.id" :value="creator.id">
           {{ creator.name }}
         </option>
@@ -113,7 +120,7 @@ function onSubmit(): void {
     <div class="order-form__field">
       <label class="order-form__label" for="coordinator">Coordinator</label>
       <select id="coordinator" v-model="userId" class="order-form__input" required>
-        <option value="" disabled>Select a coordinator</option>
+        <option :value="null" disabled>Select a coordinator</option>
         <option v-for="coordinator in coordinators" :key="coordinator.id" :value="coordinator.id">
           {{ coordinator.name }}
         </option>

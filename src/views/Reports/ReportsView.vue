@@ -2,7 +2,8 @@
 // Author: Felipe Gómez
 
 // external imports
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { useToast } from 'vue-toastification'
 
 // internal imports
 import BudgetByBrandChart from '@/components/charts/BudgetByBrandChart.vue'
@@ -14,6 +15,10 @@ import OrdersTable from '@/components/OrdersTable.vue'
 import ReportTable from '@/components/ReportTable.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
+import { AuthService } from '@/services/AuthService'
 import { BrandService } from '@/services/BrandService'
 import { CreatorService } from '@/services/CreatorService'
 import { OrderService } from '@/services/OrderService'
@@ -39,6 +44,8 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'
 const reportType = ref<ReportType>('month')
 
 // non-reactive variables
+const toast = useToast()
+
 const REPORT_OPTIONS: ReportOption[] = [
   { id: 'month', label: 'Orders by month' },
   { id: 'status', label: 'Orders by status' },
@@ -47,12 +54,13 @@ const REPORT_OPTIONS: ReportOption[] = [
 ]
 
 // reactive variables
+const allOrders = ref<OrderInterface[]>([])
+const brands = ref<BrandInterface[]>([])
+const creators = ref<CreatorInterface[]>([])
 const from = ref('')
 const to = ref('')
 
 // computed variables
-const brands = computed(() => BrandService.getAll())
-const creators = computed(() => CreatorService.getAll())
 const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
 
 const completeFilters = computed<OrderFilterDTO>(() => ({
@@ -61,14 +69,14 @@ const completeFilters = computed<OrderFilterDTO>(() => ({
   to: to.value,
 }))
 
-const filteredOrders = computed(() =>
-  OrderService.filter(OrderService.getAll(), completeFilters.value),
-)
+const filteredOrders = computed(() => OrderService.filter(allOrders.value, completeFilters.value))
 
 const stats = computed(() => OrderService.getReportStats(filteredOrders.value))
 const byStatus = computed(() => OrderService.getOrdersByStatus(filteredOrders.value))
-const byCreator = computed(() => OrderService.getOrdersByCreator(filteredOrders.value))
-const byBrand = computed(() => OrderService.getBudgetByBrand(filteredOrders.value))
+const byCreator = computed(() =>
+  OrderService.getOrdersByCreator(filteredOrders.value, creators.value),
+)
+const byBrand = computed(() => OrderService.getBudgetByBrand(filteredOrders.value, brands.value))
 const byMonth = computed(() => OrderService.getOrdersByMonth(filteredOrders.value))
 
 const currentReportOption = computed(
@@ -128,6 +136,22 @@ const reportRows = computed<Record<string, string>[]>(() => {
 })
 
 // functions
+onMounted(async () => {
+  try {
+    const [loadedOrders, loadedBrands, loadedCreators] = await Promise.all([
+      OrderService.getAll(),
+      BrandService.getAll(),
+      CreatorService.getAll(),
+    ])
+
+    allOrders.value = loadedOrders
+    brands.value = loadedBrands
+    creators.value = loadedCreators
+  } catch (caughtError) {
+    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the reports'))
+  }
+})
+
 function clearFilters(): void {
   filters.status = undefined
   filters.brandId = undefined
@@ -209,7 +233,7 @@ function clearFilters(): void {
       </DashboardCard>
 
       <DashboardCard title="Order details" class="reports__detail">
-        <OrdersTable :orders="filteredOrders" />
+        <OrdersTable :orders="filteredOrders" :brands="brands" :creators="creators" />
       </DashboardCard>
     </template>
   </main>

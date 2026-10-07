@@ -12,10 +12,10 @@ withDefaults(defineProps<{ creators: CreatorInterface[]; actionable?: boolean }>
 })
 
 // emits
-const emit = defineEmits<{ delete: [id: string] }>()
+const emit = defineEmits<{ delete: [id: number] }>()
 
 // functions
-function onDelete(id: string): void {
+function onDelete(id: number): void {
   if (!confirmDeletion('creator')) return
   emit('delete', id)
 }

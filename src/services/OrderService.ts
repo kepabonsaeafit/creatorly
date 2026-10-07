@@ -1,5 +1,8 @@
 // Author: Kevin Pabón
 
+// external imports
+import axios from 'axios'
+
 // internal imports
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
@@ -16,12 +19,7 @@ import {
   STATUSES,
 } from '@/interfaces/OrderInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { BrandService } from '@/services/BrandService'
-import { CreatorService } from '@/services/CreatorService'
-import { UserService } from '@/services/UserService'
-import { useOrderStore } from '@/stores/OrderStore'
 import { formatMonthLabel, todayIso } from '@/utils/formatDate'
-import { generateId } from '@/utils/generateId'
 
 /** A KPI card, used by both HomeView and ReportsView. */
 export interface HomeStat {
@@ -33,115 +31,144 @@ export interface HomeStat {
 
 /** An item of the recent activity shown in HomeView. */
 export interface OrderActivity {
-  id: string
+  id: number
   title: string
   timestamp: string
   type: 'default' | 'milestone'
 }
 
 export class OrderService {
+  private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/orders`
+
   private static readonly ACTIVE_STATUSES: OrderStatus[] = [
     'requested',
     'assigned',
     'in_production',
   ]
 
-  private static validate(orderData: CreateOrderDTO): void {
-    if (!orderData.description || typeof orderData.description !== 'string') {
-      throw new Error('Order: description is required')
-    }
-
-    if (
-      typeof orderData.budget !== 'number' ||
-      Number.isNaN(orderData.budget) ||
-      orderData.budget < 0
-    ) {
-      throw new Error('Order: budget must be a number >= 0')
-    }
-
-    if (!STATUSES.includes(orderData.status)) {
-      throw new Error(`Order: status must be one of ${STATUSES.join(' | ')}`)
-    }
-
-    if (!orderData.brandId || typeof orderData.brandId !== 'string') {
-      throw new Error('Order: brandId is required')
-    }
-
-    if (!orderData.userId || typeof orderData.userId !== 'string') {
-      throw new Error('Order: userId is required')
-    }
-
-    if (orderData.creatorId !== null && typeof orderData.creatorId !== 'string') {
-      throw new Error('Order: creatorId must be an id or null')
-    }
-  }
-
   /**
-   * Gets every order in the store.
+   * Gets every order from the API.
    * @returns All orders.
+   * @throws {AxiosError} If the API rejects the request.
    */
-  static getAll(): OrderInterface[] {
-    return useOrderStore().orders
+  public static async getAll(): Promise<OrderInterface[]> {
+    const { data } = await axios.get(this.API_URL)
+
+    return data
   }
 
   /**
    * Finds an order by id.
    * @param id - Id of the order to look up.
-   * @returns The matching order, or `undefined` if not found.
+   * @returns The matching order, or `null` if none has that id.
+   * @throws {AxiosError} If the API rejects the request.
    */
-  static getById(id: string): OrderInterface | undefined {
-    return useOrderStore().orders.find((order) => order.id === id)
+  public static async getById(id: number): Promise<OrderInterface | null> {
+    const { data } = await axios.get(`${this.API_URL}/${id}`)
+
+    // the API answers an empty body (not JSON null) when no order has that id
+    return data || null
   }
 
   /**
-   * Gets the brand that requested an order.
+   * Creates a new order. The backend validates it, including that the
+   * referenced brand, creator and coordinator exist.
+   * @param orderData - Data required to create the order.
+   * @returns The created order, with its id and timestamps.
+   * @throws {AxiosError} If the API rejects the request.
+   */
+  public static async create(orderData: CreateOrderDTO): Promise<OrderInterface> {
+    const { data } = await axios.post(this.API_URL, orderData)
+
+    return data
+  }
+
+  /**
+   * Applies partial changes to an order. The backend validates them.
+   * @param id - Id of the order to update.
+   * @param changes - Partial fields to change.
+   * @returns The updated order.
+   * @throws {AxiosError} If the API rejects the request.
+   */
+  public static async update(
+    id: number,
+    changes: Partial<CreateOrderDTO>,
+  ): Promise<OrderInterface> {
+    const { data } = await axios.patch(`${this.API_URL}/${id}`, changes)
+
+    return data
+  }
+
+  /**
+   * Removes an order by id.
+   * @param id - Id of the order to remove.
+   * @throws {AxiosError} If the API rejects the request.
+   */
+  public static async remove(id: number): Promise<void> {
+    await axios.delete(`${this.API_URL}/${id}`)
+  }
+
+  /**
+   * Resolves the brand that requested an order, over brands already fetched.
    * @param order - Order to look up.
+   * @param brands - Brands already fetched from the API.
    * @returns The requesting brand, or `undefined` if not found.
    */
-  static getBrand(order: OrderInterface): BrandInterface | undefined {
-    return BrandService.getById(order.brandId)
+  public static getBrand(
+    order: OrderInterface,
+    brands: BrandInterface[],
+  ): BrandInterface | undefined {
+    return brands.find((brand) => brand.id === order.brandId)
   }
 
   /**
-   * Gets the creator assigned to an order.
+   * Resolves the creator assigned to an order, over creators already fetched.
    * @param order - Order to look up.
+   * @param creators - Creators already fetched from the API.
    * @returns The assigned creator, or `undefined` if unassigned or not found.
    */
-  static getCreator(order: OrderInterface): CreatorInterface | undefined {
-    return order.creatorId ? CreatorService.getById(order.creatorId) : undefined
+  public static getCreator(
+    order: OrderInterface,
+    creators: CreatorInterface[],
+  ): CreatorInterface | undefined {
+    return creators.find((creator) => creator.id === order.creatorId)
   }
 
   /**
-   * Gets the coordinator (User) assigned to an order.
+   * Resolves the coordinator (User) assigned to an order, over users already fetched.
    * @param order - Order to look up.
+   * @param users - Users already fetched from the API.
    * @returns The assigned coordinator, or `undefined` if not found.
    */
-  static getCoordinator(order: OrderInterface): UserInterface | undefined {
-    return UserService.getById(order.userId)
+  public static getCoordinator(
+    order: OrderInterface,
+    users: UserInterface[],
+  ): UserInterface | undefined {
+    return users.find((user) => user.id === order.userId)
   }
 
   /**
    * Checks whether an order is in one of the active statuses.
    * @param order - Order to check.
-   * @returns `true` if the order's status is active.
+   * @returns `true` if the order status is active.
    */
-  static isActive(order: OrderInterface): boolean {
+  public static isActive(order: OrderInterface): boolean {
     return this.ACTIVE_STATUSES.includes(order.status)
   }
 
   /**
-   * HomeView's KPIs.
+   * HomeView KPIs, over orders already fetched from the API.
+   * @param orders - Orders to aggregate.
    * @returns The Home KPI cards.
    */
-  static getStats(): HomeStat[] {
-    const orders = this.getAll()
+  public static getStats(orders: OrderInterface[]): HomeStat[] {
     const activeOrders = orders.filter((order) => this.isActive(order))
     const committedBudget = activeOrders.reduce((sum, order) => sum + order.budget, 0)
 
-    // Compared by the first 7 characters ('YYYY-MM') of today's local date and
-    // of deliveryDate, without going through Date: this avoids a date-only
-    // value being interpreted as UTC midnight and "moving" to another month
-    // in timezones west of UTC.
+    // Compared by the first 7 characters (YYYY-MM) of today local date and of
+    // deliveryDate, without going through Date: this avoids a date-only value
+    // being interpreted as UTC midnight and moving to another month in
+    // timezones west of UTC.
     const currentMonth = todayIso().slice(0, 7)
     const deliveriesThisMonth = orders.filter(
       (order) =>
@@ -153,118 +180,32 @@ export class OrderService {
     return [
       { id: 'total', label: 'Total orders', value: orders.length, unit: '' },
       { id: 'active', label: 'Active orders', value: activeOrders.length, unit: '' },
-      {
-        id: 'budget',
-        label: 'Committed budget',
-        value: committedBudget,
-        unit: '$',
-      },
+      { id: 'budget', label: 'Committed budget', value: committedBudget, unit: '$' },
       { id: 'deliveries', label: 'Deliveries this month', value: deliveriesThisMonth, unit: '' },
     ]
   }
 
   /**
-   * HomeView's recent activity.
+   * HomeView recent activity, over orders and brands already fetched.
+   * @param orders - Orders to read the activity from.
+   * @param brands - Brands already fetched from the API.
    * @param limit - Maximum number of items to return.
    * @returns The most recent orders as activity items.
    */
-  static getRecentOrders(limit: number = 5): OrderActivity[] {
-    return [...this.getAll()]
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  public static getRecentOrders(
+    orders: OrderInterface[],
+    brands: BrandInterface[],
+    limit: number = 5,
+  ): OrderActivity[] {
+    return [...orders]
+      .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
       .slice(0, limit)
       .map((order) => ({
         id: order.id,
-        title: `${order.description} — ${this.getBrand(order)?.name ?? 'no brand'}`,
+        title: `${order.description} — ${this.getBrand(order, brands)?.name ?? 'no brand'}`,
         timestamp: order.createdAt,
         type: FINAL_STATUSES.includes(order.status) ? 'milestone' : 'default',
       }))
-  }
-
-  /**
-   * Validates and creates a new order.
-   * @param orderData - Data required to create the order.
-   * @returns The created order, with its id and timestamps.
-   * @throws {Error} If any required field is missing or invalid.
-   */
-  static create(orderData: CreateOrderDTO): OrderInterface {
-    const normalizedData: CreateOrderDTO = {
-      ...orderData,
-      deliveryDate: orderData.deliveryDate ?? null,
-      status: orderData.status ?? 'requested',
-      creatorId: orderData.creatorId ?? null,
-      requestDate: orderData.requestDate ?? todayIso(),
-    }
-
-    this.validate(normalizedData)
-
-    const now = new Date().toISOString()
-    const newOrder: OrderInterface = {
-      ...normalizedData,
-      id: generateId(),
-      createdAt: now,
-      updatedAt: now,
-    }
-
-    useOrderStore().orders.push(newOrder)
-
-    return newOrder
-  }
-
-  /**
-   * Validates and applies partial changes to an order.
-   * @param id - Id of the order to update.
-   * @param changes - Partial fields to change.
-   * @returns The updated order, or `undefined` if not found.
-   * @throws {Error} If the merged data fails validation.
-   */
-  static update(id: string, changes: Partial<CreateOrderDTO>): OrderInterface | undefined {
-    const orders = useOrderStore().orders
-    const index = orders.findIndex((order) => order.id === id)
-
-    if (index === -1) return undefined
-
-    const merged: CreateOrderDTO = {
-      description: changes.description ?? orders[index].description,
-      budget: changes.budget ?? orders[index].budget,
-      requestDate: changes.requestDate ?? orders[index].requestDate,
-      // deliveryDate and creatorId accept null on purpose (no date, no creator
-      // assigned): `??` would treat that null as "unchanged" and keep the
-      // previous value, so it is compared against undefined to distinguish
-      // "not included in the changes" from "cleared on purpose".
-      deliveryDate:
-        changes.deliveryDate !== undefined ? changes.deliveryDate : orders[index].deliveryDate,
-      status: changes.status ?? orders[index].status,
-      brandId: changes.brandId ?? orders[index].brandId,
-      creatorId: changes.creatorId !== undefined ? changes.creatorId : orders[index].creatorId,
-      userId: changes.userId ?? orders[index].userId,
-    }
-
-    this.validate(merged)
-
-    const updated: OrderInterface = {
-      ...orders[index],
-      ...merged,
-      updatedAt: new Date().toISOString(),
-    }
-
-    orders[index] = updated
-
-    return updated
-  }
-
-  /**
-   * Removes an order by id.
-   * @param id - Id of the order to remove.
-   * @returns `true` if it was removed, `false` if not found.
-   */
-  static remove(id: string): boolean {
-    const orders = useOrderStore().orders
-    const index = orders.findIndex((order) => order.id === id)
-
-    if (index === -1) return false
-    orders.splice(index, 1)
-
-    return true
   }
 
   /**
@@ -273,7 +214,7 @@ export class OrderService {
    * @param filter - Filter criteria.
    * @returns The filtered orders.
    */
-  static filter(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
+  public static filter(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
     return orders.filter((order) => {
       if (filter.status && order.status !== filter.status) return false
       if (filter.brandId && order.brandId !== filter.brandId) return false
@@ -293,21 +234,23 @@ export class OrderService {
   /**
    * Same as filter(), but sorted by request date descending (most recent
    * first). Used by OrdersIndexView; ReportsView keeps using filter()
-   * unsorted because its detail table's order must not change in this phase.
+   * unsorted because its detail table order must not change in this phase.
    * @param orders - Orders to filter.
    * @param filter - Filter criteria.
    * @returns The filtered orders, sorted by request date descending.
    */
-  static filterSorted(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
-    return this.filter(orders, filter).sort((a, b) => b.requestDate.localeCompare(a.requestDate))
+  public static filterSorted(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
+    return this.filter(orders, filter).sort((first, second) =>
+      second.requestDate.localeCompare(first.requestDate),
+    )
   }
 
   /**
-   * Number of orders per status, in the lifecycle's fixed order.
+   * Number of orders per status, in the lifecycle fixed order.
    * @param orders - Orders to aggregate.
    * @returns The order count per status.
    */
-  static getOrdersByStatus(orders: OrderInterface[]): OrdersByStatusDTO[] {
+  public static getOrdersByStatus(orders: OrderInterface[]): OrdersByStatusDTO[] {
     return STATUSES.map((status) => ({
       status,
       count: orders.filter((order) => order.status === status).length,
@@ -317,32 +260,41 @@ export class OrderService {
   /**
    * Number of orders assigned per creator (excludes orders with no creator assigned).
    * @param orders - Orders to aggregate.
+   * @param creators - Creators already fetched from the API, to resolve names.
    * @returns The order count per creator, sorted descending.
    */
-  static getOrdersByCreator(orders: OrderInterface[]): OrdersByCreatorDTO[] {
-    const counts = new Map<string, number>()
+  public static getOrdersByCreator(
+    orders: OrderInterface[],
+    creators: CreatorInterface[],
+  ): OrdersByCreatorDTO[] {
+    const counts = new Map<number, number>()
 
     for (const order of orders) {
-      if (!order.creatorId) continue
+      if (order.creatorId === null) continue
       counts.set(order.creatorId, (counts.get(order.creatorId) ?? 0) + 1)
     }
 
     return [...counts.entries()]
       .map(([creatorId, count]) => ({
         creatorId,
-        creatorName: CreatorService.getById(creatorId)?.name ?? 'Creator deleted',
+        creatorName:
+          creators.find((creator) => creator.id === creatorId)?.name ?? 'Creator deleted',
         count,
       }))
-      .sort((a, b) => b.count - a.count)
+      .sort((first, second) => second.count - first.count)
   }
 
   /**
    * Total committed budget per brand.
    * @param orders - Orders to aggregate.
+   * @param brands - Brands already fetched from the API, to resolve names.
    * @returns The committed budget per brand, sorted descending.
    */
-  static getBudgetByBrand(orders: OrderInterface[]): BudgetByBrandDTO[] {
-    const totals = new Map<string, number>()
+  public static getBudgetByBrand(
+    orders: OrderInterface[],
+    brands: BrandInterface[],
+  ): BudgetByBrandDTO[] {
+    const totals = new Map<number, number>()
 
     for (const order of orders) {
       totals.set(order.brandId, (totals.get(order.brandId) ?? 0) + order.budget)
@@ -351,10 +303,10 @@ export class OrderService {
     return [...totals.entries()]
       .map(([brandId, budget]) => ({
         brandId,
-        brandName: BrandService.getById(brandId)?.name ?? 'Brand deleted',
+        brandName: brands.find((brand) => brand.id === brandId)?.name ?? 'Brand deleted',
         budget,
       }))
-      .sort((a, b) => b.budget - a.budget)
+      .sort((first, second) => second.budget - first.budget)
   }
 
   /**
@@ -362,7 +314,7 @@ export class OrderService {
    * @param orders - Orders to aggregate.
    * @returns The order count and budget per month.
    */
-  static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
+  public static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
     const aggregates = new Map<string, { count: number; budget: number }>()
 
     for (const order of orders) {
@@ -385,11 +337,11 @@ export class OrderService {
   }
 
   /**
-   * ReportsView's KPIs, with the same shape as HomeStat to reuse StatCardGrid.
+   * ReportsView KPIs, with the same shape as HomeStat to reuse StatCardGrid.
    * @param orders - Orders to aggregate.
    * @returns The report KPI cards.
    */
-  static getReportStats(orders: OrderInterface[]): HomeStat[] {
+  public static getReportStats(orders: OrderInterface[]): HomeStat[] {
     const totalBudget = orders.reduce((sum, order) => sum + order.budget, 0)
     const approvedCount = orders.filter((order) => order.status === 'approved').length
     const approvalRate = orders.length > 0 ? Math.round((approvedCount / orders.length) * 100) : 0

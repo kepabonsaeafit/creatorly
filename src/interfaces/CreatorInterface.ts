@@ -4,7 +4,7 @@
  * UGC Creator from the agency catalog (the talent that produces the content).
  */
 export interface CreatorInterface {
-  id: string
+  id: number
   name: string
   niche: string
   contentType: string

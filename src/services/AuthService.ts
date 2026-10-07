@@ -1,64 +1,145 @@
 // Author: Kevin Pabón
 
 /**
- * AuthService does not follow the `throw new Error(...)` pattern of the other
- * services (UserService, CreatorService, BrandService, OrderService). login()
- * returns { ok, error } because "invalid credentials" is not malformed data
- * from the programmer (like a negative budget) but a legitimate, expected
- * response of a login form: the view needs to show the error without a
- * try/catch. The shape validations of the other services DO throw, because
- * there an invalid value is a programming error (a badly built DTO), not a
- * normal user interaction.
+ * Owns the JWT session (ADR-0005). It is the only place that sets the
+ * Authorization header: once logged in, the token travels on every axios
+ * request through `axios.defaults.headers.common`, so no other service has
+ * to know the token exists.
  */
+
+// external imports
+import axios from 'axios'
 
 // internal imports
 import type { LoginDTO } from '@/dtos/Auth/LoginDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { UserService } from '@/services/UserService'
 import { StorageService } from '@/storage/StorageService'
 import { useSessionStore } from '@/stores/SessionStore'
 
-/** Result of a login attempt (AuthService.login). */
-export interface LoginResult {
-  ok: boolean
-  error?: string
-}
-
 export class AuthService {
-  /**
-   * Logs a user in by credentials and persists the session.
-   * @param credentials - Email and password to validate.
-   * @returns `{ ok: true }` on success, or `{ ok: false, error }` on failure.
-   */
-  static login(credentials: LoginDTO): LoginResult {
-    const user = UserService.findByCredentials(credentials)
+  private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/auth`
 
-    if (!user) return { ok: false, error: 'Invalid credentials' }
-    useSessionStore().userId = user.id
-    StorageService.setSession(user.id)
+  private static applyToken(token: string | null): void {
+    useSessionStore().token = token
 
-    return { ok: true }
+    if (token === null) {
+      StorageService.clearToken()
+      delete axios.defaults.headers.common.Authorization
+
+      return
+    }
+
+    StorageService.setToken(token)
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`
   }
 
-  /** Logs the current user out and clears the persisted session. */
-  static logout(): void {
-    useSessionStore().userId = null
-    StorageService.clearSession()
+  /**
+   * Logs a user in against POST /api/auth/login, stores the token and loads
+   * the profile. The backend answers 401 on invalid credentials.
+   * @param credentials - Email and password to validate.
+   * @throws {AxiosError} If the API rejects the credentials.
+   */
+  public static async login(credentials: LoginDTO): Promise<void> {
+    const { data } = await axios.post(`${this.API_URL}/login`, credentials)
+
+    this.applyToken(data.access_token)
+    useSessionStore().currentUser = await this.getProfile()
+  }
+
+  /** Clears the session: token, current user and Authorization header. */
+  public static logout(): void {
+    this.applyToken(null)
+    useSessionStore().currentUser = null
+  }
+
+  /**
+   * Loads the logged-in user from GET /api/auth/profile.
+   * @returns The current user as the API returns it.
+   * @throws {AxiosError} If the API rejects the request.
+   */
+  public static async getProfile(): Promise<UserInterface> {
+    const { data } = await axios.get(`${this.API_URL}/profile`)
+
+    return data
+  }
+
+  /**
+   * Restores the session after a page reload: re-applies the stored token and
+   * loads the profile if it is not loaded yet. Called by the router guard
+   * before resolving any navigation.
+   * @returns `true` if there is a usable session.
+   */
+  public static async restoreSession(): Promise<boolean> {
+    const session = useSessionStore()
+
+    if (session.currentUser !== null) return true
+
+    const token = StorageService.getToken()
+
+    if (token === null) return false
+
+    this.applyToken(token)
+
+    try {
+      session.currentUser = await this.getProfile()
+
+      return true
+    } catch {
+      this.logout()
+
+      return false
+    }
+  }
+
+  /**
+   * Installs the axios interceptor that drops the session on any 401, so an
+   * expired token cannot leave the app showing a logged-in screen.
+   * @param onUnauthorized - Called after clearing the session, to leave the view.
+   */
+  public static handleUnauthorized(onUnauthorized: () => void): void {
+    axios.interceptors.response.use(
+      (response) => response,
+      (error: unknown) => {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          this.logout()
+          onUnauthorized()
+        }
+
+        return Promise.reject(error)
+      },
+    )
   }
 
   /**
    * Gets the user of the active session.
-   * @returns The current user, or `undefined` if there is no active session.
+   * @returns The current user, or `null` if there is no active session.
    */
-  static getCurrentUser(): UserInterface | undefined {
-    return useSessionStore().current
+  public static getCurrentUser(): UserInterface | null {
+    return useSessionStore().currentUser
   }
 
   /**
-   * Role of the active session's user; used by NavBar to decide which links to show.
+   * Role of the active session user; used by NavBar to decide which links to show.
    * @returns `true` if the current user is an admin.
    */
-  static isAdmin(): boolean {
-    return useSessionStore().isAdmin
+  public static isAdmin(): boolean {
+    return useSessionStore().currentUser?.role === 'admin'
+  }
+
+  /**
+   * Reads the backend error message out of a failed request, to show it in a toast.
+   * @param caughtError - Error caught from an axios call.
+   * @param fallback - Message to use when the API sent none.
+   * @returns The message to display.
+   */
+  public static getErrorMessage(caughtError: unknown, fallback: string): string {
+    if (axios.isAxiosError(caughtError)) {
+      const message = caughtError.response?.data?.message
+
+      if (Array.isArray(message)) return message.join(', ')
+      if (typeof message === 'string') return message
+    }
+
+    return fallback
   }
 }
