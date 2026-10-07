@@ -1,22 +1,49 @@
 # Creatorly
 
-Internal dashboard (SPA) for a UGC content agency to manage its daily operation: the **Creators** catalog, the **Brands** that request content, and the **Orders** that connect both, with budget and status tracking.
+Internal dashboard for a UGC content agency to manage its daily operation: the **Creators** catalog, the **Brands** that request content, and the **Orders** that connect both, with budget and status tracking.
 
-There's no backend: the "database" is the browser's **LocalStorage**, seeded with fake data on first launch.
+The repository holds two projects:
+
+- **Frontend** — SPA in Vue 3 + Vite + TypeScript, at the repository root (`src/`).
+- **Backend** — REST API in NestJS + TypeORM + SQLite, in [`backend/`](./backend). It owns the database, the seed data and the JWT login (ADR-0005).
+
+The frontend keeps no data of its own: it reads and writes everything through the backend API.
 
 ## Stack
+
+### Frontend
 
 - **Vue 3** + `<script setup lang="ts">` in every component
 - **TypeScript** across all of `src/`
 - **Vite** as bundler and dev server
-- **Pinia** for state (only each entity's array/state, no logic)
+- **axios** for every call to the API
+- **Pinia** for the session state (`SessionStore`, the only store)
 - **Vue Router** with access guards
 - **Chart.js** for the Reports and Orders charts
 - **vue-toastification** for success/error notifications
 
+### Backend
+
+- **NestJS 12** (ESM) + **TypeORM** over **SQLite** (`better-sqlite3`)
+- **JWT** login following the NestJS authentication guide, with passwords hashed with bcrypt
+
 ## How to run the project
 
 Requires **Node `^22.18.0 || >=24.12.0`** (the exact range enforced by `engines` in `package.json`; Node 23.x, for example, doesn't satisfy it).
+
+Both projects run at the same time, in two terminals.
+
+**1. Backend** (first, so the API is up when the frontend loads):
+
+```sh
+cd backend
+npm install
+npm run start:dev
+```
+
+It listens on `http://localhost:3000/api`, which answers `API is running`. On first start it creates and seeds `backend/database.sqlite`.
+
+**2. Frontend** (repository root):
 
 ```sh
 npm install
@@ -25,13 +52,15 @@ npm run dev
 
 Open the URL Vite prints (by default `http://localhost:5173`).
 
+The API base URL comes from `VITE_API_BASE_URL` in `.env.development`; no service hardcodes it.
+
 ## Main route
 
-`/` requires a session, like almost the whole app (the only public route is `/login`). Without a session, the router guard automatically redirects to `/login`.
+`/` requires a session, like almost the whole app (the only public route is `/login`). Without a session, the router guard automatically redirects to `/login`. The session is a JWT kept in LocalStorage: on reload the guard restores it with `GET /api/auth/profile`, and any `401` clears it and returns to the login view.
 
 ## Demo credentials
 
-The seed data includes 3 users (`src/seeders/UserSeeder.ts`):
+The backend seeds 3 users on first start (`backend/src/users/users.seeder.ts`):
 
 | Email | Password | Role | Name |
 |---|---|---|---|
@@ -43,9 +72,11 @@ The **admin** role is the only one that can access `/creators` and `/users`.
 
 ## Reset demo data
 
-In `/users` (admin only), "Demo data" section → **Reset demo data** button: erases everything stored in LocalStorage, re-seeds the initial fake data, and logs out the current session (the new seed generates users with different ids than the previous session's).
+Stop the backend, delete `backend/database.sqlite` and start it again: the seeders run whenever a table is empty. There is no longer a button in the interface, because the data no longer lives in the browser.
 
 ## Available scripts
+
+Frontend (repository root):
 
 ```sh
 npm run dev          # development server (Vite)
@@ -56,8 +87,17 @@ npm run lint         # oxlint + eslint, both with --fix
 npm run format       # prettier over src/
 ```
 
+Backend (`cd backend`):
+
+```sh
+npm run start:dev    # API with watch mode
+npm run build        # nest build (also the backend's type check)
+npm run lint         # oxlint over src/
+npm run format       # prettier over src/
+```
+
 ## To go deeper
 
-- **[AGENTS.md](./AGENTS.md)** — project architecture (5-piece pattern per entity), code rules, and AI agent work policy.
+- **[AGENTS.md](./AGENTS.md)** — architecture of both projects, API contract, code rules, and AI agent work policy.
 - **[CONTEXT.md](./CONTEXT.md)** — official domain glossary.
 - **[docs/adr/](./docs/adr/)** — architecture decisions already made, and why.

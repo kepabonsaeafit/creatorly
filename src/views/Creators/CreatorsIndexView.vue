@@ -2,12 +2,14 @@
 // Author: Gerónimo Montes
 
 // external imports
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
 import CreatorsTable from '@/components/CreatorsTable.vue'
 import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import { AuthService } from '@/services/AuthService'
 import { CreatorService } from '@/services/CreatorService'
 
 // selectors
@@ -20,25 +22,38 @@ const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
 const toast = useToast()
 
 // reactive variables
+const allCreators = ref<CreatorInterface[]>([])
 const text = ref('')
 
 // computed variables
-const niches = computed(() => CreatorService.getNiches())
+const niches = computed(() => CreatorService.getNiches(allCreators.value))
 
 const completeFilters = computed<CreatorFilterDTO>(() => ({ ...filters, text: text.value }))
 
-const creators = computed(() => {
-  const allCreators = CreatorService.getAll()
-  return CreatorService.filter(allCreators, completeFilters.value)
-})
+const creators = computed(() => CreatorService.filter(allCreators.value, completeFilters.value))
 
 // functions
-function onDelete(id: string): void {
-  const removed = CreatorService.remove(id)
-  if (removed) {
+async function loadCreators(): Promise<void> {
+  try {
+    allCreators.value = await CreatorService.getAll()
+  } catch (caughtError) {
+    toast.error(
+      AuthService.getErrorMessage(caughtError, 'It was not possible to load the creators'),
+    )
+  }
+}
+
+onMounted(loadCreators)
+
+async function onDelete(id: number): Promise<void> {
+  try {
+    await CreatorService.remove(id)
     toast.success('Creator deleted successfully')
-  } else {
-    toast.error('It was not possible to delete the creator')
+    await loadCreators()
+  } catch (caughtError) {
+    toast.error(
+      AuthService.getErrorMessage(caughtError, 'It was not possible to delete the creator'),
+    )
   }
 }
 

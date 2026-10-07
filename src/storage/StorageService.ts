@@ -1,72 +1,33 @@
 // Author: Kevin Pabón
 
 /**
- * Persistence layer: the only entry point to the browser's LocalStorage
- * (ADR-0001). It is not business logic: no other new module should use
- * `localStorage` directly; stores hydrate and persist through this class.
+ * Persistence layer: the only entry point to the browser LocalStorage.
+ * Since ADR-0005 the database lives in the backend, so the only thing left
+ * to persist here is the session token; no other module uses `localStorage`
+ * directly.
  */
 
-/** Names of the four collections persisted in LocalStorage. */
-export type CollectionName = 'users' | 'creators' | 'brands' | 'orders'
-
-/** Shape in which the active session is persisted in LocalStorage. */
-export interface SessionRecord {
-  userId: string
-}
-
 export class StorageService {
-  private static readonly KEYS: Record<CollectionName, string> = {
-    users: 'creatorly_users',
-    creators: 'creatorly_creators',
-    brands: 'creatorly_brands',
-    orders: 'creatorly_orders',
+  private static readonly TOKEN_KEY = 'creatorly_token'
+
+  /**
+   * Reads the persisted session token.
+   * @returns The stored token, or `null` if there is none.
+   */
+  public static getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY)
   }
 
-  private static readonly SESSION_KEY = 'creatorly_session'
-
-  /** Reads a full collection as plain objects. */
-  static read<T>(name: CollectionName): T[] {
-    try {
-      const raw = localStorage.getItem(this.KEYS[name])
-      return raw ? (JSON.parse(raw) as T[]) : []
-    } catch {
-      return []
-    }
+  /**
+   * Persists the session token returned by the API.
+   * @param token - Access token to store.
+   */
+  public static setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token)
   }
 
-  /** Replaces a collection's full content. */
-  static write<T>(name: CollectionName, data: T[]): void {
-    localStorage.setItem(this.KEYS[name], JSON.stringify(data))
-  }
-
-  /** Indicates whether a collection already has data (used by first-boot seeding). */
-  static hasData(name: CollectionName): boolean {
-    return this.read(name).length > 0
-  }
-
-  /** Removes all Creatorly data, including the session. */
-  static clearAll(): void {
-    Object.values(this.KEYS).forEach((key) => localStorage.removeItem(key))
-    localStorage.removeItem(this.SESSION_KEY)
-  }
-
-  /** Reads the persisted session. */
-  static getSession(): SessionRecord | null {
-    try {
-      const raw = localStorage.getItem(this.SESSION_KEY)
-      return raw ? (JSON.parse(raw) as SessionRecord) : null
-    } catch {
-      return null
-    }
-  }
-
-  /** Persists the active session. Never stores the password. */
-  static setSession(userId: string): void {
-    localStorage.setItem(this.SESSION_KEY, JSON.stringify({ userId }))
-  }
-
-  /** Removes the persisted session. */
-  static clearSession(): void {
-    localStorage.removeItem(this.SESSION_KEY)
+  /** Removes the persisted session token. */
+  public static clearToken(): void {
+    localStorage.removeItem(this.TOKEN_KEY)
   }
 }

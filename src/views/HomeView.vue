@@ -2,17 +2,37 @@
 // Author: Kevin Pabón
 
 // external imports
-import { computed } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useToast } from 'vue-toastification'
 
 // internal imports
 import ActivityList from '@/components/ActivityList.vue'
 import DashboardCard from '@/components/DashboardCard.vue'
 import StatCardGrid from '@/components/StatCardGrid.vue'
-import { OrderService } from '@/services/OrderService'
+import { AuthService } from '@/services/AuthService'
+import { BrandService } from '@/services/BrandService'
+import { type HomeStat, type OrderActivity, OrderService } from '@/services/OrderService'
 
-// computed variables
-const stats = computed(() => OrderService.getStats())
-const recentOrders = computed(() => OrderService.getRecentOrders())
+// non-reactive variables
+const toast = useToast()
+
+// reactive variables
+const stats = ref<HomeStat[]>([])
+const recentOrders = ref<OrderActivity[]>([])
+
+// functions
+onMounted(async () => {
+  try {
+    const [orders, brands] = await Promise.all([OrderService.getAll(), BrandService.getAll()])
+
+    stats.value = OrderService.getStats(orders)
+    recentOrders.value = OrderService.getRecentOrders(orders, brands)
+  } catch (caughtError) {
+    toast.error(
+      AuthService.getErrorMessage(caughtError, 'It was not possible to load the dashboard'),
+    )
+  }
+})
 </script>
 
 <template>
