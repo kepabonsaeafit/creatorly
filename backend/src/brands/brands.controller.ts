@@ -4,9 +4,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 // internal imports
+import { Brand } from './entities/brand.entity.js';
 import { BrandsService } from './brands.service.js';
 import { CreateBrandDto } from './dto/create-brand.dto.js';
-import { Brand } from './entities/brand.entity.js';
 
 @Controller('brands')
 export class BrandsController {

@@ -14,7 +14,7 @@ The class showed: an `e2-medium` VM (4 GB, so the builds don't hang), a firewall
 
 - **`dist/` is not versioned** in either project; it is in `.gitignore`.
 - **Multi-stage Dockerfiles** copied from class 12: a `builder` stage with `node:22-bookworm-slim` that runs `npm ci` and `npm run build`, and a final stage that only takes the compiled output (`COPY --from=builder`). The frontend's final stage is `nginx:alpine`; the backend's installs only production dependencies (`npm ci --omit=dev`).
-- **`docker-compose.yml` at the repository root**, as the professor's. The frontend's build context is the root (where the Vue project lives), so the root `.dockerignore` excludes `backend/`.
+- **`docker-compose.yml` at the repository root**, as the professor's. Each service's build context is its own project folder (`backend/` and `frontend/`), each with its own `.dockerignore`. *Update (2026-10-08): the frontend's build context was the repository root, with a root `.dockerignore` excluding `backend/`, until the frontend moved to `frontend/`.*
 - **SQLite stays**, in the `backend-data` volume (`SQLITE_PATH=/data/database.sqlite`), so the data survives rebuilding the containers.
 - **`VITE_API_BASE_URL` is a build argument**: Vite writes it into the JavaScript bundle at build time, so it can't be set when the container starts.
 - **`deploy.sh` receives the VM IP as an argument** (`./deploy.sh <VM_EXTERNAL_IP>`) instead of having it written inside the script, so a new IP doesn't need a commit.

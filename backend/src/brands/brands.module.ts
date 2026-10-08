@@ -5,10 +5,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // internal imports
+import { Brand } from './entities/brand.entity.js';
 import { BrandsController } from './brands.controller.js';
 import { BrandsSeeder } from './brands.seeder.js';
 import { BrandsService } from './brands.service.js';
-import { Brand } from './entities/brand.entity.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Brand])],

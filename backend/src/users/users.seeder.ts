@@ -1,9 +1,9 @@
 // Author: Felipe Gómez
 
 // external imports
+import { hash } from 'bcrypt';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
 
 // internal imports

@@ -5,8 +5,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nes
 
 // internal imports
 import type { AuthenticatedRequest } from '../auth/auth.guard.js';
-import { Roles } from '../auth/roles.decorator.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
+import { Roles } from '../auth/roles.decorator.js';
 import { User } from './entities/user.entity.js';
 import { UsersService } from './users.service.js';
 

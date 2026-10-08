@@ -6,8 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // internal imports
-import { CreateBrandDto } from './dto/create-brand.dto.js';
 import { Brand } from './entities/brand.entity.js';
+import { CreateBrandDto } from './dto/create-brand.dto.js';
 
 @Injectable()
 export class BrandsService {
