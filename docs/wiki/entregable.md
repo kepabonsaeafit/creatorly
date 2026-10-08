@@ -47,7 +47,7 @@ The system is modeled with exactly **4 classes**. **Order** is the central domai
 
 ## 4. Architecture diagram
 
-Module map: each box is a real folder in `src/`, each row inside it a real file. Arrows mean "uses/imports" (A → B means A imports something from B), verified import by import against the code.
+Module map: each box is a real folder in `frontend/src/`, each row inside it a real file. Arrows mean "uses/imports" (A → B means A imports something from B), verified import by import against the code.
 
 ![Full architecture diagram](assets/diagrama-arq-completo.png)
 

@@ -12,7 +12,7 @@ Nothing in this file assumes whether Kevin, Felipe, or Gerónimo use an AI agent
 
 **Creatorly** is a dashboard for running a UGC creator agency: a **Creators** catalog, client **Brands**, and the **Orders** that connect them, managed by internal **Users** (admin or coordinator). It has two projects in one repository:
 
-- **Frontend** — SPA in Vue 3 + Vite + TypeScript, at the **repository root** (`src/`).
+- **Frontend** — SPA in Vue 3 + Vite + TypeScript, in **`frontend/`**, next to `backend/` as in the professor's repository.
 - **Backend** — REST API in NestJS 12 + TypeORM + **SQLite**, in **`backend/`**. It owns the database, the seeders and the JWT login (ADR-0005).
 
 The frontend has no data of its own anymore: it reads and writes everything through the backend API (section 9). The official domain glossary is in `CONTEXT.md`; architecture decisions already made live in `docs/adr/`.
@@ -23,7 +23,7 @@ The frontend has no data of its own anymore: it reads and writes everything thro
 2. **The professor's reference project** — https://github.com/danielgara/courseprojects-2026 (`backend/` and `frontend/`). The professor grades against **his** style: structure, file names, method names, decorators, how services call the API. **Before writing a file, open the professor's equivalent and mirror it.** When this file and the professor's project seem to disagree on style, ask the team member instead of choosing.
 3. **`CONTEXT.md`** — domain glossary.
 4. **`docs/adr/`** — architecture decisions already made, and why. ADR-0005 is the one that rules Deliverable 1 Part 2.
-5. **The code** — if something here doesn't match what's in `src/` or `backend/src/`, the code wins and this file is out of date; report it instead of assuming.
+5. **The code** — if something here doesn't match what's in `frontend/src/` or `backend/src/`, the code wins and this file is out of date; report it instead of assuming.
 
 ## 4. Language: English, everywhere
 
@@ -39,15 +39,15 @@ Deliverable 1 Part 2 is split by area so that each member's work is their own an
 |---|---|---|
 | **Felipe Gómez** | Backend base (done) | NestJS scaffold, TypeORM, first `users` module and seeder (merged in `714fd5f`). Reviewer of backend PRs. |
 | **Kevin Pabón** | Backend + architecture | Aligning the backend to the professor's style, the `users`, `creators`, `brands`, `orders` resources, the `auth` module, `AGENTS.md` and ADRs. Approves and merges every PR. |
-| **Gerónimo Montes** | Frontend integration | Everything in `src/`: removing seeders and entity stores, services over axios, views loading from the API, login with JWT, frontend part of `README` and wiki. |
+| **Gerónimo Montes** | Frontend integration | Everything in `frontend/src/`: removing seeders and entity stores, services over axios, views loading from the API, login with JWT, frontend part of `README` and wiki. |
 
 An agent works **only within the branch and area of the team member it assists**. It doesn't touch, "fix," or rewrite another team member's code or area on its own initiative, even if the change looks obviously correct or the other person's code is incomplete — that goes through PR and review, just like any other change to `main`, with no exception for unfinished code or for the author not currently using AI. The barrier is the PR, not whether there's a human or an agent on the other side of the change. The API contract in section 9 is what lets frontend and backend move in parallel without touching each other.
 
 ## 6. Commands
 
-Requirement: **Node 22+** (enforced by `engines` in `package.json`). `npm install` in either project requires explicit authorization from Kevin — see section 13.
+Requirement: **Node 22+** (enforced by `engines` in `frontend/package.json`). `npm install` in either project requires explicit authorization from Kevin — see section 13.
 
-**Frontend** (repository root):
+**Frontend** (`cd frontend`):
 
 ```sh
 npm run dev         # development server (Vite), http://localhost:5173
@@ -76,11 +76,11 @@ The database is the file `backend/database.sqlite`, created and seeded on first 
 sudo ./deploy.sh <VM_EXTERNAL_IP>   # docker compose up -d --build with the VM's API URL and CORS
 ```
 
-`dist/` is never committed in either project: the multi-stage `Dockerfile` (root, frontend) and `backend/Dockerfile` build it inside Docker. `VITE_API_BASE_URL` reaches the frontend image as a build argument; `JWT_SECRET` lives only in the VM's `.env`.
+`dist/` is never committed in either project: the multi-stage `frontend/Dockerfile` and `backend/Dockerfile` build it inside Docker. `VITE_API_BASE_URL` reaches the frontend image as a build argument; `JWT_SECRET` lives only in the VM's `.env`.
 
 ## 7. Frontend architecture
 
-Each domain entity uses up to four pieces in the frontend. This is the mold the professor audits:
+Each domain entity uses up to four pieces in the frontend. This is the mold the professor audits (paths in this section are relative to `frontend/src/`):
 
 ```ts
 // interfaces/OrderInterface.ts → THE SHAPE the API returns. Only attributes, no methods.
@@ -113,7 +113,7 @@ onMounted(async () => {
 - **`storage/StorageService.ts`** remains only to persist the session token: nobody touches `localStorage` directly.
 - **`utils/`**: shared helpers with no access to stores, storage or the API (`chartColors`, `confirmDeletion`, `email`, `formatCurrency`, `formatDate`, `labels`). `generateId` is removed: the database generates ids.
 
-While the frontend migration is in progress, `src/` may still contain Deliverable 1 stores and seeders: don't add new code on top of them.
+While the frontend migration is in progress, `frontend/src/` may still contain Deliverable 1 stores and seeders: don't add new code on top of them.
 
 ## 8. Backend architecture
 
@@ -225,7 +225,7 @@ Session in the frontend: after login, keep `access_token` through `StorageServic
 6. **One DTO per use case**: frontend input DTOs (`Create*`, `Login`) derive from their interface with `Omit`/`Pick`; filter and aggregation DTOs (reports and charts) are their own interfaces. Backend DTOs are plain classes in `dto/`.
 7. Ids are generated by the database. Nobody generates ids in code; orders reference brand/creator/coordinator **by id**.
 8. **No chart inside a view**: all Chart.js lives in `components/charts/` (ADR-0003) — an explicit criterion of the professor's rubric.
-9. Styles: brand variables from `src/assets/base.css`; no magic colors.
+9. Styles: brand variables from `frontend/src/assets/base.css`; no magic colors.
 10. **DRY and ETC**: extract components/services before duplicating; write code that's easy to change. Don't add files, dependencies or layers the professor's project doesn't have unless a rule here asks for them.
 
 ## 11. File conventions (the professor reviews these in the defense)

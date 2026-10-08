@@ -18,7 +18,7 @@ npm run lint   # runs lint:oxlint and lint:eslint, in that order, both with --fi
 
 Whatever can be fixed automatically gets fixed; the rest stays as an error and must be corrected by hand.
 
-**Where it's used:** across the whole project (`.`), per `.oxlintrc.json` and `eslint.config.js`.
+**Where it's used:** across the whole frontend project (`frontend/`), per `frontend/.oxlintrc.json` and `frontend/eslint.config.js`.
 
 **When it's used:** before every commit; nothing gets committed with lint errors.
 
@@ -32,9 +32,9 @@ Whatever can be fixed automatically gets fixed; the rest stays as an error and m
 npm run format   # prettier --write over src/
 ```
 
-Rewrites the files in place. Config in `.prettierrc.json`: no semicolons, single quotes, 100-character line width.
+Rewrites the files in place. Config in `frontend/.prettierrc.json`: no semicolons, single quotes, 100-character line width.
 
-**Where it's used:** only in `src/`.
+**Where it's used:** only in `frontend/src/`.
 
 **When it's used:** before every commit; if it modifies files, those changes go in the same commit.
 
@@ -45,7 +45,7 @@ Rewrites the files in place. Config in `.prettierrc.json`: no semicolons, single
 ### Folder structure
 
 ```text
-src/
+frontend/src/
 ├── assets/       # global styles (brand palette in base.css)
 ├── components/   # reusable components (PascalCase)
 │   └── charts/   # Chart.js charts, always via BaseChart.vue
@@ -71,7 +71,7 @@ src/
 
 ### Styles
 
-- Use the **brand variables** from `src/assets/base.css` (`--color-primary`, `--color-success`, etc.); no magic colors (`#7c3aed`) in components.
+- Use the **brand variables** from `frontend/src/assets/base.css` (`--color-primary`, `--color-success`, etc.); no magic colors (`#7c3aed`) in components.
 - `scoped` styles in every SFC; only `assets/` has global styles.
 - See [Brand Identity and Design System](identidad-de-marca) for the full guide to tokens, typography (3 roles), KPI cards, and the Chart.js chart palette.
 

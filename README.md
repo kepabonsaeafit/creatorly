@@ -4,7 +4,7 @@ Internal dashboard for a UGC content agency to manage its daily operation: the *
 
 The repository holds two projects:
 
-- **Frontend** — SPA in Vue 3 + Vite + TypeScript, at the repository root (`src/`).
+- **Frontend** — SPA in Vue 3 + Vite + TypeScript, in [`frontend/`](./frontend).
 - **Backend** — REST API in NestJS + TypeORM + SQLite, in [`backend/`](./backend). It owns the database, the seed data and the JWT login (ADR-0005).
 
 The frontend keeps no data of its own: it reads and writes everything through the backend API.
@@ -14,7 +14,7 @@ The frontend keeps no data of its own: it reads and writes everything through th
 ### Frontend
 
 - **Vue 3** + `<script setup lang="ts">` in every component
-- **TypeScript** across all of `src/`
+- **TypeScript** across all of `frontend/src/`
 - **Vite** as bundler and dev server
 - **axios** for every call to the API
 - **Pinia** for the session state (`SessionStore`, the only store)
@@ -29,7 +29,7 @@ The frontend keeps no data of its own: it reads and writes everything through th
 
 ## How to run the project
 
-Requires **Node `^22.18.0 || >=24.12.0`** (the exact range enforced by `engines` in `package.json`; Node 23.x, for example, doesn't satisfy it).
+Requires **Node `^22.18.0 || >=24.12.0`** (the exact range enforced by `engines` in `frontend/package.json`; Node 23.x, for example, doesn't satisfy it).
 
 Both projects run at the same time, in two terminals.
 
@@ -43,16 +43,17 @@ npm run start:dev
 
 It listens on `http://localhost:3000/api`, which answers `API is running`. On first start it creates and seeds `backend/database.sqlite`.
 
-**2. Frontend** (repository root):
+**2. Frontend**:
 
 ```sh
+cd frontend
 npm install
 npm run dev
 ```
 
 Open the URL Vite prints (by default `http://localhost:5173`).
 
-The API base URL comes from `VITE_API_BASE_URL` in `.env.development`; no service hardcodes it.
+The API base URL comes from `VITE_API_BASE_URL` in `frontend/.env.development`; no service hardcodes it.
 
 ## Main route
 
@@ -76,7 +77,7 @@ Stop the backend, delete `backend/database.sqlite` and start it again: the seede
 
 ## Available scripts
 
-Frontend (repository root):
+Frontend (`cd frontend`):
 
 ```sh
 npm run dev          # development server (Vite)
