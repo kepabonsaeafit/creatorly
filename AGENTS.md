@@ -234,19 +234,36 @@ They apply to **both projects**. Each project keeps its own Prettier config: the
 
 **Header:** first line of every file, comment `// Author: Name` with the name of whoever wrote it — the author can be any of the 3 team members, don't assume it's always the same one. Editing someone else's file doesn't change its header.
 
-**Grouped imports, alphabetical within each group:**
+**Grouped imports, alphabetical within each group.** Two groups, each under its comment header: `// external imports` (packages) and `// internal imports` (`@/...`, `./`, `../`). Inside each group:
+
+- Statements are ordered by the **name of what is imported**, never by the module path: the default import, or the first name inside `{ }`. The comparison ignores case, letter by letter (`BaseChart` < `BudgetByBrandDTO` < `formatCurrency` < `getChartGridColor`; `STATUS_LABELS` < `STATUSES`). On a tie, by path.
+- `import type` is ordered together with the rest, by the same key; it is not a separate block.
+- Names inside `{ }` follow the same order (`Body, Controller, Get, Param, Post`; `LinearScale` before `LineController`). A `type` modifier stays attached to its name and doesn't count for the order.
+- An import with no bindings (`import './assets/main.css'`) goes first in its group.
+- `export { ... }` lists and `export ... from` lines follow the same rule.
 
 ```ts
 // Author: Name of whoever writes the file
 
 // external imports
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // internal imports
+import { Brand } from '../brands/entities/brand.entity.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
-import { Order } from './entities/order.entity.js';
+import { Creator } from '../creators/entities/creator.entity.js';
+import { Order, STATUSES } from './entities/order.entity.js';
+import { User } from '../users/entities/user.entity.js';
+```
+
+```ts
+// internal imports (frontend)
+import BaseChart from '@/components/charts/BaseChart.vue'
+import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
+import { formatCurrency } from '@/utils/formatCurrency'
+import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
 ```
 
 **Sections inside views and components** (the professor explicitly asks about selectors and computed variables), in this order:
