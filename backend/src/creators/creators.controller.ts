@@ -4,9 +4,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
 // internal imports
-import { CreatorsService } from './creators.service.js';
 import { CreateCreatorDto } from './dto/create-creator.dto.js';
 import { Creator } from './entities/creator.entity.js';
+import { CreatorsService } from './creators.service.js';
 
 @Controller('creators')
 export class CreatorsController {

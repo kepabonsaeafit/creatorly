@@ -5,10 +5,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // internal imports
+import { Creator } from './entities/creator.entity.js';
 import { CreatorsController } from './creators.controller.js';
 import { CreatorsSeeder } from './creators.seeder.js';
 import { CreatorsService } from './creators.service.js';
-import { Creator } from './entities/creator.entity.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Creator])],
