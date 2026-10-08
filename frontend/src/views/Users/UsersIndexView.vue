@@ -6,12 +6,12 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import UsersTable from '@/components/UsersTable.vue'
+import { AuthService } from '@/services/AuthService'
+import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { AuthService } from '@/services/AuthService'
 import { UserService } from '@/services/UserService'
-import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
+import UsersTable from '@/components/UsersTable.vue'
 
 // selectors
 const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })

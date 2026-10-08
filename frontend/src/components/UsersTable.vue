@@ -2,10 +2,10 @@
 // Author: Gerónimo Montes
 
 // internal imports
-import type { UserInterface } from '@/interfaces/UserInterface'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 import { formatDate } from '@/utils/formatDate'
 import { formatRole } from '@/utils/labels'
+import type { UserInterface } from '@/interfaces/UserInterface'
 
 // props
 withDefaults(

@@ -4,13 +4,9 @@
 import axios from 'axios'
 
 // internal imports
-import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
-import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
-import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
-import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
-import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
-import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
+import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import {
   FINAL_STATUSES,
@@ -18,8 +14,12 @@ import {
   type OrderStatus,
   STATUSES,
 } from '@/interfaces/OrderInterface'
-import type { UserInterface } from '@/interfaces/UserInterface'
 import { formatMonthLabel, todayIso } from '@/utils/formatDate'
+import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
+import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
+import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
+import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
+import type { UserInterface } from '@/interfaces/UserInterface'
 
 /** A KPI card, used by both HomeView and ReportsView. */
 export interface HomeStat {

@@ -12,8 +12,8 @@ import axios from 'axios'
 
 // internal imports
 import type { LoginDTO } from '@/dtos/Auth/LoginDTO'
-import type { UserInterface } from '@/interfaces/UserInterface'
 import { StorageService } from '@/storage/StorageService'
+import type { UserInterface } from '@/interfaces/UserInterface'
 import { useSessionStore } from '@/stores/SessionStore'
 
 export class AuthService {

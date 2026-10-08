@@ -3,13 +3,13 @@
 
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
-import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import type { OrderInterface } from '@/interfaces/OrderInterface'
-import { OrderService } from '@/services/OrderService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import { formatStatus } from '@/utils/labels'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
+import { OrderService } from '@/services/OrderService'
 
 // props
 const props = withDefaults(

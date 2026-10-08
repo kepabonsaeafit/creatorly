@@ -1,17 +1,16 @@
 // Author: Kevin Pabón
 
-import './assets/main.css'
-import 'vue-toastification/dist/index.css'
-
 // external imports
+import 'vue-toastification/dist/index.css'
 import { createApp } from 'vue'
 import Toast, { POSITION } from 'vue-toastification'
 
 // internal imports
+import './assets/main.css'
 import App from '@/App.vue'
+import { AuthService } from '@/services/AuthService'
 import PiniaConfig from '@/PiniaConfig'
 import router from '@/router'
-import { AuthService } from '@/services/AuthService'
 
 const app = createApp(App)
 

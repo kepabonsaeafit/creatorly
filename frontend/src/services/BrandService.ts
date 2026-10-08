@@ -4,8 +4,8 @@
 import axios from 'axios'
 
 // internal imports
-import type { CreateBrandDTO } from '@/dtos/Brands/CreateBrandDTO'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreateBrandDTO } from '@/dtos/Brands/CreateBrandDTO'
 
 export class BrandService {
   private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/brands`

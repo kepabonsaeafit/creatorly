@@ -7,9 +7,9 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import CreatorForm from '@/components/CreatorForm.vue'
-import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import { AuthService } from '@/services/AuthService'
+import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
+import CreatorForm from '@/components/CreatorForm.vue'
 import { CreatorService } from '@/services/CreatorService'
 
 // non-reactive variables

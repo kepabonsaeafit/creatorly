@@ -2,8 +2,8 @@
 // Author: Gerónimo Montes
 
 // internal imports
-import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { confirmDeletion } from '@/utils/confirmDeletion'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { formatCurrency } from '@/utils/formatCurrency'
 
 // props
