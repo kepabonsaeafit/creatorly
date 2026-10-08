@@ -8,8 +8,8 @@ import { Repository } from 'typeorm';
 // internal imports
 import { Brand } from '../brands/entities/brand.entity.js';
 import { Creator } from '../creators/entities/creator.entity.js';
-import { User } from '../users/entities/user.entity.js';
 import { Order, OrderStatus } from './entities/order.entity.js';
+import { User } from '../users/entities/user.entity.js';
 
 /** A demo order, referencing its brand and creator by name and its coordinator by email. */
 interface OrderSeedRow {

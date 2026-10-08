@@ -1,8 +1,8 @@
 // Author: Kevin Pabón
 
 // external imports
-import { SetMetadata } from '@nestjs/common';
 import type { CustomDecorator } from '@nestjs/common';
+import { SetMetadata } from '@nestjs/common';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 

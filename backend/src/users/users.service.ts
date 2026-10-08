@@ -2,13 +2,13 @@
 
 // external imports
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // internal imports
-import { Order } from '../orders/entities/order.entity.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
+import { Order } from '../orders/entities/order.entity.js';
 import { ROLES, User } from './entities/user.entity.js';
 import type { UserRole } from './entities/user.entity.js';
 

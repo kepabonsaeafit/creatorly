@@ -47,7 +47,7 @@ The final result has already been verified without clipping (see the PNG above).
 
 ## 3. Color System and Tokens
 
-All application styles must strictly use the CSS variables defined in `src/assets/base.css`. Burning hardcoded hex or `rgb/hsl` values into views and components is forbidden.
+All application styles must strictly use the CSS variables defined in `frontend/src/assets/base.css`. Burning hardcoded hex or `rgb/hsl` values into views and components is forbidden.
 
 ### 3.1 Brand and Surface Tokens
 
@@ -142,4 +142,4 @@ For the orders and reports charts owned by Felipe:
 1. **No generic social-media aesthetics:** Camera, play-button, reel, or "influencer" heart iconography is off the table. Creatorly is a B2B operational and budget management tool.
 2. **A single brand accent color:** Violet is the only institutional accent. Green and red are reserved exclusively for semantic meaning (success and danger).
 3. **Don't literalize the bridge:** The "bridge" metaphor is expressed in the architecture and in the logo's monogram (the open C with its node), not with illustrations of physical bridges.
-4. **Respect the tokens:** Every visual rule must be consumed from `src/assets/base.css` to guarantee full dark-mode compatibility and avoid design inconsistencies.
+4. **Respect the tokens:** Every visual rule must be consumed from `frontend/src/assets/base.css` to guarantee full dark-mode compatibility and avoid design inconsistencies.
