@@ -6,11 +6,11 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import CreatorsTable from '@/components/CreatorsTable.vue'
+import { AuthService } from '@/services/AuthService'
 import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import { AuthService } from '@/services/AuthService'
 import { CreatorService } from '@/services/CreatorService'
+import CreatorsTable from '@/components/CreatorsTable.vue'
 
 // selectors
 const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({

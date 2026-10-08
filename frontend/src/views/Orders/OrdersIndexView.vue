@@ -6,19 +6,19 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
-import DashboardCard from '@/components/DashboardCard.vue'
-import OrdersTable from '@/components/OrdersTable.vue'
-import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
-import type { BrandInterface } from '@/interfaces/BrandInterface'
-import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import type { OrderInterface } from '@/interfaces/OrderInterface'
 import { AuthService } from '@/services/AuthService'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
-import { OrderService } from '@/services/OrderService'
-import { getChartPalette } from '@/utils/chartColors'
+import DashboardCard from '@/components/DashboardCard.vue'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
+import { getChartPalette } from '@/utils/chartColors'
+import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
+import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
+import { OrderService } from '@/services/OrderService'
+import OrdersTable from '@/components/OrdersTable.vue'
 
 // selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({

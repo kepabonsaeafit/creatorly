@@ -5,14 +5,14 @@
 import { computed, ref } from 'vue'
 
 // internal imports
-import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
+import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
+import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
+import { todayIso } from '@/utils/formatDate'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
-import { todayIso } from '@/utils/formatDate'
-import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 
 // props
 interface Props {

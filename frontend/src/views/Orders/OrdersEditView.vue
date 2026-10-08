@@ -7,18 +7,18 @@ import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import OrderForm from '@/components/OrderForm.vue'
-import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
-import type { BrandInterface } from '@/interfaces/BrandInterface'
-import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import type { OrderInterface } from '@/interfaces/OrderInterface'
-import type { UserInterface } from '@/interfaces/UserInterface'
 import { AuthService } from '@/services/AuthService'
+import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
-import { CreatorService } from '@/services/CreatorService'
-import { OrderService } from '@/services/OrderService'
-import { UserService } from '@/services/UserService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
+import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
+import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import { CreatorService } from '@/services/CreatorService'
+import OrderForm from '@/components/OrderForm.vue'
+import type { OrderInterface } from '@/interfaces/OrderInterface'
+import { OrderService } from '@/services/OrderService'
+import type { UserInterface } from '@/interfaces/UserInterface'
+import { UserService } from '@/services/UserService'
 
 // non-reactive variables
 const route = useRoute()

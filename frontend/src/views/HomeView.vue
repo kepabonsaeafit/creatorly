@@ -7,11 +7,11 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import ActivityList from '@/components/ActivityList.vue'
-import DashboardCard from '@/components/DashboardCard.vue'
-import StatCardGrid from '@/components/StatCardGrid.vue'
 import { AuthService } from '@/services/AuthService'
 import { BrandService } from '@/services/BrandService'
+import DashboardCard from '@/components/DashboardCard.vue'
 import { type HomeStat, type OrderActivity, OrderService } from '@/services/OrderService'
+import StatCardGrid from '@/components/StatCardGrid.vue'
 
 // non-reactive variables
 const toast = useToast()

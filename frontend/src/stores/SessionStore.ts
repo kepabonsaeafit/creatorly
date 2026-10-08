@@ -5,8 +5,8 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 // internal imports
-import type { UserInterface } from '@/interfaces/UserInterface'
 import { StorageService } from '@/storage/StorageService'
+import type { UserInterface } from '@/interfaces/UserInterface'
 
 /**
  * The only store left in the frontend (ADR-0005): it holds the session token

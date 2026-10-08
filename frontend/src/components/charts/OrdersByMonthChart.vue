@@ -7,8 +7,8 @@ import { computed } from 'vue'
 
 // internal imports
 import BaseChart from '@/components/charts/BaseChart.vue'
-import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
+import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 
 // props
 const props = defineProps<{ items: OrdersByMonthDTO[] }>()

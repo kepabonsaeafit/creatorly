@@ -7,9 +7,9 @@ import { computed } from 'vue'
 
 // internal imports
 import BaseChart from '@/components/charts/BaseChart.vue'
-import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
-import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import { formatStatus } from '@/utils/labels'
+import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
+import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 
 // props
 const props = withDefaults(defineProps<{ items: OrdersByStatusDTO[]; showLegend?: boolean }>(), {
