@@ -1,9 +1,9 @@
 // Author: Kevin Pabón
 
 // external imports
+import { compare } from 'bcrypt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
 
 // internal imports
 import type { UserRole } from '../users/entities/user.entity.js';

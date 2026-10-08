@@ -4,12 +4,12 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request } from '@nestjs/common';
 
 // internal imports
-import { User } from '../users/entities/user.entity.js';
-import { UsersService } from '../users/users.service.js';
 import type { AuthenticatedRequest } from './auth.guard.js';
 import { AuthService } from './auth.service.js';
-import { SignInDto } from './dto/sign-in.dto.js';
 import { Public } from './public.decorator.js';
+import { SignInDto } from './dto/sign-in.dto.js';
+import { User } from '../users/entities/user.entity.js';
+import { UsersService } from '../users/users.service.js';
 
 @Controller('auth')
 export class AuthController {

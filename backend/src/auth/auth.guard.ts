@@ -2,14 +2,14 @@
 
 // external imports
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 
 // internal imports
-import type { JwtPayload } from './auth.service.js';
-import { jwtConstants } from './constants.js';
 import { IS_PUBLIC_KEY } from './public.decorator.js';
+import { jwtConstants } from './constants.js';
+import type { JwtPayload } from './auth.service.js';
 
 /** A request that went through the AuthGuard, with the token's payload in `user`. */
 export type AuthenticatedRequest = Request & { user: JwtPayload };
