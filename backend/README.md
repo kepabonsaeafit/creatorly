@@ -1,6 +1,6 @@
 # Creatorly API
 
-REST API for Creatorly, built with NestJS 12, TypeORM and SQLite (`better-sqlite3`). It owns the database, the demo seed data and the login. The Vue frontend lives at the repository root and talks to this API.
+REST API for Creatorly, built with NestJS 12, TypeORM and SQLite (`better-sqlite3`). It owns the database, the demo seed data and the login. The Vue frontend lives in `frontend/`, next to this folder, and talks to this API.
 
 ## Requirements
 
