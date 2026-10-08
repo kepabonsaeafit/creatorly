@@ -1,4 +1,4 @@
-// Kevin Pabón
+// Author: Kevin Pabón
 
 // external imports
 import js from '@eslint/js'
@@ -13,12 +13,12 @@ import pluginVue from 'eslint-plugin-vue'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 
-// Este archivo sigue en .js a propósito: ESLint 10 exige la librería `jiti` para
-// cargar un eslint.config.ts, y `jiti` no está dentro de los paquetes autorizados
-// del paso 1. La integración con TypeScript está completa igual (vueTsConfigs).
+// This file stays in .js on purpose: ESLint 10 needs the `jiti` library to load
+// an eslint.config.ts, and `jiti` is not among the project's authorized
+// dependencies. The TypeScript integration is complete anyway (vueTsConfigs).
 
-// Migración a TypeScript completa (paso 7): todas las SFCs usan
-// <script setup lang="ts">, así que scriptLangs vuelve al default (['ts']).
+// Every SFC uses <script setup lang="ts">, so scriptLangs keeps its
+// default value (['ts']).
 configureVueProject({})
 
 export default defineConfigWithVueTs(

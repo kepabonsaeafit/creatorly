@@ -4,7 +4,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 
-    // Archivos de configuración: corren en Node, no en el navegador.
+    // Configuration files: they run in Node, not in the browser.
     "lib": ["ESNext"],
     "types": ["node"]
   }
