@@ -20,7 +20,7 @@ a {
   }
 }
 
-/* vue-toastification: usa la paleta de marca en vez de sus colores por defecto */
+/* vue-toastification: use the brand palette instead of its default colors */
 .Vue-Toastification__toast--success {
   background-color: var(--color-success);
 }
