@@ -1,5 +1,5 @@
 # Class Diagram
-![Class Diagram](assets/class-diagram.png)
+![Class Diagram](assets/class-diagram-v2.png)
 
 # General Architecture Diagram
 <img alt="General Architecture Diagram" src="assets/general-architecture-diagram.png" />
