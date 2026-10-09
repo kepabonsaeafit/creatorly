@@ -10,7 +10,7 @@ import { useToast } from 'vue-toastification'
 import { AuthService } from '@/services/AuthService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
-import UserForm from '@/components/UserForm.vue'
+import UserFormComponent from '@/components/UserFormComponent.vue'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 
@@ -30,7 +30,7 @@ const saving = ref(false)
 const currentUser = computed(() => AuthService.getCurrentUser())
 
 // functions
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     user.value = await UserService.getById(userId)
   } catch (caughtError) {
@@ -84,7 +84,7 @@ async function onDelete(): Promise<void> {
     <p v-if="loading" class="edit-user__loading">Loading user…</p>
     <template v-else-if="user">
       <h1>Edit user</h1>
-      <UserForm
+      <UserFormComponent
         edit-mode
         :initial="user"
         :saving="saving"

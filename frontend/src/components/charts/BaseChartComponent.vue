@@ -21,20 +21,6 @@ import {
 } from 'chart.js'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
-Chart.register(
-  ArcElement,
-  BarController,
-  BarElement,
-  CategoryScale,
-  Legend,
-  LineController,
-  LineElement,
-  LinearScale,
-  PieController,
-  PointElement,
-  Tooltip,
-)
-
 // props
 interface Props {
   type: ChartType
@@ -50,17 +36,21 @@ let chart: Chart | null = null
 // reactive variables
 const canvas = ref<HTMLCanvasElement | null>(null)
 
-// watchers
-watch(
-  () => [props.type, props.data, props.options],
-  () => {
-    destroy()
-    render()
-  },
-  { deep: true },
+// functions
+Chart.register(
+  ArcElement,
+  BarController,
+  BarElement,
+  CategoryScale,
+  Legend,
+  LineController,
+  LineElement,
+  LinearScale,
+  PieController,
+  PointElement,
+  Tooltip,
 )
 
-// functions
 function render(): void {
   if (!canvas.value) return
   chart = new Chart(canvas.value, {
@@ -77,6 +67,16 @@ function destroy(): void {
 
 onMounted(render)
 onUnmounted(destroy)
+
+// watchers
+watch(
+  () => [props.type, props.data, props.options],
+  () => {
+    destroy()
+    render()
+  },
+  { deep: true },
+)
 </script>
 
 <template>

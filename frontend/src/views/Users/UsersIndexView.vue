@@ -11,10 +11,7 @@ import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
-import UsersTable from '@/components/UsersTable.vue'
-
-// selectors
-const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
+import UsersTableComponent from '@/components/UsersTableComponent.vue'
 
 // non-reactive variables
 const toast = useToast()
@@ -22,6 +19,9 @@ const toast = useToast()
 // reactive variables
 const allUsers = ref<UserInterface[]>([])
 const text = ref('')
+
+// selectors
+const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
 
 // computed variables
 const currentUser = computed(() => AuthService.getCurrentUser())
@@ -83,7 +83,11 @@ async function onDelete(id: number): Promise<void> {
       <button type="button" class="users__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <UsersTable :users="users" :current-user-id="currentUser?.id ?? null" @delete="onDelete" />
+    <UsersTableComponent
+      :users="users"
+      :current-user-id="currentUser?.id ?? null"
+      @delete="onDelete"
+    />
   </main>
 </template>
 

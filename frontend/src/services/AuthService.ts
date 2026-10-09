@@ -8,7 +8,7 @@
  */
 
 // external imports
-import axios from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 
 // internal imports
 import type { LoginDTO } from '@/dtos/Auth/LoginDTO'
@@ -39,7 +39,7 @@ export class AuthService {
    * @param credentials - Email and password to validate.
    * @throws {AxiosError} If the API rejects the credentials.
    */
-  public static async login(credentials: LoginDTO): Promise<void> {
+  static async login(credentials: LoginDTO): Promise<void> {
     const { data } = await axios.post(`${this.API_URL}/login`, credentials)
 
     this.applyToken(data.access_token)
@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   /** Clears the session: token, current user and Authorization header. */
-  public static logout(): void {
+  static logout(): void {
     this.applyToken(null)
     useSessionStore().currentUser = null
   }
@@ -57,7 +57,7 @@ export class AuthService {
    * @returns The current user as the API returns it.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getProfile(): Promise<UserInterface> {
+  static async getProfile(): Promise<UserInterface> {
     const { data } = await axios.get(`${this.API_URL}/profile`)
 
     return data
@@ -69,7 +69,7 @@ export class AuthService {
    * before resolving any navigation.
    * @returns `true` if there is a usable session.
    */
-  public static async restoreSession(): Promise<boolean> {
+  static async restoreSession(): Promise<boolean> {
     const session = useSessionStore()
 
     if (session.currentUser !== null) return true
@@ -96,10 +96,10 @@ export class AuthService {
    * expired token cannot leave the app showing a logged-in screen.
    * @param onUnauthorized - Called after clearing the session, to leave the view.
    */
-  public static handleUnauthorized(onUnauthorized: () => void): void {
+  static handleUnauthorized(onUnauthorized: () => void): void {
     axios.interceptors.response.use(
-      (response) => response,
-      (error: unknown) => {
+      (response: AxiosResponse): AxiosResponse => response,
+      (error: unknown): Promise<never> => {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
           this.logout()
           onUnauthorized()
@@ -114,15 +114,15 @@ export class AuthService {
    * Gets the user of the active session.
    * @returns The current user, or `null` if there is no active session.
    */
-  public static getCurrentUser(): UserInterface | null {
+  static getCurrentUser(): UserInterface | null {
     return useSessionStore().currentUser
   }
 
   /**
-   * Role of the active session user; used by NavBar to decide which links to show.
+   * Role of the active session user; used by NavBarComponent to decide which links to show.
    * @returns `true` if the current user is an admin.
    */
-  public static isAdmin(): boolean {
+  static isAdmin(): boolean {
     return useSessionStore().currentUser?.role === 'admin'
   }
 
@@ -132,7 +132,7 @@ export class AuthService {
    * @param fallback - Message to use when the API sent none.
    * @returns The message to display.
    */
-  public static getErrorMessage(caughtError: unknown, fallback: string): string {
+  static getErrorMessage(caughtError: unknown, fallback: string): string {
     if (axios.isAxiosError(caughtError)) {
       const message = caughtError.response?.data?.message
 

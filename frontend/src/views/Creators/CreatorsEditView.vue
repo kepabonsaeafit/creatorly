@@ -10,7 +10,7 @@ import { useToast } from 'vue-toastification'
 import { AuthService } from '@/services/AuthService'
 import { confirmDeletion } from '@/utils/confirmDeletion'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
-import CreatorForm from '@/components/CreatorForm.vue'
+import CreatorFormComponent from '@/components/CreatorFormComponent.vue'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
 
@@ -27,7 +27,7 @@ const error = ref('')
 const saving = ref(false)
 
 // functions
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     creator.value = await CreatorService.getById(creatorId)
   } catch (caughtError) {
@@ -76,7 +76,7 @@ async function onDelete(): Promise<void> {
     <p v-if="loading" class="edit-creator__loading">Loading creator…</p>
     <template v-else-if="creator">
       <h1>Edit creator</h1>
-      <CreatorForm
+      <CreatorFormComponent
         edit-mode
         :initial="creator"
         :saving="saving"

@@ -6,7 +6,7 @@ import type { ChartData, ChartOptions } from 'chart.js'
 import { computed } from 'vue'
 
 // internal imports
-import BaseChart from '@/components/charts/BaseChart.vue'
+import BaseChartComponent from '@/components/charts/BaseChartComponent.vue'
 import { formatStatus } from '@/utils/labels'
 import { getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
@@ -18,10 +18,10 @@ const props = withDefaults(defineProps<{ items: OrdersByStatusDTO[]; showLegend?
 
 // computed variables
 const data = computed<ChartData<'pie'>>(() => ({
-  labels: props.items.map((row) => formatStatus(row.status)),
+  labels: props.items.map((row: OrdersByStatusDTO): string => formatStatus(row.status)),
   datasets: [
     {
-      data: props.items.map((row) => row.count),
+      data: props.items.map((row: OrdersByStatusDTO): number => row.count),
       backgroundColor: getChartPalette(),
     },
   ],
@@ -38,5 +38,5 @@ const options = computed<ChartOptions<'pie'>>(() => ({
 </script>
 
 <template>
-  <BaseChart type="pie" :data="data" :options="options" />
+  <BaseChartComponent type="pie" :data="data" :options="options" />
 </template>
