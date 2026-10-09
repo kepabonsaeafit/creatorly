@@ -5,4 +5,4 @@ Nothing gets pushed straight to `main`: every change arrives through a branch + 
 ## Consequences
 
 - Commit messages use conventional format with type in English and description in Spanish (`feat: agrega gráfico de pedidos por estado`).
-- AI agents assisting a team member can make local commits, but push, PR, and merge require explicit, written authorization from that team member.
+- Push, PR, and merge of a branch require explicit, written authorization from the team member who owns it.
