@@ -109,7 +109,7 @@ onMounted(async () => {
 - **`interfaces/`** holds only the four entity interfaces (`User`, `Creator`, `Brand`, `Order`) with **`id: number`** and the `brandId` / `creatorId` / `userId` references as numbers. `UserInterface` has **no `password`**: the API never returns it; `CreateUserDTO` adds it. An `interfaces/` file can export, alongside its type, the `as const` list that type derives from (`STATUSES` in `OrderInterface.ts`, `ROLES` in `UserInterface.ts`) — the single source for those values in the frontend. Any other supporting type (props, a table column, a nav link, a report option) is declared in the file that uses it, or exported from the service that produces it — never as a new file in `interfaces/`.
 - **`dtos/`** and **`views/`** are grouped in one folder per entity or area (`Creators/`, `Orders/`, `Users/`, `Reports/`, `Auth/`, plus `Brands/` in `dtos/`); `HomeView` stays at the root of `views/`.
 - **`services/`**: `AuthService`, `BrandService`, `CreatorService`, `OrderService`, `UserService`. CRUD methods keep their names (`getAll`, `getById`, `create`, `update`, `remove`), become `async` and return `Promise<T>`. Filters and chart aggregations (`filter`, `getOrdersByStatus`, `getStats`, ...) stay as **pure static methods** over arrays already fetched from the API. Business validations live in the **backend** service; the frontend doesn't duplicate them — forms use HTML attributes (`required`, `min`) and show the backend's error message in a toast. No module-level constants or standalone functions in a service: everything goes inside the class (`private static`).
-- **`stores/`**: only **`SessionStore`** remains (token and current user). Entity stores and **`seeders/` no longer exist** in the frontend. `PiniaConfig.ts` follows the professor's shape: `export default class PiniaConfig { public static init(): Pinia }`.
+- **`stores/`**: only **`SessionStore`** remains (token and current user). Entity stores and **`seeders/` no longer exist** in the frontend. `PiniaConfig.ts` follows the professor's shape: `export class PiniaConfig { static init(): Pinia }`.
 - **`storage/StorageService.ts`** remains only to persist the session token: nobody touches `localStorage` directly.
 - **`utils/`**: shared helpers with no access to stores, storage or the API (`chartColors`, `confirmDeletion`, `email`, `formatCurrency`, `formatDate`, `labels`). `generateId` is removed: the database generates ids.
 
@@ -219,7 +219,7 @@ Session in the frontend: after login, keep `access_token` through `StorageServic
 
 1. **TypeScript everywhere**: `.ts` files, SFCs with `<script setup lang="ts">`. No new `.js`.
 2. **Explicit types** on every function or method parameter and return value. `any` is forbidden without a written justification comment.
-3. One route → one SFC view in `views/`; reusable components in `components/` (PascalCase). **No composables**: logic goes to `services/`.
+3. One route → one SFC view in `views/`; reusable components in `components/` (PascalCase, with the `Component` suffix: `StatCardComponent.vue`). **No composables**: logic goes to `services/`.
 4. **Nobody touches `localStorage` directly**: always through `storage/StorageService.ts`.
 5. **Views don't touch stores** (except reading the session through `AuthService`): they only talk to services. **Controllers don't hold logic**: they only call their service.
 6. **One DTO per use case**: frontend input DTOs (`Create*`, `Login`) derive from their interface with `Omit`/`Pick`; filter and aggregation DTOs (reports and charts) are their own interfaces. Backend DTOs are plain classes in `dto/`.
@@ -227,6 +227,7 @@ Session in the frontend: after login, keep `access_token` through `StorageServic
 8. **No chart inside a view**: all Chart.js lives in `components/charts/` (ADR-0003) — an explicit criterion of the professor's rubric.
 9. Styles: brand variables from `frontend/src/assets/base.css`; no magic colors.
 10. **DRY and ETC**: extract components/services before duplicating; write code that's easy to change. Don't add files, dependencies or layers the professor's project doesn't have unless a rule here asks for them.
+11. **Frontend exports and statics**: `.ts` files use named exports, never `export default` (`export class PiniaConfig`, `export const router`); static methods don't carry the `public` keyword.
 
 ## 11. File conventions (the professor reviews these in the defense)
 
@@ -236,7 +237,7 @@ They apply to **both projects**. Each project keeps its own Prettier config: the
 
 **Grouped imports, alphabetical within each group.** Two groups, each under its comment header: `// external imports` (packages) and `// internal imports` (`@/...`, `./`, `../`). Inside each group:
 
-- Statements are ordered by the **name of what is imported**, never by the module path: the default import, or the first name inside `{ }`. The comparison ignores case, letter by letter (`BaseChart` < `BudgetByBrandDTO` < `formatCurrency` < `getChartGridColor`; `STATUS_LABELS` < `STATUSES`). On a tie, by path.
+- Statements are ordered by the **name of what is imported**, never by the module path: the default import, or the first name inside `{ }`. The comparison ignores case, letter by letter (`BaseChartComponent` < `BudgetByBrandDTO` < `formatCurrency` < `getChartGridColor`; `STATUS_LABELS` < `STATUSES`). On a tie, by path.
 - `import type` is ordered together with the rest, by the same key; it is not a separate block.
 - Names inside `{ }` follow the same order (`Body, Controller, Get, Param, Post`; `LinearScale` before `LineController`). A `type` modifier stays attached to its name and doesn't count for the order.
 - An import with no bindings (`import './assets/main.css'`) goes first in its group.
@@ -260,7 +261,7 @@ import { User } from '../users/entities/user.entity.js';
 
 ```ts
 // internal imports (frontend)
-import BaseChart from '@/components/charts/BaseChart.vue'
+import BaseChartComponent from '@/components/charts/BaseChartComponent.vue'
 import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
@@ -271,15 +272,15 @@ import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/c
 ```ts
 // props
 // emits
-// selectors
 // non-reactive variables
 // reactive variables
+// selectors
 // computed variables
-// watchers
 // functions
+// watchers
 ```
 
-`// selectors` is only for variables bound with `v-model` to a `<select>`; any other reactive variable (text fields, dates, numbers, flags like `error`/`saving`, lists loaded from the API) goes under `// reactive variables`. `// non-reactive variables` holds what never changes or isn't reactive: constants, `useRouter()`/`useRoute()`/`useToast()` and plain `let` variables. `onMounted(...)` goes under `// functions`. A file only carries the sections that apply to it.
+`// selectors` is only for variables bound with `v-model` to a `<select>`; any other reactive variable (text fields, dates, numbers, flags like `error`/`saving`, lists loaded from the API) goes under `// reactive variables`. `// non-reactive variables` holds what never changes or isn't reactive: constants, `useRouter()`/`useRoute()`/`useToast()` and plain `let` variables. `onMounted(...)` goes under `// functions`. `watch(...)` goes under `// watchers`, and its callback parameters use the prefix `old` / `new` followed by the watched variable in camel case (`newChartData`, `oldChartData`). A file only carries the sections that apply to it.
 
 **Related functions go together**, and services are spaced with blank lines between validation, building, persistence and `return`, so the code can breathe.
 
