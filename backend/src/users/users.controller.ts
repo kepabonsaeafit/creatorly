@@ -4,10 +4,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nestjs/common';
 
 // internal imports
-import type { AuthenticatedRequest } from '../auth/auth.guard.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { User } from './entities/user.entity.js';
+import type { UserRequestInterface } from '../interfaces/auth/UserRequestInterface.js';
 import { UsersService } from './users.service.js';
 
 @Controller('users')
@@ -35,14 +35,14 @@ export class UsersController {
   update(
     @Param('id') id: string,
     @Body() updateUserDto: Partial<CreateUserDto>,
-    @Request() request: AuthenticatedRequest,
+    @Request() request: UserRequestInterface,
   ): Promise<User> {
     return this.usersService.update(Number(id), updateUserDto, request.user.sub);
   }
 
   @Roles('admin')
   @Delete(':id')
-  remove(@Param('id') id: string, @Request() request: AuthenticatedRequest): Promise<void> {
+  remove(@Param('id') id: string, @Request() request: UserRequestInterface): Promise<void> {
     return this.usersService.remove(Number(id), request.user.sub);
   }
 }

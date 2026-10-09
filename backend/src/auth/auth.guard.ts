@@ -9,10 +9,8 @@ import type { Request } from 'express';
 // internal imports
 import { IS_PUBLIC_KEY } from './public.decorator.js';
 import { jwtConstants } from './constants.js';
-import type { JwtPayload } from './auth.service.js';
-
-/** A request that went through the AuthGuard, with the token's payload in `user`. */
-export type AuthenticatedRequest = Request & { user: JwtPayload };
+import type { JWTPayloadInterface } from '../interfaces/auth/JWTPayloadInterface.js';
+import type { UserRequestInterface } from '../interfaces/auth/UserRequestInterface.js';
 
 /** Global guard: every route needs a valid Bearer token unless it is marked `@Public()`. */
 @Injectable()
@@ -32,7 +30,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const request = context.switchToHttp().getRequest<UserRequestInterface>();
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -41,7 +39,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       // the payload is assigned to the request so route handlers can read it
-      request.user = await this.jwtService.verifyAsync<JwtPayload>(token, {
+      request.user = await this.jwtService.verifyAsync<JWTPayloadInterface>(token, {
         secret: jwtConstants.secret,
       });
     } catch {
