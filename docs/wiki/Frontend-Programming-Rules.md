@@ -30,13 +30,18 @@
 - Follow the same structure for all routes: paths in lowercase with hyphens (`/orders/create`) and route names with dots for the variants of a resource (`orders`, `orders.create`, `orders.edit`).
 
 # Services
-- Use services as a bridge between the store and the view.
-- Use DTOs to modify the store when creating or updating registries.
-- Define services as a class of static methods. Do not write constants or functions outside the class.
+- Use services as a bridge between the views and the API.
+- Define services as a class of static methods that call the API with axios. Do not write constants or functions outside the class.
+- Read the base URL of the API from the environment variable, never write it in a service.
+- Name the CRUD methods getAll, getById, create, update, and remove. They are async and return Promise<T>.
+- Use DTOs to create or update registries.
+- Write the filters and aggregations as pure static methods over the arrays already fetched from the API.
+- Do not duplicate the business validations of the backend. Show the error message of the API in a toast.
 
 # Stores
-- Use Pinia in the store files to save information in local storage.
-- Nobody touches local storage directly: the stores go through the storage service.
+- Use Pinia only for the session: the SessionStore keeps the token and the current user.
+- Nobody touches local storage directly: the session token is persisted through the storage service.
+- Views do not read the store. They ask the authentication service.
 
 # Views
 - Define every view as a Single File Component.
