@@ -16,7 +16,7 @@ export class CreatorService {
    * @returns All creators.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getAll(): Promise<CreatorInterface[]> {
+  static async getAll(): Promise<CreatorInterface[]> {
     const { data } = await axios.get(this.API_URL)
 
     return data
@@ -28,7 +28,7 @@ export class CreatorService {
    * @returns The matching creator, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<CreatorInterface | null> {
+  static async getById(id: number): Promise<CreatorInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
     // the API answers an empty body (not JSON null) when no creator has that id
@@ -41,7 +41,7 @@ export class CreatorService {
    * @returns The created creator, with its id and timestamps.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async create(creatorData: CreateCreatorDTO): Promise<CreatorInterface> {
+  static async create(creatorData: CreateCreatorDTO): Promise<CreatorInterface> {
     const { data } = await axios.post(this.API_URL, creatorData)
 
     return data
@@ -54,10 +54,7 @@ export class CreatorService {
    * @returns The updated creator.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async update(
-    id: number,
-    changes: Partial<CreateCreatorDTO>,
-  ): Promise<CreatorInterface> {
+  static async update(id: number, changes: Partial<CreateCreatorDTO>): Promise<CreatorInterface> {
     const { data } = await axios.patch(`${this.API_URL}/${id}`, changes)
 
     return data
@@ -68,7 +65,7 @@ export class CreatorService {
    * @param id - Id of the creator to remove.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async remove(id: number): Promise<void> {
+  static async remove(id: number): Promise<void> {
     await axios.delete(`${this.API_URL}/${id}`)
   }
 
@@ -79,9 +76,9 @@ export class CreatorService {
    * @param filter - Filter criteria.
    * @returns The filtered, name-sorted creators.
    */
-  public static filter(creators: CreatorInterface[], filter: CreatorFilterDTO): CreatorInterface[] {
+  static filter(creators: CreatorInterface[], filter: CreatorFilterDTO): CreatorInterface[] {
     return creators
-      .filter((creator) => {
+      .filter((creator: CreatorInterface): boolean => {
         if (filter.niche && creator.niche !== filter.niche) return false
         if (filter.available !== undefined && creator.available !== filter.available) return false
         if (filter.text) {
@@ -92,7 +89,9 @@ export class CreatorService {
 
         return true
       })
-      .sort((first, second) => first.name.localeCompare(second.name))
+      .sort((first: CreatorInterface, second: CreatorInterface): number =>
+        first.name.localeCompare(second.name),
+      )
   }
 
   /**
@@ -100,9 +99,11 @@ export class CreatorService {
    * @param creators - Creators to read the niches from.
    * @returns The sorted list of distinct niches.
    */
-  public static getNiches(creators: CreatorInterface[]): string[] {
-    const uniqueNiches = new Set(creators.map((creator) => creator.niche))
+  static getNiches(creators: CreatorInterface[]): string[] {
+    const uniqueNiches = new Set(creators.map((creator: CreatorInterface): string => creator.niche))
 
-    return [...uniqueNiches].sort((first, second) => first.localeCompare(second))
+    return [...uniqueNiches].sort((first: string, second: string): number =>
+      first.localeCompare(second),
+    )
   }
 }

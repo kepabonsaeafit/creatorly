@@ -10,13 +10,7 @@ import { AuthService } from '@/services/AuthService'
 import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
-import CreatorsTable from '@/components/CreatorsTable.vue'
-
-// selectors
-const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
-  niche: undefined,
-  available: undefined,
-})
+import CreatorsTableComponent from '@/components/CreatorsTableComponent.vue'
 
 // non-reactive variables
 const toast = useToast()
@@ -24,6 +18,12 @@ const toast = useToast()
 // reactive variables
 const allCreators = ref<CreatorInterface[]>([])
 const text = ref('')
+
+// selectors
+const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
+  niche: undefined,
+  available: undefined,
+})
 
 // computed variables
 const niches = computed(() => CreatorService.getNiches(allCreators.value))
@@ -95,7 +95,7 @@ function clearFilters(): void {
       <button type="button" class="creators__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <CreatorsTable :creators="creators" actionable @delete="onDelete" />
+    <CreatorsTableComponent :creators="creators" actionable @delete="onDelete" />
   </main>
 </template>
 

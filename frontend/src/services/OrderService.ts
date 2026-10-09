@@ -21,6 +21,12 @@ import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 
+/** Count and budget accumulated for one request month while aggregating orders. */
+interface MonthTotals {
+  count: number
+  budget: number
+}
+
 /** A KPI card, used by both HomeView and ReportsView. */
 export interface HomeStat {
   id: string
@@ -51,7 +57,7 @@ export class OrderService {
    * @returns All orders.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getAll(): Promise<OrderInterface[]> {
+  static async getAll(): Promise<OrderInterface[]> {
     const { data } = await axios.get(this.API_URL)
 
     return data
@@ -63,7 +69,7 @@ export class OrderService {
    * @returns The matching order, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<OrderInterface | null> {
+  static async getById(id: number): Promise<OrderInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
     // the API answers an empty body (not JSON null) when no order has that id
@@ -77,7 +83,7 @@ export class OrderService {
    * @returns The created order, with its id and timestamps.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async create(orderData: CreateOrderDTO): Promise<OrderInterface> {
+  static async create(orderData: CreateOrderDTO): Promise<OrderInterface> {
     const { data } = await axios.post(this.API_URL, orderData)
 
     return data
@@ -90,10 +96,7 @@ export class OrderService {
    * @returns The updated order.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async update(
-    id: number,
-    changes: Partial<CreateOrderDTO>,
-  ): Promise<OrderInterface> {
+  static async update(id: number, changes: Partial<CreateOrderDTO>): Promise<OrderInterface> {
     const { data } = await axios.patch(`${this.API_URL}/${id}`, changes)
 
     return data
@@ -104,7 +107,7 @@ export class OrderService {
    * @param id - Id of the order to remove.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async remove(id: number): Promise<void> {
+  static async remove(id: number): Promise<void> {
     await axios.delete(`${this.API_URL}/${id}`)
   }
 
@@ -114,11 +117,8 @@ export class OrderService {
    * @param brands - Brands already fetched from the API.
    * @returns The requesting brand, or `undefined` if not found.
    */
-  public static getBrand(
-    order: OrderInterface,
-    brands: BrandInterface[],
-  ): BrandInterface | undefined {
-    return brands.find((brand) => brand.id === order.brandId)
+  static getBrand(order: OrderInterface, brands: BrandInterface[]): BrandInterface | undefined {
+    return brands.find((brand: BrandInterface): boolean => brand.id === order.brandId)
   }
 
   /**
@@ -127,11 +127,11 @@ export class OrderService {
    * @param creators - Creators already fetched from the API.
    * @returns The assigned creator, or `undefined` if unassigned or not found.
    */
-  public static getCreator(
+  static getCreator(
     order: OrderInterface,
     creators: CreatorInterface[],
   ): CreatorInterface | undefined {
-    return creators.find((creator) => creator.id === order.creatorId)
+    return creators.find((creator: CreatorInterface): boolean => creator.id === order.creatorId)
   }
 
   /**
@@ -140,11 +140,8 @@ export class OrderService {
    * @param users - Users already fetched from the API.
    * @returns The assigned coordinator, or `undefined` if not found.
    */
-  public static getCoordinator(
-    order: OrderInterface,
-    users: UserInterface[],
-  ): UserInterface | undefined {
-    return users.find((user) => user.id === order.userId)
+  static getCoordinator(order: OrderInterface, users: UserInterface[]): UserInterface | undefined {
+    return users.find((user: UserInterface): boolean => user.id === order.userId)
   }
 
   /**
@@ -152,7 +149,7 @@ export class OrderService {
    * @param order - Order to check.
    * @returns `true` if the order status is active.
    */
-  public static isActive(order: OrderInterface): boolean {
+  static isActive(order: OrderInterface): boolean {
     return this.ACTIVE_STATUSES.includes(order.status)
   }
 
@@ -161,9 +158,12 @@ export class OrderService {
    * @param orders - Orders to aggregate.
    * @returns The Home KPI cards.
    */
-  public static getStats(orders: OrderInterface[]): HomeStat[] {
-    const activeOrders = orders.filter((order) => this.isActive(order))
-    const committedBudget = activeOrders.reduce((sum, order) => sum + order.budget, 0)
+  static getStats(orders: OrderInterface[]): HomeStat[] {
+    const activeOrders = orders.filter((order: OrderInterface): boolean => this.isActive(order))
+    const committedBudget = activeOrders.reduce(
+      (sum: number, order: OrderInterface): number => sum + order.budget,
+      0,
+    )
 
     // Compared by the first 7 characters (YYYY-MM) of today local date and of
     // deliveryDate, without going through Date: this avoids a date-only value
@@ -171,7 +171,7 @@ export class OrderService {
     // timezones west of UTC.
     const currentMonth = todayIso().slice(0, 7)
     const deliveriesThisMonth = orders.filter(
-      (order) =>
+      (order: OrderInterface): boolean =>
         FINAL_STATUSES.includes(order.status) &&
         order.deliveryDate !== null &&
         order.deliveryDate.slice(0, 7) === currentMonth,
@@ -192,15 +192,17 @@ export class OrderService {
    * @param limit - Maximum number of items to return.
    * @returns The most recent orders as activity items.
    */
-  public static getRecentOrders(
+  static getRecentOrders(
     orders: OrderInterface[],
     brands: BrandInterface[],
     limit: number = 5,
   ): OrderActivity[] {
     return [...orders]
-      .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+      .sort((first: OrderInterface, second: OrderInterface): number =>
+        second.createdAt.localeCompare(first.createdAt),
+      )
       .slice(0, limit)
-      .map((order) => ({
+      .map((order: OrderInterface): OrderActivity => ({
         id: order.id,
         title: `${order.description} — ${this.getBrand(order, brands)?.name ?? 'no brand'}`,
         timestamp: order.createdAt,
@@ -214,8 +216,8 @@ export class OrderService {
    * @param filter - Filter criteria.
    * @returns The filtered orders.
    */
-  public static filter(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
-    return orders.filter((order) => {
+  static filter(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
+    return orders.filter((order: OrderInterface): boolean => {
       if (filter.status && order.status !== filter.status) return false
       if (filter.brandId && order.brandId !== filter.brandId) return false
       if (filter.creatorId && order.creatorId !== filter.creatorId) return false
@@ -239,9 +241,10 @@ export class OrderService {
    * @param filter - Filter criteria.
    * @returns The filtered orders, sorted by request date descending.
    */
-  public static filterSorted(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
-    return this.filter(orders, filter).sort((first, second) =>
-      second.requestDate.localeCompare(first.requestDate),
+  static filterSorted(orders: OrderInterface[], filter: OrderFilterDTO): OrderInterface[] {
+    return this.filter(orders, filter).sort(
+      (first: OrderInterface, second: OrderInterface): number =>
+        second.requestDate.localeCompare(first.requestDate),
     )
   }
 
@@ -250,10 +253,10 @@ export class OrderService {
    * @param orders - Orders to aggregate.
    * @returns The order count per status.
    */
-  public static getOrdersByStatus(orders: OrderInterface[]): OrdersByStatusDTO[] {
-    return STATUSES.map((status) => ({
+  static getOrdersByStatus(orders: OrderInterface[]): OrdersByStatusDTO[] {
+    return STATUSES.map((status: OrderStatus): OrdersByStatusDTO => ({
       status,
-      count: orders.filter((order) => order.status === status).length,
+      count: orders.filter((order: OrderInterface): boolean => order.status === status).length,
     }))
   }
 
@@ -263,7 +266,7 @@ export class OrderService {
    * @param creators - Creators already fetched from the API, to resolve names.
    * @returns The order count per creator, sorted descending.
    */
-  public static getOrdersByCreator(
+  static getOrdersByCreator(
     orders: OrderInterface[],
     creators: CreatorInterface[],
   ): OrdersByCreatorDTO[] {
@@ -275,13 +278,17 @@ export class OrderService {
     }
 
     return [...counts.entries()]
-      .map(([creatorId, count]) => ({
+      .map(([creatorId, count]: [number, number]): OrdersByCreatorDTO => ({
         creatorId,
         creatorName:
-          creators.find((creator) => creator.id === creatorId)?.name ?? 'Creator deleted',
+          creators.find((creator: CreatorInterface): boolean => creator.id === creatorId)?.name ??
+          'Creator deleted',
         count,
       }))
-      .sort((first, second) => second.count - first.count)
+      .sort(
+        (first: OrdersByCreatorDTO, second: OrdersByCreatorDTO): number =>
+          second.count - first.count,
+      )
   }
 
   /**
@@ -290,10 +297,7 @@ export class OrderService {
    * @param brands - Brands already fetched from the API, to resolve names.
    * @returns The committed budget per brand, sorted descending.
    */
-  public static getBudgetByBrand(
-    orders: OrderInterface[],
-    brands: BrandInterface[],
-  ): BudgetByBrandDTO[] {
+  static getBudgetByBrand(orders: OrderInterface[], brands: BrandInterface[]): BudgetByBrandDTO[] {
     const totals = new Map<number, number>()
 
     for (const order of orders) {
@@ -301,12 +305,16 @@ export class OrderService {
     }
 
     return [...totals.entries()]
-      .map(([brandId, budget]) => ({
+      .map(([brandId, budget]: [number, number]): BudgetByBrandDTO => ({
         brandId,
-        brandName: brands.find((brand) => brand.id === brandId)?.name ?? 'Brand deleted',
+        brandName:
+          brands.find((brand: BrandInterface): boolean => brand.id === brandId)?.name ??
+          'Brand deleted',
         budget,
       }))
-      .sort((first, second) => second.budget - first.budget)
+      .sort(
+        (first: BudgetByBrandDTO, second: BudgetByBrandDTO): number => second.budget - first.budget,
+      )
   }
 
   /**
@@ -314,8 +322,8 @@ export class OrderService {
    * @param orders - Orders to aggregate.
    * @returns The order count and budget per month.
    */
-  public static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
-    const aggregates = new Map<string, { count: number; budget: number }>()
+  static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
+    const aggregates = new Map<string, MonthTotals>()
 
     for (const order of orders) {
       const month = order.requestDate.slice(0, 7)
@@ -327,8 +335,10 @@ export class OrderService {
     }
 
     return [...aggregates.entries()]
-      .sort(([monthA], [monthB]) => monthA.localeCompare(monthB))
-      .map(([month, values]) => ({
+      .sort(([monthA]: [string, MonthTotals], [monthB]: [string, MonthTotals]): number =>
+        monthA.localeCompare(monthB),
+      )
+      .map(([month, values]: [string, MonthTotals]): OrdersByMonthDTO => ({
         month,
         label: formatMonthLabel(`${month}-01`),
         count: values.count,
@@ -337,13 +347,18 @@ export class OrderService {
   }
 
   /**
-   * ReportsView KPIs, with the same shape as HomeStat to reuse StatCardGrid.
+   * ReportsView KPIs, with the same shape as HomeStat to reuse StatCardGridComponent.
    * @param orders - Orders to aggregate.
    * @returns The report KPI cards.
    */
-  public static getReportStats(orders: OrderInterface[]): HomeStat[] {
-    const totalBudget = orders.reduce((sum, order) => sum + order.budget, 0)
-    const approvedCount = orders.filter((order) => order.status === 'approved').length
+  static getReportStats(orders: OrderInterface[]): HomeStat[] {
+    const totalBudget = orders.reduce(
+      (sum: number, order: OrderInterface): number => sum + order.budget,
+      0,
+    )
+    const approvedCount = orders.filter(
+      (order: OrderInterface): boolean => order.status === 'approved',
+    ).length
     const approvalRate = orders.length > 0 ? Math.round((approvedCount / orders.length) * 100) : 0
 
     return [

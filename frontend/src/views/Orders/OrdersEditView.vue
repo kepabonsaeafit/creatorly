@@ -14,7 +14,7 @@ import { confirmDeletion } from '@/utils/confirmDeletion'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
-import OrderForm from '@/components/OrderForm.vue'
+import OrderFormComponent from '@/components/OrderFormComponent.vue'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
 import { OrderService } from '@/services/OrderService'
 import type { UserInterface } from '@/interfaces/UserInterface'
@@ -36,7 +36,7 @@ const error = ref('')
 const saving = ref(false)
 
 // functions
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     const [loadedOrder, loadedBrands, loadedCreators, loadedUsers] = await Promise.all([
       OrderService.getById(orderId),
@@ -93,7 +93,7 @@ async function onDelete(): Promise<void> {
     <p v-if="loading" class="edit-order__loading">Loading order…</p>
     <template v-else-if="order">
       <h1>Edit order</h1>
-      <OrderForm
+      <OrderFormComponent
         edit-mode
         :initial="order"
         :brands="brands"
