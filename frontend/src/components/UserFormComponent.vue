@@ -28,9 +28,6 @@ const props = withDefaults(defineProps<Props>(), {
 // emits
 const emit = defineEmits<{ submit: [userData: CreateUserDTO]; cancel: [] }>()
 
-// selectors
-const role = ref<UserRole>(props.initial.role ?? 'coordinator')
-
 // reactive variables
 const name = ref(props.initial.name ?? '')
 const email = ref(props.initial.email ?? '')
@@ -38,6 +35,9 @@ const email = ref(props.initial.email ?? '')
 // empty field means "keep the current one" and the view leaves it out of the
 // payload. It is only required when creating.
 const password = ref('')
+
+// selectors
+const role = ref<UserRole>(props.initial.role ?? 'coordinator')
 
 // computed variables
 const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))

@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router'
 import { AuthService } from '@/services/AuthService'
 import { formatRole } from '@/utils/labels'
 
-/** A NavBar link; the router decides which ones require the admin role (meta.admin). */
+/** A NavBarComponent link; the router decides which ones require the admin role (meta.admin). */
 interface NavLink {
   name: string
   label: string
@@ -29,7 +29,7 @@ const LINKS: NavLink[] = [
 
 // computed variables
 // The role comes from AuthService, not from SessionStore: views and components
-// only talk to services (rule 5 of AGENTS.md).
+// only talk to services and never read the stores directly.
 const currentUser = computed(() => AuthService.getCurrentUser())
 
 const initials = computed(() => {
@@ -38,7 +38,7 @@ const initials = computed(() => {
     .split(' ')
     .filter(Boolean)
     .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase())
+    .map((word: string): string | undefined => word[0]?.toUpperCase())
     .join('')
 })
 
@@ -50,7 +50,9 @@ const isAdmin = computed(() => AuthService.isAdmin())
  * only source of which routes are admin-only.
  */
 const links = computed(() =>
-  LINKS.filter((link) => !router.resolve({ name: link.name }).meta.admin || isAdmin.value),
+  LINKS.filter(
+    (link: NavLink): boolean => !router.resolve({ name: link.name }).meta.admin || isAdmin.value,
+  ),
 )
 
 // functions

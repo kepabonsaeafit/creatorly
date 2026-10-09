@@ -9,7 +9,7 @@ import { useToast } from 'vue-toastification'
 // internal imports
 import { AuthService } from '@/services/AuthService'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
-import CreatorForm from '@/components/CreatorForm.vue'
+import CreatorFormComponent from '@/components/CreatorFormComponent.vue'
 import { CreatorService } from '@/services/CreatorService'
 
 // non-reactive variables
@@ -44,6 +44,6 @@ async function onSubmit(creatorData: CreateCreatorDTO): Promise<void> {
 <template>
   <main class="Panel">
     <h1>New creator</h1>
-    <CreatorForm :saving="saving" :error="error" @submit="onSubmit" />
+    <CreatorFormComponent :saving="saving" :error="error" @submit="onSubmit" />
   </main>
 </template>

@@ -5,10 +5,10 @@
 import { RouterView } from 'vue-router'
 
 // internal imports
-import NavBar from '@/components/NavBar.vue'
+import NavBarComponent from '@/components/NavBarComponent.vue'
 </script>
 
 <template>
-  <NavBar />
+  <NavBarComponent />
   <RouterView />
 </template>

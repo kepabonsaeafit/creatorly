@@ -1,8 +1,8 @@
-# Chart.js directly with a custom wrapper (BaseChart.vue) instead of vue-chartjs
+# Chart.js directly with a custom wrapper (BaseChartComponent.vue) instead of vue-chartjs
 
 > **Updated by ADR-0004 (2026-09-02):** the decision still stands and is reinforced. The component's location changes and the rule that no chart lives inside a view is made explicit.
 
-The course requirements mandate Chart.js as the required charting library. We decided to use `chart.js` directly and build our own wrapper component `components/charts/BaseChart.vue` — it mounts the canvas, receives typed `type` + `data` + `options`, and destroys the instance on unmount — instead of adding the `vue-chartjs` library. Fewer dependencies, full control over the chart's lifecycle, and the wrapper counts as one of the reusable components the assignment requires. The second required JS library is still pending the professor's answer on whether `vue-toastification`, already installed in the project, counts as one.
+The course requirements mandate Chart.js as the required charting library. We decided to use `chart.js` directly and build our own wrapper component `components/charts/BaseChartComponent.vue` — it mounts the canvas, receives typed `type` + `data` + `options`, and destroys the instance on unmount — instead of adding the `vue-chartjs` library. Fewer dependencies, full control over the chart's lifecycle, and the wrapper counts as one of the reusable components the assignment requires. The second required JS library is still pending the professor's answer on whether `vue-toastification`, already installed in the project, counts as one.
 
 ## Considered Options
 

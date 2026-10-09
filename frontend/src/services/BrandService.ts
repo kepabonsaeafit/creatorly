@@ -15,7 +15,7 @@ export class BrandService {
    * @returns All brands.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getAll(): Promise<BrandInterface[]> {
+  static async getAll(): Promise<BrandInterface[]> {
     const { data } = await axios.get(this.API_URL)
 
     return data
@@ -27,7 +27,7 @@ export class BrandService {
    * @returns The matching brand, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<BrandInterface | null> {
+  static async getById(id: number): Promise<BrandInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
     // the API answers an empty body (not JSON null) when no brand has that id
@@ -40,7 +40,7 @@ export class BrandService {
    * @returns The created brand, with its id and timestamps.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async create(brandData: CreateBrandDTO): Promise<BrandInterface> {
+  static async create(brandData: CreateBrandDTO): Promise<BrandInterface> {
     const { data } = await axios.post(this.API_URL, brandData)
 
     return data

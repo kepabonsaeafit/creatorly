@@ -3,7 +3,7 @@
 
 // internal imports
 import type { HomeStat } from '@/services/OrderService'
-import StatCard from '@/components/StatCard.vue'
+import StatCardComponent from '@/components/StatCardComponent.vue'
 
 // props
 defineProps<{ stats: HomeStat[] }>()
@@ -11,7 +11,7 @@ defineProps<{ stats: HomeStat[] }>()
 
 <template>
   <div class="stat-grid">
-    <StatCard v-for="stat in stats" :key="stat.id" v-bind="stat" />
+    <StatCardComponent v-for="stat in stats" :key="stat.id" v-bind="stat" />
   </div>
 </template>
 

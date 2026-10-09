@@ -6,7 +6,7 @@ import type { ChartData, ChartOptions } from 'chart.js'
 import { computed } from 'vue'
 
 // internal imports
-import BaseChart from '@/components/charts/BaseChart.vue'
+import BaseChartComponent from '@/components/charts/BaseChartComponent.vue'
 import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
 import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
 
@@ -15,11 +15,11 @@ const props = defineProps<{ items: OrdersByCreatorDTO[] }>()
 
 // computed variables
 const data = computed<ChartData<'bar'>>(() => ({
-  labels: props.items.map((row) => row.creatorName),
+  labels: props.items.map((row: OrdersByCreatorDTO): string => row.creatorName),
   datasets: [
     {
       label: 'Orders',
-      data: props.items.map((row) => row.count),
+      data: props.items.map((row: OrdersByCreatorDTO): number => row.count),
       backgroundColor: getChartPalette()[0],
     },
   ],
@@ -36,5 +36,5 @@ const options = computed<ChartOptions<'bar'>>(() => ({
 </script>
 
 <template>
-  <BaseChart type="bar" :data="data" :options="options" />
+  <BaseChartComponent type="bar" :data="data" :options="options" />
 </template>

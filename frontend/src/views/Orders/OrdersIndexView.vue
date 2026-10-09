@@ -11,20 +11,14 @@ import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
-import DashboardCard from '@/components/DashboardCard.vue'
+import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 import { getChartPalette } from '@/utils/chartColors'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
-import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
+import OrdersByStatusChartComponent from '@/components/charts/OrdersByStatusChartComponent.vue'
 import { OrderService } from '@/services/OrderService'
-import OrdersTable from '@/components/OrdersTable.vue'
-
-// selectors
-const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
-  status: undefined,
-  brandId: undefined,
-})
+import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
 
 // non-reactive variables
 const toast = useToast()
@@ -34,6 +28,12 @@ const allOrders = ref<OrderInterface[]>([])
 const brands = ref<BrandInterface[]>([])
 const creators = ref<CreatorInterface[]>([])
 const text = ref('')
+
+// selectors
+const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
+  status: undefined,
+  brandId: undefined,
+})
 
 // computed variables
 const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
@@ -114,7 +114,7 @@ function clearFilters(): void {
       <button type="button" class="orders__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <DashboardCard v-if="orders.length > 0" class="orders__chart">
+    <DashboardCardComponent v-if="orders.length > 0" class="orders__chart">
       <div class="orders__chart-header">
         <h2 class="orders__chart-title">Orders by status</h2>
         <span class="orders__chart-total">{{ orders.length }} total</span>
@@ -122,7 +122,7 @@ function clearFilters(): void {
 
       <div class="orders__chart-body">
         <div class="orders__chart-canvas">
-          <OrdersByStatusChart :items="byStatus" :show-legend="false" />
+          <OrdersByStatusChartComponent :items="byStatus" :show-legend="false" />
         </div>
 
         <ul class="orders__chart-legend">
@@ -136,9 +136,9 @@ function clearFilters(): void {
           </li>
         </ul>
       </div>
-    </DashboardCard>
+    </DashboardCardComponent>
 
-    <OrdersTable
+    <OrdersTableComponent
       :orders="orders"
       :brands="brands"
       :creators="creators"

@@ -36,17 +36,17 @@ const props = withDefaults(defineProps<Props>(), {
 // emits
 const emit = defineEmits<{ submit: [orderData: CreateOrderDTO] }>()
 
-// selectors
-const brandId = ref<number | null>(props.initial.brandId ?? null)
-const creatorId = ref<number | null>(props.initial.creatorId ?? null)
-const userId = ref<number | null>(props.initial.userId ?? null)
-const status = ref<OrderStatus>(props.initial.status ?? 'requested')
-
 // reactive variables
 const description = ref(props.initial.description ?? '')
 const budget = ref(props.initial.budget ?? 0)
 const requestDate = ref(props.initial.requestDate ?? todayIso())
 const deliveryDate = ref(props.initial.deliveryDate ?? '')
+
+// selectors
+const brandId = ref<number | null>(props.initial.brandId ?? null)
+const creatorId = ref<number | null>(props.initial.creatorId ?? null)
+const userId = ref<number | null>(props.initial.userId ?? null)
+const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
 // computed variables
 const coordinators = computed(() => UserService.getCoordinators(props.users))
