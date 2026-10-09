@@ -6,15 +6,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 // internal imports
-import type { UserRole } from '../users/entities/user.entity.js';
+import type { JWTPayloadInterface } from '../interfaces/auth/JWTPayloadInterface.js';
 import { UsersService } from '../users/users.service.js';
-
-/** Data carried inside the access token; the AuthGuard puts it in `request.user`. */
-export interface JwtPayload {
-  sub: number;
-  email: string;
-  role: UserRole;
-}
 
 @Injectable()
 export class AuthService {
@@ -45,7 +38,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload: JwtPayload = { sub: user.id, email: user.email, role: user.role };
+    const payload: JWTPayloadInterface = { sub: user.id, email: user.email, role: user.role };
 
     return {
       access_token: await this.jwtService.signAsync(payload),

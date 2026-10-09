@@ -5,8 +5,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 // internal imports
-import type { AuthenticatedRequest } from './auth.guard.js';
 import { ROLES_KEY } from './roles.decorator.js';
+import type { UserRequestInterface } from '../interfaces/auth/UserRequestInterface.js';
 import type { UserRole } from '../users/entities/user.entity.js';
 
 /** Global guard, after the AuthGuard: a route with `@Roles(...)` only lets those roles in. */
@@ -24,7 +24,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const { user } = context.switchToHttp().getRequest<UserRequestInterface>();
 
     return requiredRoles.includes(user.role);
   }
