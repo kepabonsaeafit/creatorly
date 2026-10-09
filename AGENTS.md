@@ -23,7 +23,7 @@ The frontend has no data of its own anymore: it reads and writes everything thro
 2. **The professor's reference project** — https://github.com/danielgara/courseprojects-2026 (`backend/` and `frontend/`). The professor grades against **his** style: structure, file names, method names, decorators, how services call the API. **Before writing a file, open the professor's equivalent and mirror it.** When this file and the professor's project seem to disagree on style, ask the team member instead of choosing.
 3. **`CONTEXT.md`** — domain glossary.
 4. **`docs/adr/`** — architecture decisions already made, and why. ADR-0005 is the one that rules Deliverable 1 Part 2.
-5. **`docs/wiki/`** — the project wiki (draft of the GitHub wiki, modeled on the SkyControl wiki): `Home`, `Deliverable-1`, `Frontend-Style-Guide`, `Frontend-Programming-Rules` and `Screenshots`. `Frontend-Programming-Rules` is the public version of the frontend rules in sections 10 and 11: keep both in sync.
+5. **`docs/wiki/`** — the project wiki (draft of the GitHub wiki, modeled on the SkyControl wiki): `Home`, `Deliverable-1`, `Deliverable-2`, `Frontend-Style-Guide`, `Frontend-Programming-Rules`, `Backend-Style-Guide`, `Backend-Programming-Rules` and `Screenshots`. `Frontend-Programming-Rules` and `Backend-Programming-Rules` are the public versions of the rules in sections 8, 10 and 11: keep them in sync.
 6. **The code** — if something here doesn't match what's in `frontend/src/` or `backend/src/`, the code wins and this file is out of date; report it instead of assuming.
 
 ## 4. Language: English, everywhere
@@ -314,6 +314,6 @@ Helping isn't generating and pasting. Any agent assisting a team member in this 
 
 ## 14. Maintaining this file
 
-A change to this file follows the same flow as any other file in the repo: branch + Pull Request, with Kevin's approval as architect. When a decision changes a rule here (a new folder, a new dependency, a new convention), this file is updated **in the same PR** as the code, so no agent works with outdated rules. A change to the frontend rules also updates `docs/wiki/Frontend-Programming-Rules.md` in that same PR.
+A change to this file follows the same flow as any other file in the repo: branch + Pull Request, with Kevin's approval as architect. When a decision changes a rule here (a new folder, a new dependency, a new convention), this file is updated **in the same PR** as the code, so no agent works with outdated rules. A change to the frontend or backend rules also updates `docs/wiki/Frontend-Programming-Rules.md` or `docs/wiki/Backend-Programming-Rules.md` in that same PR.
 
 To add a new ADR in `docs/adr/`: it's justified when the decision is hard to reverse, would be surprising without the written context, and has a real trade-off someone else could question in the defense. A new ADR also goes through a PR.

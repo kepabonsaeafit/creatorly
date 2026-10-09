@@ -12,3 +12,6 @@ Our team consists of:
 - [Frontend Style Guide](https://github.com/kepabonsaeafit/creatorly/wiki/Frontend-Style-Guide)
 - [Frontend Programming Rules](https://github.com/kepabonsaeafit/creatorly/wiki/Frontend-Programming-Rules)
 - [Screenshots](https://github.com/kepabonsaeafit/creatorly/wiki/Screenshots)
+- [Deliverable 2](https://github.com/kepabonsaeafit/creatorly/wiki/Deliverable-2) - The artifacts of the deliverable 2 including class diagram and three architecture diagrams.
+- [Backend Style Guide](https://github.com/kepabonsaeafit/creatorly/wiki/Backend-Style-Guide)
+- [Backend Programming Rules](https://github.com/kepabonsaeafit/creatorly/wiki/Backend-Programming-Rules)
