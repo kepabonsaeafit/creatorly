@@ -18,7 +18,7 @@
 - Type all function parameters and return types explicitly.
 - Use Promise<T> return types for async controller and service methods.
 - Do not use `any`.
-- Define a supporting type in the file that uses it and export it from there (JwtPayload is exported from the auth service and AuthenticatedRequest from the auth guard).
+- Put the shared interfaces of the authentication in `src/interfaces/auth/`, one per file and with the `Interface` suffix (`JWTPayloadInterface` for the token payload and `UserRequestInterface` for the request that carries it).
 - Export the lists of valid values with `as const` from the entity file that uses them (STATUSES, ROLES).
 
 ### File headers
@@ -50,7 +50,7 @@
 - Convert the id parameter with Number(id) before calling the service.
 - Delegate all business work to the corresponding service.
 - Keep explicit response types in method signatures.
-- Read the logged-in user with `@Request() request: AuthenticatedRequest` and pass `request.user.sub` to the service.
+- Read the logged-in user with `@Request() request: UserRequestInterface` and pass `request.user.sub` to the service.
 - Restrict the admin-only routes with @Roles('admin').
 
 ## Services
