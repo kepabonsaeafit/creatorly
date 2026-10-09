@@ -9,21 +9,25 @@ import { useToast } from 'vue-toastification'
 import { AuthService } from '@/services/AuthService'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
-import BudgetByBrandChart from '@/components/charts/BudgetByBrandChart.vue'
+import BudgetByBrandChartComponent from '@/components/charts/BudgetByBrandChartComponent.vue'
+import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
-import DashboardCard from '@/components/DashboardCard.vue'
+import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
-import OrdersByCreatorChart from '@/components/charts/OrdersByCreatorChart.vue'
-import OrdersByMonthChart from '@/components/charts/OrdersByMonthChart.vue'
-import OrdersByStatusChart from '@/components/charts/OrdersByStatusChart.vue'
+import OrdersByCreatorChartComponent from '@/components/charts/OrdersByCreatorChartComponent.vue'
+import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
+import OrdersByMonthChartComponent from '@/components/charts/OrdersByMonthChartComponent.vue'
+import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
+import OrdersByStatusChartComponent from '@/components/charts/OrdersByStatusChartComponent.vue'
+import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import { OrderService } from '@/services/OrderService'
-import OrdersTable from '@/components/OrdersTable.vue'
-import ReportTable from '@/components/ReportTable.vue'
-import StatCardGrid from '@/components/StatCardGrid.vue'
+import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
+import ReportTableComponent from '@/components/ReportTableComponent.vue'
+import StatCardGridComponent from '@/components/StatCardGridComponent.vue'
 
 /** Report types available in this view. */
 type ReportType = 'month' | 'status' | 'creator' | 'brand'
@@ -33,15 +37,6 @@ interface ReportOption {
   id: ReportType
   label: string
 }
-
-// selectors
-const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'>>({
-  status: undefined,
-  brandId: undefined,
-  creatorId: undefined,
-})
-
-const reportType = ref<ReportType>('month')
 
 // non-reactive variables
 const toast = useToast()
@@ -59,6 +54,15 @@ const brands = ref<BrandInterface[]>([])
 const creators = ref<CreatorInterface[]>([])
 const from = ref('')
 const to = ref('')
+
+// selectors
+const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'>>({
+  status: undefined,
+  brandId: undefined,
+  creatorId: undefined,
+})
+
+const reportType = ref<ReportType>('month')
 
 // computed variables
 const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
@@ -80,7 +84,9 @@ const byBrand = computed(() => OrderService.getBudgetByBrand(filteredOrders.valu
 const byMonth = computed(() => OrderService.getOrdersByMonth(filteredOrders.value))
 
 const currentReportOption = computed(
-  () => REPORT_OPTIONS.find((option) => option.id === reportType.value) ?? REPORT_OPTIONS[0],
+  () =>
+    REPORT_OPTIONS.find((option: ReportOption): boolean => option.id === reportType.value) ??
+    REPORT_OPTIONS[0],
 )
 
 const reportColumns = computed(() => {
@@ -111,24 +117,24 @@ const reportColumns = computed(() => {
 
 const reportRows = computed<Record<string, string>[]>(() => {
   if (reportType.value === 'status') {
-    return byStatus.value.map((row) => ({
+    return byStatus.value.map((row: OrdersByStatusDTO): Record<string, string> => ({
       status: formatStatus(row.status),
       count: String(row.count),
     }))
   }
   if (reportType.value === 'creator') {
-    return byCreator.value.map((row) => ({
+    return byCreator.value.map((row: OrdersByCreatorDTO): Record<string, string> => ({
       creator: row.creatorName,
       count: String(row.count),
     }))
   }
   if (reportType.value === 'brand') {
-    return byBrand.value.map((row) => ({
+    return byBrand.value.map((row: BudgetByBrandDTO): Record<string, string> => ({
       brand: row.brandName,
       budget: formatCurrency(row.budget),
     }))
   }
-  return byMonth.value.map((row) => ({
+  return byMonth.value.map((row: OrdersByMonthDTO): Record<string, string> => ({
     month: row.label,
     count: String(row.count),
     budget: formatCurrency(row.budget),
@@ -136,7 +142,7 @@ const reportRows = computed<Record<string, string>[]>(() => {
 })
 
 // functions
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     const [loadedOrders, loadedBrands, loadedCreators] = await Promise.all([
       OrderService.getAll(),
@@ -203,9 +209,9 @@ function clearFilters(): void {
     <p v-if="filteredOrders.length === 0" class="reports__empty">No orders match these filters.</p>
 
     <template v-else>
-      <StatCardGrid :stats="stats" />
+      <StatCardGridComponent :stats="stats" />
 
-      <DashboardCard class="reports__report">
+      <DashboardCardComponent class="reports__report">
         <div class="reports__report-header">
           <h2 class="reports__report-title">{{ currentReportOption.label }}</h2>
           <label class="reports__report-selector">
@@ -223,18 +229,18 @@ function clearFilters(): void {
         </p>
 
         <div v-else class="reports__report-body">
-          <ReportTable :columns="reportColumns" :rows="reportRows" />
+          <ReportTableComponent :columns="reportColumns" :rows="reportRows" />
 
-          <OrdersByMonthChart v-if="reportType === 'month'" :items="byMonth" />
-          <OrdersByStatusChart v-else-if="reportType === 'status'" :items="byStatus" />
-          <OrdersByCreatorChart v-else-if="reportType === 'creator'" :items="byCreator" />
-          <BudgetByBrandChart v-else :items="byBrand" />
+          <OrdersByMonthChartComponent v-if="reportType === 'month'" :items="byMonth" />
+          <OrdersByStatusChartComponent v-else-if="reportType === 'status'" :items="byStatus" />
+          <OrdersByCreatorChartComponent v-else-if="reportType === 'creator'" :items="byCreator" />
+          <BudgetByBrandChartComponent v-else :items="byBrand" />
         </div>
-      </DashboardCard>
+      </DashboardCardComponent>
 
-      <DashboardCard title="Order details" class="reports__detail">
-        <OrdersTable :orders="filteredOrders" :brands="brands" :creators="creators" />
-      </DashboardCard>
+      <DashboardCardComponent title="Order details" class="reports__detail">
+        <OrdersTableComponent :orders="filteredOrders" :brands="brands" :creators="creators" />
+      </DashboardCardComponent>
     </template>
   </main>
 </template>

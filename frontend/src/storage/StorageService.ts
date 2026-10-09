@@ -14,7 +14,7 @@ export class StorageService {
    * Reads the persisted session token.
    * @returns The stored token, or `null` if there is none.
    */
-  public static getToken(): string | null {
+  static getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY)
   }
 
@@ -22,12 +22,12 @@ export class StorageService {
    * Persists the session token returned by the API.
    * @param token - Access token to store.
    */
-  public static setToken(token: string): void {
+  static setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token)
   }
 
   /** Removes the persisted session token. */
-  public static clearToken(): void {
+  static clearToken(): void {
     localStorage.removeItem(this.TOKEN_KEY)
   }
 }

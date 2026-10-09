@@ -16,7 +16,7 @@ export class UserService {
    * @returns All users.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getAll(): Promise<UserInterface[]> {
+  static async getAll(): Promise<UserInterface[]> {
     const { data } = await axios.get(this.API_URL)
 
     return data
@@ -28,7 +28,7 @@ export class UserService {
    * @returns The matching user, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async getById(id: number): Promise<UserInterface | null> {
+  static async getById(id: number): Promise<UserInterface | null> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
     // the API answers an empty body (not JSON null) when no user has that id
@@ -41,7 +41,7 @@ export class UserService {
    * @returns The created user, with its id and timestamps.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async create(userData: CreateUserDTO): Promise<UserInterface> {
+  static async create(userData: CreateUserDTO): Promise<UserInterface> {
     const { data } = await axios.post(this.API_URL, userData)
 
     return data
@@ -55,7 +55,7 @@ export class UserService {
    * @returns The updated user.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async update(id: number, changes: Partial<CreateUserDTO>): Promise<UserInterface> {
+  static async update(id: number, changes: Partial<CreateUserDTO>): Promise<UserInterface> {
     const { data } = await axios.patch(`${this.API_URL}/${id}`, changes)
 
     return data
@@ -67,17 +67,17 @@ export class UserService {
    * @param id - Id of the user to remove.
    * @throws {AxiosError} If the API rejects the request.
    */
-  public static async remove(id: number): Promise<void> {
+  static async remove(id: number): Promise<void> {
     await axios.delete(`${this.API_URL}/${id}`)
   }
 
   /**
-   * Users with the coordinator role, for OrderForm's coordinator select.
+   * Users with the coordinator role, for OrderFormComponent's coordinator select.
    * @param users - Users already fetched from the API.
    * @returns The users with the coordinator role.
    */
-  public static getCoordinators(users: UserInterface[]): UserInterface[] {
-    return users.filter((user) => user.role === 'coordinator')
+  static getCoordinators(users: UserInterface[]): UserInterface[] {
+    return users.filter((user: UserInterface): boolean => user.role === 'coordinator')
   }
 
   /**
@@ -87,9 +87,9 @@ export class UserService {
    * @param filter - Filter criteria.
    * @returns The filtered, name-sorted users.
    */
-  public static filter(users: UserInterface[], filter: UserFilterDTO): UserInterface[] {
+  static filter(users: UserInterface[], filter: UserFilterDTO): UserInterface[] {
     return users
-      .filter((user) => {
+      .filter((user: UserInterface): boolean => {
         if (filter.role && user.role !== filter.role) return false
         if (filter.text) {
           const text = filter.text.trim().toLowerCase()
@@ -105,6 +105,8 @@ export class UserService {
 
         return true
       })
-      .sort((first, second) => first.name.localeCompare(second.name))
+      .sort((first: UserInterface, second: UserInterface): number =>
+        first.name.localeCompare(second.name),
+      )
   }
 }

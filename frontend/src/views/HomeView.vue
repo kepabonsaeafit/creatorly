@@ -6,12 +6,12 @@ import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import ActivityList from '@/components/ActivityList.vue'
+import ActivityListComponent from '@/components/ActivityListComponent.vue'
 import { AuthService } from '@/services/AuthService'
 import { BrandService } from '@/services/BrandService'
-import DashboardCard from '@/components/DashboardCard.vue'
+import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import { type HomeStat, type OrderActivity, OrderService } from '@/services/OrderService'
-import StatCardGrid from '@/components/StatCardGrid.vue'
+import StatCardGridComponent from '@/components/StatCardGridComponent.vue'
 
 // non-reactive variables
 const toast = useToast()
@@ -21,7 +21,7 @@ const stats = ref<HomeStat[]>([])
 const recentOrders = ref<OrderActivity[]>([])
 
 // functions
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     const [orders, brands] = await Promise.all([OrderService.getAll(), BrandService.getAll()])
 
@@ -39,19 +39,19 @@ onMounted(async () => {
   <main class="Panel dashboard">
     <h1>Dashboard</h1>
 
-    <StatCardGrid :stats="stats" />
+    <StatCardGridComponent :stats="stats" />
 
     <div class="dashboard__panels">
-      <DashboardCard title="Recent orders">
-        <ActivityList :items="recentOrders" />
-      </DashboardCard>
+      <DashboardCardComponent title="Recent orders">
+        <ActivityListComponent :items="recentOrders" />
+      </DashboardCardComponent>
 
-      <DashboardCard title="Business charts">
+      <DashboardCardComponent title="Business charts">
         <p class="dashboard__hint">
           The charts (pie, bar and line with Chart.js) live on the
           <RouterLink :to="{ name: 'reports' }">Reports</RouterLink> page.
         </p>
-      </DashboardCard>
+      </DashboardCardComponent>
     </div>
   </main>
 </template>

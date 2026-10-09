@@ -13,7 +13,7 @@ import { BrandService } from '@/services/BrandService'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
-import OrderForm from '@/components/OrderForm.vue'
+import OrderFormComponent from '@/components/OrderFormComponent.vue'
 import { OrderService } from '@/services/OrderService'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
@@ -30,7 +30,7 @@ const error = ref('')
 const saving = ref(false)
 
 // functions
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     const [loadedBrands, loadedCreators, loadedUsers] = await Promise.all([
       BrandService.getAll(),
@@ -69,7 +69,7 @@ async function onSubmit(orderData: CreateOrderDTO): Promise<void> {
 <template>
   <main class="Panel">
     <h1>New order</h1>
-    <OrderForm
+    <OrderFormComponent
       :brands="brands"
       :creators="creators"
       :users="users"

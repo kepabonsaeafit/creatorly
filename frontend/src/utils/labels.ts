@@ -20,7 +20,7 @@ export interface SelectOption<Value extends string> {
 /**
  * Label and color of each OrderStatus, in the same order as STATUSES.
  * The color reuses the same variable that already painted each status in
- * OrdersTable.vue: only delivered/approved had their own accent
+ * OrdersTableComponent.vue: only delivered/approved had their own accent
  * (--color-success); the rest use the badge's default text color
  * (--color-text). No color changes.
  */
@@ -34,7 +34,7 @@ export const STATUS_LABELS: Record<OrderStatus, LabelEntry> = {
 
 /**
  * Label and color of each UserRole. The color reuses the same variable that
- * already painted the role badge in UsersTable.vue: only admin had its own
+ * already painted the role badge in UsersTableComponent.vue: only admin had its own
  * accent (--color-primary); coordinator uses the default text color
  * (--color-text). No color changes.
  */
@@ -48,7 +48,7 @@ export function formatStatus(status: OrderStatus): string {
   return STATUS_LABELS[status].text
 }
 
-/** Readable label of a UserRole, reused by the Users table and the NavBar. */
+/** Readable label of a UserRole, reused by the Users table and the NavBarComponent. */
 export function formatRole(role: UserRole): string {
   return ROLE_LABELS[role].text
 }
@@ -57,7 +57,7 @@ export function formatRole(role: UserRole): string {
 export function toSelectOptions<Value extends string>(
   labels: Record<Value, LabelEntry>,
 ): SelectOption<Value>[] {
-  return (Object.keys(labels) as Value[]).map((value) => ({
+  return (Object.keys(labels) as Value[]).map((value: Value): SelectOption<Value> => ({
     value,
     label: labels[value].text,
   }))

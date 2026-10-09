@@ -13,7 +13,7 @@ import OrdersEditView from '@/views/Orders/OrdersEditView.vue'
 import OrdersIndexView from '@/views/Orders/OrdersIndexView.vue'
 import ReportsView from '@/views/Reports/ReportsView.vue'
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'home', component: HomeView },
@@ -28,5 +28,3 @@ const router = createRouter({
 })
 
 router.beforeEach(accessControlGuard)
-
-export default router

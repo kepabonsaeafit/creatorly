@@ -2,7 +2,7 @@
 // Author: Kevin Pabón
 
 // internal imports
-import ActivityItem from '@/components/ActivityItem.vue'
+import ActivityItemComponent from '@/components/ActivityItemComponent.vue'
 import type { OrderActivity } from '@/services/OrderService'
 
 // props
@@ -11,7 +11,7 @@ defineProps<{ items: OrderActivity[] }>()
 
 <template>
   <ul class="activity-list">
-    <ActivityItem v-for="item in items" :key="item.id" v-bind="item" />
+    <ActivityItemComponent v-for="item in items" :key="item.id" v-bind="item" />
   </ul>
 </template>
 

@@ -9,7 +9,7 @@ import { useToast } from 'vue-toastification'
 // internal imports
 import { AuthService } from '@/services/AuthService'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
-import UserForm from '@/components/UserForm.vue'
+import UserFormComponent from '@/components/UserFormComponent.vue'
 import { UserService } from '@/services/UserService'
 
 // non-reactive variables
@@ -41,6 +41,6 @@ async function onSubmit(userData: CreateUserDTO): Promise<void> {
 <template>
   <main class="Panel">
     <h1>New user</h1>
-    <UserForm :saving="saving" :error="error" @submit="onSubmit" />
+    <UserFormComponent :saving="saving" :error="error" @submit="onSubmit" />
   </main>
 </template>
