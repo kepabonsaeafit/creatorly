@@ -1,4 +1,5 @@
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -49,10 +50,17 @@ export class CreatorsService {
   /**
    * Finds a creator by id.
    * @param id - Creator id.
-   * @returns The creator, or `null` if none matches.
+   * @returns The creator.
+   * @throws {NotFoundException} If no creator has that id.
    */
-  findOne(id: number): Promise<Creator | null> {
-    return this.creatorsRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Creator> {
+    const creator = await this.creatorsRepository.findOneBy({ id });
+
+    if (!creator) {
+      throw new NotFoundException('Creator: not found');
+    }
+
+    return creator;
   }
 
   /**
@@ -86,11 +94,7 @@ export class CreatorsService {
    * @throws {BadRequestException} If the merged data fails validation.
    */
   async update(id: number, updateCreatorDto: Partial<CreateCreatorDto>): Promise<Creator> {
-    const creator = await this.creatorsRepository.findOneBy({ id });
-
-    if (!creator) {
-      throw new NotFoundException('Creator: not found');
-    }
+    const creator = await this.findOne(id);
 
     const merged: CreateCreatorDto = {
       name: updateCreatorDto.name ?? creator.name,
@@ -113,11 +117,7 @@ export class CreatorsService {
    * @throws {NotFoundException} If no creator has that id.
    */
   async remove(id: number): Promise<void> {
-    const creator = await this.creatorsRepository.findOneBy({ id });
-
-    if (!creator) {
-      throw new NotFoundException('Creator: not found');
-    }
+    const creator = await this.findOne(id);
 
     await this.creatorsRepository.remove(creator);
   }

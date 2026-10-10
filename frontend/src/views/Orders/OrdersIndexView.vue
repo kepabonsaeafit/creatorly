@@ -28,6 +28,7 @@ const allOrders = ref<OrderInterface[]>([])
 const brands = ref<BrandInterface[]>([])
 const creators = ref<CreatorInterface[]>([])
 const text = ref('')
+const loading = ref(true)
 
 // selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
@@ -60,6 +61,8 @@ async function loadOrders(): Promise<void> {
     creators.value = loadedCreators
   } catch (caughtError) {
     toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the orders'))
+  } finally {
+    loading.value = false
   }
 }
 
@@ -114,41 +117,50 @@ function clearFilters(): void {
       <button type="button" class="orders__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <DashboardCardComponent v-if="orders.length > 0" class="orders__chart">
-      <div class="orders__chart-header">
-        <h2 class="orders__chart-title">Orders by status</h2>
-        <span class="orders__chart-total">{{ orders.length }} total</span>
-      </div>
+    <p v-if="loading" class="orders__loading">Loading orders…</p>
 
-      <div class="orders__chart-body">
-        <div class="orders__chart-canvas">
-          <OrdersByStatusChartComponent :items="byStatus" :show-legend="false" />
+    <template v-else>
+      <DashboardCardComponent v-if="orders.length > 0" class="orders__chart">
+        <div class="orders__chart-header">
+          <h2 class="orders__chart-title">Orders by status</h2>
+          <span class="orders__chart-total">{{ orders.length }} total</span>
         </div>
 
-        <ul class="orders__chart-legend">
-          <li v-for="(row, index) in byStatus" :key="row.status" class="orders__chart-item">
-            <span
-              class="orders__chart-dot"
-              :style="{ backgroundColor: statusPalette[index] }"
-            ></span>
-            <span class="orders__chart-label">{{ formatStatus(row.status) }}</span>
-            <span class="orders__chart-value">{{ row.count }}</span>
-          </li>
-        </ul>
-      </div>
-    </DashboardCardComponent>
+        <div class="orders__chart-body">
+          <div class="orders__chart-canvas">
+            <OrdersByStatusChartComponent :items="byStatus" :show-legend="false" />
+          </div>
 
-    <OrdersTableComponent
-      :orders="orders"
-      :brands="brands"
-      :creators="creators"
-      actionable
-      @delete="onDelete"
-    />
+          <ul class="orders__chart-legend">
+            <li v-for="(row, index) in byStatus" :key="row.status" class="orders__chart-item">
+              <span
+                class="orders__chart-dot"
+                :style="{ backgroundColor: statusPalette[index] }"
+              ></span>
+              <span class="orders__chart-label">{{ formatStatus(row.status) }}</span>
+              <span class="orders__chart-value">{{ row.count }}</span>
+            </li>
+          </ul>
+        </div>
+      </DashboardCardComponent>
+
+      <OrdersTableComponent
+        :orders="orders"
+        :brands="brands"
+        :creators="creators"
+        actionable
+        @delete="onDelete"
+      />
+    </template>
   </main>
 </template>
 
 <style scoped>
+.orders__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .orders__header {
   display: flex;
   align-items: center;

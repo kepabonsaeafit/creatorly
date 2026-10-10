@@ -1,7 +1,18 @@
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Request,
+} from '@nestjs/common';
 
 // internal imports
 import { CreateUserDto } from './dto/create-user.dto.js';
@@ -20,8 +31,8 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User | null> {
-    return this.usersService.findOne(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return this.usersService.findOne(id);
   }
 
   @Roles('admin')
@@ -33,16 +44,19 @@ export class UsersController {
   @Roles('admin')
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: Partial<CreateUserDto>,
     @Request() request: UserRequestInterface,
   ): Promise<User> {
-    return this.usersService.update(Number(id), updateUserDto, request.user.sub);
+    return this.usersService.update(id, updateUserDto, request.user.sub);
   }
 
   @Roles('admin')
   @Delete(':id')
-  remove(@Param('id') id: string, @Request() request: UserRequestInterface): Promise<void> {
-    return this.usersService.remove(Number(id), request.user.sub);
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() request: UserRequestInterface,
+  ): Promise<void> {
+    return this.usersService.remove(id, request.user.sub);
   }
 }
