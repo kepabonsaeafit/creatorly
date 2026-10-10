@@ -1,4 +1,5 @@
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import axios from 'axios'
@@ -6,6 +7,7 @@ import axios from 'axios'
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { CreateBrandDTO } from '@/dtos/Brands/CreateBrandDTO'
+import { getOrNull } from '@/utils/getOrNull'
 
 export class BrandService {
   private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/brands`
@@ -27,11 +29,8 @@ export class BrandService {
    * @returns The matching brand, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  static async getById(id: number): Promise<BrandInterface | null> {
-    const { data } = await axios.get(`${this.API_URL}/${id}`)
-
-    // the API answers an empty body (not JSON null) when no brand has that id
-    return data || null
+  static getById(id: number): Promise<BrandInterface | null> {
+    return getOrNull<BrandInterface>(`${this.API_URL}/${id}`)
   }
 
   /**

@@ -53,7 +53,7 @@ npm run dev
 
 Open the URL Vite prints (by default `http://localhost:5173`).
 
-The API base URL comes from `VITE_API_BASE_URL` in `frontend/.env.development`; no service hardcodes it.
+The API base URL comes from `VITE_API_BASE_URL` in `frontend/.env.development`; no service hardcodes it. The backend needs no configuration in development; its optional variables (`PORT`, `SQLITE_PATH`, `CORS_ORIGIN`, `JWT_SECRET`) are listed with their defaults in [`backend/.env.example`](./backend/.env.example).
 
 ## Main route
 
@@ -69,7 +69,7 @@ The backend seeds 3 users on first start (`backend/src/users/users.seeder.ts`):
 | `laura@creatorly.com` | `1234` | coordinator | Laura Restrepo |
 | `sara@creatorly.com` | `1234` | coordinator | Sara Gómez |
 
-The **admin** role is the only one that can access `/creators` and `/users`.
+The **admin** role is the only one that can access `/creators` and `/users`. The router hides those pages, and the backend also answers 403 if a coordinator calls their create/edit/delete endpoints directly.
 
 ## Reset demo data
 
@@ -95,6 +95,7 @@ npm run start:dev    # API with watch mode
 npm run build        # nest build (also the backend's type check)
 npm run lint         # oxlint over src/
 npm run format       # prettier over src/
+npm test             # vitest unit tests (login and role guard)
 ```
 
 ## Deployment (GCP)
@@ -115,4 +116,4 @@ sudo ./deploy.sh <VM_EXTERNAL_IP>
 
 - **[CONTEXT.md](./CONTEXT.md)** — official domain glossary.
 - **[docs/adr/](./docs/adr/)** — architecture decisions already made, and why.
-- **[docs/wiki/](./docs/wiki/)** — project wiki: [Home](./docs/wiki/Home.md), [Deliverable 1](./docs/wiki/Deliverable-1.md) (logo, verbal model, class and architecture diagrams), [Frontend Style Guide](./docs/wiki/Frontend-Style-Guide.md), [Frontend Programming Rules](./docs/wiki/Frontend-Programming-Rules.md), [Screenshots](./docs/wiki/Screenshots.md), [Deliverable 2](./docs/wiki/Deliverable-2.md) (class diagram and the general, frontend and backend architecture diagrams), [Backend Style Guide](./docs/wiki/Backend-Style-Guide.md) and [Backend Programming Rules](./docs/wiki/Backend-Programming-Rules.md).
+- **[docs/wiki/](./docs/wiki/)** — project wiki: [Home](./docs/wiki/Home.md), [Deliverable 1](./docs/wiki/Deliverable-1.md) (logo, verbal model, class and architecture diagrams), [Frontend Style Guide](./docs/wiki/Frontend-Style-Guide.md), [Frontend Programming Rules](./docs/wiki/Frontend-Programming-Rules.md), [Screenshots](./docs/wiki/Screenshots.md), [Deliverable 2](./docs/wiki/Deliverable-2.md) (class diagram and the general, frontend and backend architecture diagrams), [Backend Style Guide](./docs/wiki/Backend-Style-Guide.md), [Backend Programming Rules](./docs/wiki/Backend-Programming-Rules.md) and [Architecture](./docs/wiki/Architecture.md) (layers, login flow, domain model and known limitations).

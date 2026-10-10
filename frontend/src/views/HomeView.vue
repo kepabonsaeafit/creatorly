@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import { onMounted, ref } from 'vue'
@@ -19,6 +20,7 @@ const toast = useToast()
 // reactive variables
 const stats = ref<HomeStat[]>([])
 const recentOrders = ref<OrderActivity[]>([])
+const loading = ref(true)
 
 // functions
 onMounted(async (): Promise<void> => {
@@ -31,6 +33,8 @@ onMounted(async (): Promise<void> => {
     toast.error(
       AuthService.getErrorMessage(caughtError, 'It was not possible to load the dashboard'),
     )
+  } finally {
+    loading.value = false
   }
 })
 </script>
@@ -39,24 +43,33 @@ onMounted(async (): Promise<void> => {
   <main class="Panel dashboard">
     <h1>Dashboard</h1>
 
-    <StatCardGridComponent :stats="stats" />
+    <p v-if="loading" class="dashboard__loading">Loading dashboard…</p>
 
-    <div class="dashboard__panels">
-      <DashboardCardComponent title="Recent orders">
-        <ActivityListComponent :items="recentOrders" />
-      </DashboardCardComponent>
+    <template v-else>
+      <StatCardGridComponent :stats="stats" />
 
-      <DashboardCardComponent title="Business charts">
-        <p class="dashboard__hint">
-          The charts (pie, bar and line with Chart.js) live on the
-          <RouterLink :to="{ name: 'reports' }">Reports</RouterLink> page.
-        </p>
-      </DashboardCardComponent>
-    </div>
+      <div class="dashboard__panels">
+        <DashboardCardComponent title="Recent orders">
+          <ActivityListComponent :items="recentOrders" />
+        </DashboardCardComponent>
+
+        <DashboardCardComponent title="Business charts">
+          <p class="dashboard__hint">
+            The charts (pie, bar and line with Chart.js) live on the
+            <RouterLink :to="{ name: 'reports' }">Reports</RouterLink> page.
+          </p>
+        </DashboardCardComponent>
+      </div>
+    </template>
   </main>
 </template>
 
 <style scoped>
+.dashboard__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .dashboard {
   padding: 1rem 0;
 }

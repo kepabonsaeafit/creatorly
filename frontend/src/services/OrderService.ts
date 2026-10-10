@@ -1,4 +1,5 @@
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import axios from 'axios'
@@ -15,6 +16,7 @@ import {
   STATUSES,
 } from '@/interfaces/OrderInterface'
 import { formatMonthLabel, todayIso } from '@/utils/formatDate'
+import { getOrNull } from '@/utils/getOrNull'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
 import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
@@ -69,11 +71,8 @@ export class OrderService {
    * @returns The matching order, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  static async getById(id: number): Promise<OrderInterface | null> {
-    const { data } = await axios.get(`${this.API_URL}/${id}`)
-
-    // the API answers an empty body (not JSON null) when no order has that id
-    return data || null
+  static getById(id: number): Promise<OrderInterface | null> {
+    return getOrNull<OrderInterface>(`${this.API_URL}/${id}`)
   }
 
   /**

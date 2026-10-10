@@ -1,10 +1,12 @@
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import axios from 'axios'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
+import { getOrNull } from '@/utils/getOrNull'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 
@@ -28,11 +30,8 @@ export class UserService {
    * @returns The matching user, or `null` if none has that id.
    * @throws {AxiosError} If the API rejects the request.
    */
-  static async getById(id: number): Promise<UserInterface | null> {
-    const { data } = await axios.get(`${this.API_URL}/${id}`)
-
-    // the API answers an empty body (not JSON null) when no user has that id
-    return data || null
+  static getById(id: number): Promise<UserInterface | null> {
+    return getOrNull<UserInterface>(`${this.API_URL}/${id}`)
   }
 
   /**

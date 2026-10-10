@@ -1,4 +1,5 @@
 // Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request } from '@nestjs/common';
@@ -26,7 +27,7 @@ export class AuthController {
   }
 
   @Get('profile')
-  getProfile(@Request() request: UserRequestInterface): Promise<User | null> {
+  getProfile(@Request() request: UserRequestInterface): Promise<User> {
     return this.usersService.findOne(request.user.sub);
   }
 }

@@ -84,10 +84,17 @@ export class UsersService {
   /**
    * Finds a user by id (without the password hash).
    * @param id - User id.
-   * @returns The user, or `null` if none matches.
+   * @returns The user.
+   * @throws {NotFoundException} If no user has that id.
    */
-  findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+  async findOne(id: number): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException('User: not found');
+    }
+
+    return user;
   }
 
   /**
@@ -192,11 +199,7 @@ export class UsersService {
    * @throws {BadRequestException} If it is the logged-in user, or the user still has orders.
    */
   async remove(id: number, currentUserId: number): Promise<void> {
-    const user = await this.usersRepository.findOneBy({ id });
-
-    if (!user) {
-      throw new NotFoundException('User: not found');
-    }
+    const user = await this.findOne(id);
 
     this.validateDeletion(id, currentUserId);
 
