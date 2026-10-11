@@ -19,6 +19,7 @@ const toast = useToast()
 // reactive variables
 const allUsers = ref<UserInterface[]>([])
 const text = ref('')
+const loading = ref(true)
 
 // selectors
 const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
@@ -37,6 +38,8 @@ async function loadUsers(): Promise<void> {
     allUsers.value = await UserService.getAll()
   } catch (caughtError) {
     toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the users'))
+  } finally {
+    loading.value = false
   }
 }
 
@@ -83,7 +86,10 @@ async function onDelete(id: number): Promise<void> {
       <button type="button" class="users__clear" @click="clearFilters">Clear filters</button>
     </div>
 
+    <p v-if="loading" class="users__loading">Loading users…</p>
+
     <UsersTableComponent
+      v-else
       :users="users"
       :current-user-id="currentUser?.id ?? null"
       @delete="onDelete"
@@ -92,6 +98,11 @@ async function onDelete(id: number): Promise<void> {
 </template>
 
 <style scoped>
+.users__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .users__header {
   display: flex;
   align-items: center;

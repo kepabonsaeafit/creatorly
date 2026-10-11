@@ -69,7 +69,7 @@ The backend seeds 3 users on first start (`backend/src/users/users.seeder.ts`):
 | `laura@creatorly.com` | `1234` | coordinator | Laura Restrepo |
 | `sara@creatorly.com` | `1234` | coordinator | Sara Gómez |
 
-The **admin** role is the only one that can access `/creators` and `/users`.
+The **admin** role is the only one that can access `/creators` and `/users`. The router hides those pages, and the backend also answers 403 if a coordinator calls their create/edit/delete endpoints directly.
 
 ## Reset demo data
 
@@ -95,6 +95,7 @@ npm run start:dev    # API with watch mode
 npm run build        # nest build (also the backend's type check)
 npm run lint         # oxlint over src/
 npm run format       # prettier over src/
+npm test             # vitest unit tests (login and role guard)
 ```
 
 ## Deployment (GCP)

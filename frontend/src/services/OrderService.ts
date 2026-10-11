@@ -66,14 +66,13 @@ export class OrderService {
   /**
    * Finds an order by id.
    * @param id - Id of the order to look up.
-   * @returns The matching order, or `null` if none has that id.
-   * @throws {AxiosError} If the API rejects the request.
+   * @returns The matching order.
+   * @throws {AxiosError} If the API rejects the request (404 if no order has that id).
    */
-  static async getById(id: number): Promise<OrderInterface | null> {
+  static async getById(id: number): Promise<OrderInterface> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    // the API answers an empty body (not JSON null) when no order has that id
-    return data || null
+    return data
   }
 
   /**

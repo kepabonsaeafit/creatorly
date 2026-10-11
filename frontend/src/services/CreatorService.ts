@@ -25,14 +25,13 @@ export class CreatorService {
   /**
    * Finds a creator by id.
    * @param id - Id of the creator to look up.
-   * @returns The matching creator, or `null` if none has that id.
-   * @throws {AxiosError} If the API rejects the request.
+   * @returns The matching creator.
+   * @throws {AxiosError} If the API rejects the request (404 if no creator has that id).
    */
-  static async getById(id: number): Promise<CreatorInterface | null> {
+  static async getById(id: number): Promise<CreatorInterface> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    // the API answers an empty body (not JSON null) when no creator has that id
-    return data || null
+    return data
   }
 
   /**

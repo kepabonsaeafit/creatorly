@@ -25,14 +25,13 @@ export class UserService {
   /**
    * Finds a user by id.
    * @param id - Id of the user to look up.
-   * @returns The matching user, or `null` if none has that id.
-   * @throws {AxiosError} If the API rejects the request.
+   * @returns The matching user.
+   * @throws {AxiosError} If the API rejects the request (404 if no user has that id).
    */
-  static async getById(id: number): Promise<UserInterface | null> {
+  static async getById(id: number): Promise<UserInterface> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    // the API answers an empty body (not JSON null) when no user has that id
-    return data || null
+    return data
   }
 
   /**

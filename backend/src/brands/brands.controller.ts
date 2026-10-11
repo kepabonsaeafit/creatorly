@@ -1,7 +1,7 @@
 // Author: Kevin Pabón
 
 // external imports
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 
 // internal imports
 import { Brand } from './entities/brand.entity.js';
@@ -18,8 +18,8 @@ export class BrandsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Brand | null> {
-    return this.brandsService.findOne(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Brand> {
+    return this.brandsService.findOne(id);
   }
 
   @Post()

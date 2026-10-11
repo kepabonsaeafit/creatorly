@@ -95,10 +95,17 @@ export class OrdersService {
   /**
    * Finds an order by id, with its brandId, creatorId and userId.
    * @param id - Order id.
-   * @returns The order, or `null` if none matches.
+   * @returns The order.
+   * @throws {NotFoundException} If no order has that id.
    */
-  findOne(id: number): Promise<Order | null> {
-    return this.ordersRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Order> {
+    const order = await this.ordersRepository.findOneBy({ id });
+
+    if (!order) {
+      throw new NotFoundException('Order: not found');
+    }
+
+    return order;
   }
 
   /**
@@ -149,11 +156,7 @@ export class OrdersService {
    * creator or user it references does not exist.
    */
   async update(id: number, updateOrderDto: Partial<CreateOrderDto>): Promise<Order> {
-    const order = await this.ordersRepository.findOneBy({ id });
-
-    if (!order) {
-      throw new NotFoundException('Order: not found');
-    }
+    const order = await this.findOne(id);
 
     // deliveryDate and creatorId accept null on purpose, so they are compared
     // against undefined to tell "not sent" from "cleared"
@@ -195,11 +198,7 @@ export class OrdersService {
    * @throws {NotFoundException} If no order has that id.
    */
   async remove(id: number): Promise<void> {
-    const order = await this.ordersRepository.findOneBy({ id });
-
-    if (!order) {
-      throw new NotFoundException('Order: not found');
-    }
+    const order = await this.findOne(id);
 
     await this.ordersRepository.remove(order);
   }

@@ -1,7 +1,7 @@
 // Author: Kevin Pabón
 
 // external imports
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -47,10 +47,17 @@ export class BrandsService {
   /**
    * Finds a brand by id.
    * @param id - Brand id.
-   * @returns The brand, or `null` if none matches.
+   * @returns The brand.
+   * @throws {NotFoundException} If no brand has that id.
    */
-  findOne(id: number): Promise<Brand | null> {
-    return this.brandsRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Brand> {
+    const brand = await this.brandsRepository.findOneBy({ id });
+
+    if (!brand) {
+      throw new NotFoundException('Brand: not found');
+    }
+
+    return brand;
   }
 
   /**

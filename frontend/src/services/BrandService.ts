@@ -24,14 +24,13 @@ export class BrandService {
   /**
    * Finds a brand by id.
    * @param id - Id of the brand to look up.
-   * @returns The matching brand, or `null` if none has that id.
-   * @throws {AxiosError} If the API rejects the request.
+   * @returns The matching brand.
+   * @throws {AxiosError} If the API rejects the request (404 if no brand has that id).
    */
-  static async getById(id: number): Promise<BrandInterface | null> {
+  static async getById(id: number): Promise<BrandInterface> {
     const { data } = await axios.get(`${this.API_URL}/${id}`)
 
-    // the API answers an empty body (not JSON null) when no brand has that id
-    return data || null
+    return data
   }
 
   /**

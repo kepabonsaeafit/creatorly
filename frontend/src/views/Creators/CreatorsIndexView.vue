@@ -18,6 +18,7 @@ const toast = useToast()
 // reactive variables
 const allCreators = ref<CreatorInterface[]>([])
 const text = ref('')
+const loading = ref(true)
 
 // selectors
 const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
@@ -40,6 +41,8 @@ async function loadCreators(): Promise<void> {
     toast.error(
       AuthService.getErrorMessage(caughtError, 'It was not possible to load the creators'),
     )
+  } finally {
+    loading.value = false
   }
 }
 
@@ -95,11 +98,18 @@ function clearFilters(): void {
       <button type="button" class="creators__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <CreatorsTableComponent :creators="creators" actionable @delete="onDelete" />
+    <p v-if="loading" class="creators__loading">Loading creators…</p>
+
+    <CreatorsTableComponent v-else :creators="creators" actionable @delete="onDelete" />
   </main>
 </template>
 
 <style scoped>
+.creators__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .creators__header {
   display: flex;
   align-items: center;

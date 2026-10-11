@@ -49,6 +49,7 @@ const REPORT_OPTIONS: ReportOption[] = [
 ]
 
 // reactive variables
+const loading = ref(true)
 const allOrders = ref<OrderInterface[]>([])
 const brands = ref<BrandInterface[]>([])
 const creators = ref<CreatorInterface[]>([])
@@ -155,6 +156,8 @@ onMounted(async (): Promise<void> => {
     creators.value = loadedCreators
   } catch (caughtError) {
     toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the reports'))
+  } finally {
+    loading.value = false
   }
 })
 
@@ -206,7 +209,11 @@ function clearFilters(): void {
       <button type="button" class="reports__clear" @click="clearFilters">Clear filters</button>
     </div>
 
-    <p v-if="filteredOrders.length === 0" class="reports__empty">No orders match these filters.</p>
+    <p v-if="loading" class="reports__loading">Loading reports…</p>
+
+    <p v-else-if="filteredOrders.length === 0" class="reports__empty">
+      No orders match these filters.
+    </p>
 
     <template v-else>
       <StatCardGridComponent :stats="stats" />
@@ -246,6 +253,11 @@ function clearFilters(): void {
 </template>
 
 <style scoped>
+.reports__loading {
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .reports__filters {
   display: flex;
   gap: 0.75rem;

@@ -1,7 +1,7 @@
 // Author: Kevin Pabón
 
 // external imports
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 
 // internal imports
 import { CreateOrderDto } from './dto/create-order.dto.js';
@@ -18,8 +18,8 @@ export class OrdersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Order | null> {
-    return this.ordersService.findOne(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Order> {
+    return this.ordersService.findOne(id);
   }
 
   @Post()
@@ -28,12 +28,15 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: Partial<CreateOrderDto>): Promise<Order> {
-    return this.ordersService.update(Number(id), updateOrderDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateOrderDto: Partial<CreateOrderDto>,
+  ): Promise<Order> {
+    return this.ordersService.update(id, updateOrderDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.ordersService.remove(Number(id));
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.ordersService.remove(id);
   }
 }

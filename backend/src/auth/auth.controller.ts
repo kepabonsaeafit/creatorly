@@ -26,7 +26,7 @@ export class AuthController {
   }
 
   @Get('profile')
-  getProfile(@Request() request: UserRequestInterface): Promise<User | null> {
+  getProfile(@Request() request: UserRequestInterface): Promise<User> {
     return this.usersService.findOne(request.user.sub);
   }
 }
