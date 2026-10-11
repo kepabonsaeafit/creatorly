@@ -56,7 +56,7 @@ export class Order {
   @Column({ type: 'simple-enum', enum: STATUSES })
   status: OrderStatus;
 
-  @ManyToOne(() => Brand)
+  @ManyToOne(() => Brand, (brand) => brand.orders)
   @JoinColumn({ name: 'brandId' })
   brand: Relation<Brand>;
 
@@ -64,14 +64,14 @@ export class Order {
   brandId: number;
 
   // deleting the creator keeps the order, without a creator assigned
-  @ManyToOne(() => Creator, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => Creator, (creator) => creator.orders, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'creatorId' })
   creator: Relation<Creator> | null;
 
   @RelationId((order: Order) => order.creator)
   creatorId: number | null;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.orders)
   @JoinColumn({ name: 'userId' })
   user: Relation<User>;
 
