@@ -100,9 +100,7 @@ function clearFilters(): void {
 
     <p v-if="loading" class="creators__loading">Loading creators…</p>
 
-    <template v-else>
-      <CreatorsTableComponent :creators="creators" actionable @delete="onDelete" />
-    </template>
+    <CreatorsTableComponent v-else :creators="creators" actionable @delete="onDelete" />
   </main>
 </template>
 

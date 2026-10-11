@@ -88,13 +88,12 @@ async function onDelete(id: number): Promise<void> {
 
     <p v-if="loading" class="users__loading">Loading users…</p>
 
-    <template v-else>
-      <UsersTableComponent
-        :users="users"
-        :current-user-id="currentUser?.id ?? null"
-        @delete="onDelete"
-      />
-    </template>
+    <UsersTableComponent
+      v-else
+      :users="users"
+      :current-user-id="currentUser?.id ?? null"
+      @delete="onDelete"
+    />
   </main>
 </template>
 
