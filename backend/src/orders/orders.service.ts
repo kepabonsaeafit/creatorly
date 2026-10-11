@@ -38,6 +38,14 @@ export class OrdersService {
       throw new BadRequestException('Order: budget must be a number >= 0');
     }
 
+    if (!this.isDate(createOrderDto.requestDate)) {
+      throw new BadRequestException('Order: requestDate must be a date YYYY-MM-DD');
+    }
+
+    if (createOrderDto.deliveryDate !== null && !this.isDate(createOrderDto.deliveryDate)) {
+      throw new BadRequestException('Order: deliveryDate must be a date YYYY-MM-DD or null');
+    }
+
     if (!STATUSES.includes(createOrderDto.status)) {
       throw new BadRequestException(`Order: status must be one of ${STATUSES.join(' | ')}`);
     }
@@ -72,6 +80,18 @@ export class OrdersService {
     if (!(await this.usersRepository.existsBy({ id: createOrderDto.userId }))) {
       throw new BadRequestException('Order: user not found');
     }
+  }
+
+  // true only for a real calendar day written as 'YYYY-MM-DD', so '24/12/2026'
+  // and '2026-02-30' are rejected
+  private isDate(value: unknown): boolean {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return false;
+    }
+
+    const date = new Date(`${value}T00:00:00Z`);
+
+    return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
   }
 
   // today's date in the server's local time, as 'YYYY-MM-DD'
