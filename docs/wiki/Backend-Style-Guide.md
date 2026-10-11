@@ -28,4 +28,9 @@ npm run format
 npm run build
 ```
 
-> If `npm run format` modifies files, those changes go in the same commit. `npm run build` is also the type check of the backend: run it before opening a Pull Request.
+### Tests
+```bash
+npm test
+```
+
+> If `npm run format` modifies files, those changes go in the same commit. `npm run build` is also the type check of the backend: run it and `npm test` before opening a Pull Request.

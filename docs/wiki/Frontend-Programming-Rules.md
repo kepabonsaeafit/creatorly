@@ -18,7 +18,7 @@
 ### Environment Variables
 - All environment variables go in the .env files.
 ### File headers
-- Write your name in the header of every file you modify as an authorship validation (`// Author: Name`).
+- Write `// Author: Name` as the first line of every file, crediting whoever originally wrote it. Keep a single author line: modifying a file does not add a second one.
 - Exports will not use the "default" keyword.
 ### Functions
 - Static functions will not contain the keyword "public" in their definition.

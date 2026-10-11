@@ -15,4 +15,3 @@ Our team consists of:
 - [Deliverable 2](https://github.com/kepabonsaeafit/creatorly/wiki/Deliverable-2) - The artifacts of the deliverable 2 including class diagram and three architecture diagrams.
 - [Backend Style Guide](https://github.com/kepabonsaeafit/creatorly/wiki/Backend-Style-Guide)
 - [Backend Programming Rules](https://github.com/kepabonsaeafit/creatorly/wiki/Backend-Programming-Rules)
-- [Architecture](https://github.com/kepabonsaeafit/creatorly/wiki/Architecture) - How the system is built layer by layer (frontend, backend, login flow, domain model) and its known limitations.

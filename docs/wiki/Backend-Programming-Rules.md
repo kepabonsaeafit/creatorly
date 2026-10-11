@@ -22,7 +22,7 @@
 - Export the lists of valid values with `as const` from the entity file that uses them (STATUSES, ROLES).
 
 ### File headers
-- Write your name in the header of every file you modify as an authorship validation (`// Author: Name`).
+- Write `// Author: Name` as the first line of every file, crediting whoever originally wrote it. Keep a single author line: modifying a file does not add a second one.
 - Every public method of a service has a short JSDoc with `@param`, `@returns`, and `@throws` when they apply.
 
 ## Project Structure
@@ -47,7 +47,7 @@
 - Keep controllers thin: route mapping and request/response orchestration only.
 - Do not place domain/business logic in controllers.
 - Use Nest decorators consistently: @Controller, @Get, @Post, @Patch, @Delete, @Param, @Body.
-- Convert the id parameter with Number(id) before calling the service.
+- Parse the id parameter with Nest's `ParseIntPipe` (`@Param('id', ParseIntPipe) id: number`), so an id that is not a number answers 400. Never convert it by hand.
 - Delegate all business work to the corresponding service.
 - Keep explicit response types in method signatures.
 - Read the logged-in user with `@Request() request: UserRequestInterface` and pass `request.user.sub` to the service.
@@ -60,7 +60,7 @@
 - Name the methods findAll, findOne, create, update, and remove. Extra lookups follow the same naming (findByEmail).
 - Validate the input in a private `validate` method that throws BadRequestException.
 - Validate that the referenced entities exist (brand, creator, user) before saving, so a missing reference answers 400 instead of 500.
-- Validate entity existence before update/remove operations and throw NotFoundException.
+- `findOne` throws NotFoundException when no row has that id, so a missing entity answers 404. update and remove reuse `findOne` to validate existence.
 - Build the entity field by field from the DTO. Never save the request body directly.
 - Reload the entity after saving it when it has relations or hidden columns, so the response carries the relation ids and never the password hash.
 - Keep private helper methods for repeated lookup logic.
