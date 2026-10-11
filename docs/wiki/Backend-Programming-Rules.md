@@ -78,6 +78,7 @@
 - Save day-only dates in a date column with the YYYY-MM-DD format, typed as string in TypeScript.
 - Include createdAt and updatedAt timestamps with the TypeORM date decorators.
 - Define relationships with @ManyToOne, @JoinColumn, and @RelationId, so the JSON keeps the brandId, creatorId, and userId properties.
+- Declare the inverse side with @OneToMany in the related entity (`orders: Order[]` in Brand, Creator, and User). It adds no column and is not loaded unless a query asks for it.
 - Store passwords as a bcrypt hash in passwordHash with `select: false`. The API never returns it.
 
 ## Seeders
