@@ -1,5 +1,4 @@
 // Author: Kevin Pabón
-// Author: Felipe Gómez
 
 // external imports
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';

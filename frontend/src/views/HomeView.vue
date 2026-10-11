@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // Author: Kevin Pabón
-// Author: Felipe Gómez
 
 // external imports
 import { onMounted, ref } from 'vue'

@@ -1,5 +1,4 @@
 // Author: Kevin Pabón
-// Author: Felipe Gómez
 
 // external imports
 import {
