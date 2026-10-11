@@ -6,7 +6,6 @@ import axios from 'axios'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
-import { getOrNull } from '@/utils/getOrNull'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 
@@ -27,11 +26,13 @@ export class UserService {
   /**
    * Finds a user by id.
    * @param id - Id of the user to look up.
-   * @returns The matching user, or `null` if none has that id.
-   * @throws {AxiosError} If the API rejects the request.
+   * @returns The matching user.
+   * @throws {AxiosError} If the API rejects the request (404 if no user has that id).
    */
-  static getById(id: number): Promise<UserInterface | null> {
-    return getOrNull<UserInterface>(`${this.API_URL}/${id}`)
+  static async getById(id: number): Promise<UserInterface> {
+    const { data } = await axios.get(`${this.API_URL}/${id}`)
+
+    return data
   }
 
   /**

@@ -7,7 +7,6 @@ import axios from 'axios'
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { CreateBrandDTO } from '@/dtos/Brands/CreateBrandDTO'
-import { getOrNull } from '@/utils/getOrNull'
 
 export class BrandService {
   private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/brands`
@@ -26,11 +25,13 @@ export class BrandService {
   /**
    * Finds a brand by id.
    * @param id - Id of the brand to look up.
-   * @returns The matching brand, or `null` if none has that id.
-   * @throws {AxiosError} If the API rejects the request.
+   * @returns The matching brand.
+   * @throws {AxiosError} If the API rejects the request (404 if no brand has that id).
    */
-  static getById(id: number): Promise<BrandInterface | null> {
-    return getOrNull<BrandInterface>(`${this.API_URL}/${id}`)
+  static async getById(id: number): Promise<BrandInterface> {
+    const { data } = await axios.get(`${this.API_URL}/${id}`)
+
+    return data
   }
 
   /**
