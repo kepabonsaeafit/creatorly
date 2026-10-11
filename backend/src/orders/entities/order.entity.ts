@@ -46,11 +46,11 @@ export class Order {
   budget: number;
 
   // day-only date, 'YYYY-MM-DD'
-  @Column({ type: 'varchar' })
+  @Column({ type: 'date' })
   requestDate: string;
 
   // day-only date, 'YYYY-MM-DD'
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'date', nullable: true })
   deliveryDate: string | null;
 
   @Column({ type: 'simple-enum', enum: STATUSES })
