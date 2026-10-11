@@ -53,7 +53,7 @@ npm run dev
 
 Open the URL Vite prints (by default `http://localhost:5173`).
 
-The API base URL comes from `VITE_API_BASE_URL` in `frontend/.env.development`; no service hardcodes it. The backend needs no configuration in development; its optional variables (`PORT`, `SQLITE_PATH`, `CORS_ORIGIN`, `JWT_SECRET`) are listed with their defaults in [`backend/.env.example`](./backend/.env.example).
+The API base URL comes from `VITE_API_BASE_URL` in `frontend/.env.development`; no service hardcodes it.
 
 ## Main route
 

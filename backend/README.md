@@ -16,7 +16,7 @@ npm run start:dev
 
 The API runs at http://localhost:3000/api (`GET /api` returns `API is running`).
 
-Optional environment variables (template with every default in [`.env.example`](./.env.example)): `PORT` (default `3000`), `SQLITE_PATH` (default `database.sqlite`), `CORS_ORIGIN` (comma-separated list; default `http://localhost:5173`, `http://localhost`, `http://127.0.0.1`) and `JWT_SECRET` (secret that signs the access tokens; the default is for local development only, production must set its own long random value).
+Optional environment variables: `PORT` (default `3000`), `SQLITE_PATH` (default `database.sqlite`), `CORS_ORIGIN` (comma-separated list; default `http://localhost:5173`, `http://localhost`, `http://127.0.0.1`) and `JWT_SECRET` (secret that signs the access tokens; the default is for local development only, production must set its own long random value).
 
 ## Database
 
