@@ -15,33 +15,14 @@ import {
   STATUSES,
 } from '@/interfaces/OrderInterface'
 import { formatMonthLabel, todayIso } from '@/utils/formatDate'
+import type { HomeStatInterface } from '@/interfaces/HomeStatInterface'
+import type { MonthTotalsInterface } from '@/interfaces/MonthTotalsInterface'
+import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
 import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
-
-/** Count and budget accumulated for one request month while aggregating orders. */
-interface MonthTotals {
-  count: number
-  budget: number
-}
-
-/** A KPI card, used by both HomeView and ReportsView. */
-export interface HomeStat {
-  id: string
-  label: string
-  value: number
-  unit: string
-}
-
-/** An item of the recent activity shown in HomeView. */
-export interface OrderActivity {
-  id: number
-  title: string
-  timestamp: string
-  type: 'default' | 'milestone'
-}
 
 export class OrderService {
   private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/orders`
@@ -157,7 +138,7 @@ export class OrderService {
    * @param orders - Orders to aggregate.
    * @returns The Home KPI cards.
    */
-  static getStats(orders: OrderInterface[]): HomeStat[] {
+  static getStats(orders: OrderInterface[]): HomeStatInterface[] {
     const activeOrders = orders.filter((order: OrderInterface): boolean => this.isActive(order))
     const committedBudget = activeOrders.reduce(
       (sum: number, order: OrderInterface): number => sum + order.budget,
@@ -195,13 +176,13 @@ export class OrderService {
     orders: OrderInterface[],
     brands: BrandInterface[],
     limit: number = 5,
-  ): OrderActivity[] {
+  ): OrderActivityInterface[] {
     return [...orders]
       .sort((first: OrderInterface, second: OrderInterface): number =>
         second.createdAt.localeCompare(first.createdAt),
       )
       .slice(0, limit)
-      .map((order: OrderInterface): OrderActivity => ({
+      .map((order: OrderInterface): OrderActivityInterface => ({
         id: order.id,
         title: `${order.description} — ${this.getBrand(order, brands)?.name ?? 'no brand'}`,
         timestamp: order.createdAt,
@@ -322,7 +303,7 @@ export class OrderService {
    * @returns The order count and budget per month.
    */
   static getOrdersByMonth(orders: OrderInterface[]): OrdersByMonthDTO[] {
-    const aggregates = new Map<string, MonthTotals>()
+    const aggregates = new Map<string, MonthTotalsInterface>()
 
     for (const order of orders) {
       const month = order.requestDate.slice(0, 7)
@@ -334,10 +315,13 @@ export class OrderService {
     }
 
     return [...aggregates.entries()]
-      .sort(([monthA]: [string, MonthTotals], [monthB]: [string, MonthTotals]): number =>
-        monthA.localeCompare(monthB),
+      .sort(
+        (
+          [monthA]: [string, MonthTotalsInterface],
+          [monthB]: [string, MonthTotalsInterface],
+        ): number => monthA.localeCompare(monthB),
       )
-      .map(([month, values]: [string, MonthTotals]): OrdersByMonthDTO => ({
+      .map(([month, values]: [string, MonthTotalsInterface]): OrdersByMonthDTO => ({
         month,
         label: formatMonthLabel(`${month}-01`),
         count: values.count,
@@ -346,11 +330,11 @@ export class OrderService {
   }
 
   /**
-   * ReportsView KPIs, with the same shape as HomeStat to reuse StatCardGridComponent.
+   * ReportsView KPIs, with the same shape as HomeStatInterface to reuse StatCardGridComponent.
    * @param orders - Orders to aggregate.
    * @returns The report KPI cards.
    */
-  static getReportStats(orders: OrderInterface[]): HomeStat[] {
+  static getReportStats(orders: OrderInterface[]): HomeStatInterface[] {
     const totalBudget = orders.reduce(
       (sum: number, order: OrderInterface): number => sum + order.budget,
       0,

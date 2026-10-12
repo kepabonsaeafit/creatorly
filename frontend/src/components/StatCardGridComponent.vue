@@ -2,11 +2,11 @@
 // Author: Kevin Pabón
 
 // internal imports
-import type { HomeStat } from '@/services/OrderService'
+import type { HomeStatInterface } from '@/interfaces/HomeStatInterface'
 import StatCardComponent from '@/components/StatCardComponent.vue'
 
 // props
-defineProps<{ stats: HomeStat[] }>()
+defineProps<{ stats: HomeStatInterface[] }>()
 </script>
 
 <template>

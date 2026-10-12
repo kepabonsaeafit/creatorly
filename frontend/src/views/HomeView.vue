@@ -10,15 +10,17 @@ import ActivityListComponent from '@/components/ActivityListComponent.vue'
 import { AuthService } from '@/services/AuthService'
 import { BrandService } from '@/services/BrandService'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
-import { type HomeStat, type OrderActivity, OrderService } from '@/services/OrderService'
+import type { HomeStatInterface } from '@/interfaces/HomeStatInterface'
+import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
+import { OrderService } from '@/services/OrderService'
 import StatCardGridComponent from '@/components/StatCardGridComponent.vue'
 
 // non-reactive variables
 const toast = useToast()
 
 // reactive variables
-const stats = ref<HomeStat[]>([])
-const recentOrders = ref<OrderActivity[]>([])
+const stats = ref<HomeStatInterface[]>([])
+const recentOrders = ref<OrderActivityInterface[]>([])
 const loading = ref(true)
 
 // functions
