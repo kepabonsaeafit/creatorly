@@ -3,10 +3,10 @@
 
 // internal imports
 import ActivityItemComponent from '@/components/ActivityItemComponent.vue'
-import type { OrderActivity } from '@/services/OrderService'
+import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
 
 // props
-defineProps<{ items: OrderActivity[] }>()
+defineProps<{ items: OrderActivityInterface[] }>()
 </script>
 
 <template>

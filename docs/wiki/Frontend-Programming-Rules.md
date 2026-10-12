@@ -14,6 +14,7 @@
 - Type all domain-related code, such as interfaces, DTOs, and API contracts.
 - Don't type local variables inside functions that TypeScript can infer its type automatically.
 - The shape of each entity goes in the src/interfaces directory, and each use case has its own type in the src/dtos directory.
+- Types shared between services, views, and components also go in src/interfaces (`HomeStatInterface`, `OrderActivityInterface`). Services do not declare or export types.
 - Do not use `any`.
 ### Environment Variables
 - All environment variables go in the .env files.
@@ -26,7 +27,8 @@
 
 # Routes
 - Associate a view to each route.
-- Do not write logic inside the routes file. The access guard lives in its own file and the admin-only routes are grouped in their own file.
+- Keep the routes and the access guard together in `router/index.ts`. The guard only decides where to redirect and asks `AuthService` for the session and the role.
+- Mark the public routes with `meta: { public: true }` and the admin-only routes with `meta: { admin: true }`.
 - Follow the same structure for all routes: paths in lowercase with hyphens (`/orders/create`) and route names with dots for the variants of a resource (`orders`, `orders.create`, `orders.edit`).
 
 # Services
