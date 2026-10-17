@@ -47,7 +47,7 @@ describe('CreateOrderDto', () => {
     ).resolves.toEqual([]);
   });
 
-  it.each(['24/12/2026', '2026-2-3', '2026-10-11T10:00:00Z', 'tomorrow'])(
+  it.each(['24/12/2026', '2026-2-3', '2026-10-11T10:00:00Z', 'tomorrow', '2026-02-30'])(
     'rejects the requestDate %s',
     async (requestDate) => {
       await expect(getErrorProperties({ ...validOrder, requestDate })).resolves.toEqual([

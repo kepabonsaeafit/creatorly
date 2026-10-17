@@ -2,6 +2,7 @@
 
 // external imports
 import {
+  IsDateString,
   IsIn,
   IsInt,
   IsNotEmpty,
@@ -17,7 +18,8 @@ import { STATUSES } from '../entities/order.entity.js';
 import type { OrderStatus } from '../entities/order.entity.js';
 import { Trim } from '../../common/trim.decorator.js';
 
-// day-only date, 'YYYY-MM-DD'
+// day-only date, 'YYYY-MM-DD'; IsDateString({ strict: true }) also rejects
+// days that do not exist, such as '2026-02-30'
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export class CreateOrderDto {
@@ -33,11 +35,13 @@ export class CreateOrderDto {
   // defaults to today in OrdersService when omitted
   @IsOptional()
   @Matches(DATE_PATTERN)
+  @IsDateString({ strict: true })
   requestDate?: string;
 
   // null (or omitted) means no delivery date yet
   @IsOptional()
   @Matches(DATE_PATTERN)
+  @IsDateString({ strict: true })
   deliveryDate?: string | null;
 
   // defaults to 'requested' in OrdersService when omitted

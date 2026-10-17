@@ -13,7 +13,7 @@ The services also repeated the same input checks (`validate`, `isDate`, `EMAIL_R
 ## Decision
 
 - **`class-validator` and `class-transformer`** in `backend/`, and a global `ValidationPipe` in `main.ts` with `whitelist: true`, `forbidNonWhitelisted: true` and `transform: true`, like the professor's. An unknown property in a body answers 400.
-- **Validation decorators in the five input DTOs** (sign-in, brand, creator, user, order). Roles and statuses use `@IsIn(ROLES)` and `@IsIn(STATUSES)`; day-only dates use `@Matches(/^\d{4}-\d{2}-\d{2}$/)` (not `@IsDateString`, which also accepts a date with time). Properties with a default or that accept `null` use `@IsOptional()`; the service still assigns the defaults.
+- **Validation decorators in the five input DTOs** (sign-in, brand, creator, user, order). Roles and statuses use `@IsIn(ROLES)` and `@IsIn(STATUSES)`; day-only dates use `@Matches(/^\d{4}-\d{2}-\d{2}$/)` together with `@IsDateString({ strict: true })`: the first one forces the shape (no time part) and the second one rejects days that do not exist. Properties with a default or that accept `null` use `@IsOptional()`; the service still assigns the defaults.
 - **Error messages are the library's defaults**, with no custom `message`. The API keeps answering `{ statusCode, message, error }`, where `message` is now an array for DTO errors.
 - **Cleaning in the DTO**, not in the service: a `@Trim()` decorator (the Trazo pattern) on text properties and a `@ToLowerCase()` decorator, in `src/common`, on emails. The services no longer normalize.
 - **Update DTOs** with `PartialType(CreateDto)` from `@nestjs/mapped-types` (`UpdateCreatorDto`, `UpdateUserDto`, `UpdateOrderDto`). Controllers and services receive them instead of `Partial<CreateDto>`.
@@ -23,11 +23,11 @@ The services also repeated the same input checks (`validate`, `isDate`, `EMAIL_R
 
 - **Keep validation in the services (ADR-0005)** — rejected: it is not what the professor's tutorial 8 teaches and the grading follows his style; it also duplicated the checks across services.
 - **Custom error messages in every decorator** — rejected: the professor uses the library's messages, and it would bring back the long hand-written messages the DTOs replace.
-- **`@IsDateString` for dates** — rejected: it accepts `2026-10-11T10:00:00Z`, but the columns are day-only dates.
+- **`@IsDateString` alone for dates** — rejected: it accepts `2026-10-11T10:00:00Z`, but the columns are day-only dates.
 
 ## Consequences
 
-- `@Matches` only checks the shape of the date, so an impossible day such as `2026-02-30` is accepted (the old `isDate` rejected it).
+- Each date needs two decorators: `@Matches` alone would accept an impossible day such as `2026-02-30`, which the old `isDate` rejected.
 - Every property the frontend sends must be declared in a DTO, or the request fails with 400 (`forbidNonWhitelisted`).
 - `niche` is not lowercased yet: the duplicated-niche fix ("gaming" and "Gaming") is a later change.
 - The frontend's `getErrorMessage` already joins array messages, so DTO errors are shown in the toasts without changes.
