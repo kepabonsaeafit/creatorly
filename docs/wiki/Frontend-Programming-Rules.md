@@ -1,6 +1,6 @@
 # General Rules
 ### Case
-- Files should be named in pascal case unless specified by other rules in this document. The files of `utils/` and `router/` use camel case.
+- Files should be named in pascal case unless specified by other rules in this document. The files of `router/` use camel case.
 - Variables and functions use camel case.
 ### Language
 - Everything is written in English: identifiers, file names, comments, UI text, and documentation. Only the proper names in the seed data are the exception.
@@ -39,6 +39,12 @@
 - Use DTOs to create or update registries.
 - Write the filters and aggregations as pure static methods over the arrays already fetched from the API.
 - Do not duplicate the business validations of the backend. Show the error message of the API in a toast.
+
+# Utils
+- Define each util as a class of static methods, in its own file named in pascal case with the `Util` suffix (`DateUtil.ts`, `ErrorUtil.ts`).
+- Do not write constants or functions outside the class. Constants are `static readonly` and internal helpers are `private static`.
+- Utils hold generic helpers: formatting, labels, colors, errors, and strings. They do not call the API and do not read the store.
+- Views and components call them as `XUtil.method()` (`DateUtil.format(order.requestDate)`).
 
 # Stores
 - Use Pinia only for the session: the SessionStore keeps the token and the current user.
