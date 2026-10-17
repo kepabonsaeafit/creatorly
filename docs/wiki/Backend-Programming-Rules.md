@@ -41,7 +41,7 @@
 - Keep the global API prefix as api.
 - Configure CORS explicitly with allowed origins (the CORS_ORIGIN environment variable, with the local origins as default).
 - Read the port, the database path, and the JWT secret from environment variables.
-- Do not use ValidationPipe: validations live in the services.
+- Register a global `ValidationPipe` in `main.ts` with `whitelist: true`, `forbidNonWhitelisted: true`, and `transform: true`, so an unknown property in a request body answers 400.
 
 ## Controllers
 - Keep controllers thin: route mapping and request/response orchestration only.
@@ -54,11 +54,12 @@
 - Restrict the admin-only routes with @Roles('admin').
 
 ## Services
-- Place business rules and validations in services.
+- Place business rules in services. The validation of the input format lives in the DTOs.
 - Use constructor injection for dependencies.
 - Use TypeORM repositories via @InjectRepository in services.
 - Name the methods findAll, findOne, create, update, and remove. Extra lookups follow the same naming (findByEmail).
-- Validate the input in a private `validate` method that throws BadRequestException.
+- Do not re-validate the input format in services (types, required fields, email or date format, allowed values): the DTO already did it before the service runs.
+- Keep in the service the rules that need data or context (unique email, own-role change, self deletion, user with orders) and throw BadRequestException for them.
 - Validate that the referenced entities exist (brand, creator, user) before saving, so a missing reference answers 400 instead of 500.
 - `findOne` throws NotFoundException when no row has that id, so a missing entity answers 404. update and remove reuse `findOne` to validate existence.
 - Build the entity field by field from the DTO. Never save the request body directly.
@@ -66,10 +67,15 @@
 - Keep private helper methods for repeated lookup logic.
 
 ## DTOs and Validation
-- Use plain classes without decorators for all input contracts.
-- Keep one Create DTO per resource in its dto folder.
-- Update methods receive Partial<CreateDto>. Do not create a second class.
-- Do not use class-validator or class-transformer.
+- Validate the input in the DTOs with `class-validator` decorators, and keep the default error messages of the library (no custom `message`).
+- Keep one Create DTO per resource in its dto folder (`create-<resource>.dto.ts`).
+- Create the Update DTO with `PartialType(CreateDto)` from `@nestjs/mapped-types` (`update-<resource>.dto.ts`). Update methods receive it instead of `Partial<CreateDto>`.
+- Clean the input in the DTO with `class-transformer` decorators: `@Trim()` on text properties and `@ToLowerCase()` on emails. Both live in `src/common`.
+- Validate allowed values with `@IsIn(LIST)`, using the lists exported by the entities (`ROLES`, `STATUSES`).
+- Validate day-only dates with `@Matches(/^\d{4}-\d{2}-\d{2}$/)`.
+- Mark with `@IsOptional()` the properties that have a default (`available`, `status`, `requestDate`, `role`) and the ones that accept `null` (`deliveryDate`, `creatorId`). The service assigns the default.
+- Declare in the DTO every property the frontend sends: a property without a decorator is rejected by `forbidNonWhitelisted`.
+- Test the DTOs with `plainToInstance` and `validate`.
 
 ## Entities and Persistence
 - Use TypeORM decorators for all entities and columns.
