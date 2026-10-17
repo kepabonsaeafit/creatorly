@@ -1,4 +1,4 @@
-// Author: Felipe Gómez
+// Author: Kevin Pabón
 
 // external imports
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -9,13 +9,13 @@ import { Repository } from 'typeorm';
 // internal imports
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { Order } from '../orders/entities/order.entity.js';
-import { ROLES, User } from './entities/user.entity.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
+import { User } from './entities/user.entity.js';
 import type { UserRole } from './entities/user.entity.js';
 
 @Injectable()
 export class UsersService {
   private static readonly SALT_ROUNDS = 10;
-  private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   constructor(
     @InjectRepository(User)
@@ -23,31 +23,6 @@ export class UsersService {
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
   ) {}
-
-  private validate(createUserDto: CreateUserDto): void {
-    if (!createUserDto.name || typeof createUserDto.name !== 'string') {
-      throw new BadRequestException('User: name is required');
-    }
-
-    if (!UsersService.EMAIL_REGEX.test(createUserDto.email)) {
-      throw new BadRequestException('User: email has an invalid format');
-    }
-
-    if (!createUserDto.password || typeof createUserDto.password !== 'string') {
-      throw new BadRequestException('User: password is required');
-    }
-
-    if (!ROLES.includes(createUserDto.role)) {
-      throw new BadRequestException(`User: role must be one of ${ROLES.join(' | ')}`);
-    }
-  }
-
-  // emails are stored trimmed and lowercase, so the login and the uniqueness check match
-  private normalizeEmail(email: string): string {
-    return String(email ?? '')
-      .trim()
-      .toLowerCase();
-  }
 
   private async validateUniqueEmail(email: string, ownId: number | null): Promise<void> {
     const existing = await this.usersRepository.findOneBy({ email });
@@ -99,7 +74,7 @@ export class UsersService {
 
   /**
    * Finds a user by email, including the password hash, to verify a login.
-   * @param email - Email to search for.
+   * @param email - Email to search for (emails are stored trimmed and lowercase).
    * @returns The user with `passwordHash` loaded, or `null` if none matches.
    */
   findByEmail(email: string): Promise<User | null> {
@@ -110,26 +85,22 @@ export class UsersService {
   }
 
   /**
-   * Validates and creates a new user, storing the password as a bcrypt hash;
-   * the role defaults to 'coordinator'.
+   * Creates a new user, storing the password as a bcrypt hash; the role defaults to
+   * 'coordinator'. CreateUserDto has already validated and normalized the data.
    * @param createUserDto - Data of the new user, with the plain password.
    * @returns The created user (without the password hash).
-   * @throws {BadRequestException} If any field is missing or invalid, or the email is already in use.
+   * @throws {BadRequestException} If the email is already in use.
    */
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const userData: CreateUserDto = {
-      name: createUserDto.name,
-      email: this.normalizeEmail(createUserDto.email),
-      password: createUserDto.password,
-      role: createUserDto.role ?? 'coordinator',
-    };
+    await this.validateUniqueEmail(createUserDto.email, null);
 
-    this.validate(userData);
-    await this.validateUniqueEmail(userData.email, null);
-
-    const { password, ...rest } = userData;
+    const { password, ...rest } = createUserDto;
     const passwordHash = await hash(password, UsersService.SALT_ROUNDS);
-    const user = this.usersRepository.create({ ...rest, passwordHash });
+    const user = this.usersRepository.create({
+      ...rest,
+      role: createUserDto.role ?? 'coordinator',
+      passwordHash,
+    });
 
     const saved = await this.usersRepository.save(user);
 
@@ -138,21 +109,17 @@ export class UsersService {
   }
 
   /**
-   * Validates and applies partial changes to a user; a new password is hashed,
-   * otherwise the current hash is kept.
+   * Applies partial changes to a user; UpdateUserDto has already validated them. A new
+   * password is hashed, otherwise the current hash is kept.
    * @param id - Id of the user to update.
    * @param updateUserDto - Fields to change.
    * @param currentUserId - Id of the logged-in user (from the token).
    * @returns The updated user (without the password hash).
    * @throws {NotFoundException} If no user has that id.
-   * @throws {BadRequestException} If the merged data fails validation, the email is already
-   * in use, or the logged-in admin removes their own admin role.
+   * @throws {BadRequestException} If the email is already in use, or the logged-in admin
+   * removes their own admin role.
    */
-  async update(
-    id: number,
-    updateUserDto: Partial<CreateUserDto>,
-    currentUserId: number,
-  ): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto, currentUserId: number): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
       select: { id: true, name: true, email: true, role: true, passwordHash: true },
@@ -162,26 +129,19 @@ export class UsersService {
       throw new NotFoundException('User: not found');
     }
 
-    // without a new password, the stored hash stands in as the current credential
-    const merged: CreateUserDto = {
-      name: updateUserDto.name ?? user.name,
-      email: this.normalizeEmail(updateUserDto.email ?? user.email),
-      password: updateUserDto.password ?? user.passwordHash,
-      role: updateUserDto.role ?? user.role,
-    };
+    const email = updateUserDto.email ?? user.email;
+    const role = updateUserDto.role ?? user.role;
 
-    this.validate(merged);
-    this.validateOwnRoleChange(id, merged.role, currentUserId);
-    await this.validateUniqueEmail(merged.email, id);
+    this.validateOwnRoleChange(id, role, currentUserId);
+    await this.validateUniqueEmail(email, id);
 
-    const passwordHash =
-      updateUserDto.password !== undefined
-        ? await hash(merged.password, UsersService.SALT_ROUNDS)
-        : user.passwordHash;
+    const passwordHash = updateUserDto.password
+      ? await hash(updateUserDto.password, UsersService.SALT_ROUNDS)
+      : user.passwordHash;
     this.usersRepository.merge(user, {
-      name: merged.name,
-      email: merged.email,
-      role: merged.role,
+      name: updateUserDto.name ?? user.name,
+      email,
+      role,
       passwordHash,
     });
 

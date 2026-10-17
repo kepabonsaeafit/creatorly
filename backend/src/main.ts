@@ -1,6 +1,7 @@
-// Author: Felipe Gómez
+// Author: Kevin Pabón
 
 // external imports
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 // internal imports
@@ -8,6 +9,14 @@ import { AppModule } from './app.module.js';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   const corsOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim());
 

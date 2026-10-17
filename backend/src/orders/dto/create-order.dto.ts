@@ -1,15 +1,60 @@
 // Author: Kevin Pabón
 
+// external imports
+import {
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+  Min,
+} from 'class-validator';
+
 // internal imports
+import { STATUSES } from '../entities/order.entity.js';
 import type { OrderStatus } from '../entities/order.entity.js';
+import { Trim } from '../../common/trim.decorator.js';
+
+// day-only date, 'YYYY-MM-DD'
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export class CreateOrderDto {
+  @Trim()
+  @IsString()
+  @IsNotEmpty()
   description: string;
+
+  @IsNumber()
+  @Min(0)
   budget: number;
-  requestDate: string;
-  deliveryDate: string | null;
-  status: OrderStatus;
+
+  // defaults to today in OrdersService when omitted
+  @IsOptional()
+  @Matches(DATE_PATTERN)
+  requestDate?: string;
+
+  // null (or omitted) means no delivery date yet
+  @IsOptional()
+  @Matches(DATE_PATTERN)
+  deliveryDate?: string | null;
+
+  // defaults to 'requested' in OrdersService when omitted
+  @IsOptional()
+  @IsIn(STATUSES)
+  status?: OrderStatus;
+
+  @IsInt()
+  @Min(1)
   brandId: number;
-  creatorId: number | null;
+
+  // null (or omitted) means no creator assigned yet
+  @IsOptional()
+  @IsInt()
+  creatorId?: number | null;
+
+  @IsInt()
+  @Min(1)
   userId: number;
 }
