@@ -8,7 +8,7 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import { AuthService } from '@/services/AuthService'
-import { confirmDeletion } from '@/utils/confirmDeletion'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
 import UserFormComponent from '@/components/UserFormComponent.vue'
 import type { UserInterface } from '@/interfaces/UserInterface'
@@ -67,7 +67,7 @@ function onCancel(): void {
 }
 
 async function onDelete(): Promise<void> {
-  if (!confirmDeletion('user')) return
+  if (!ConfirmUtil.confirmDeletion('user')) return
 
   try {
     await UserService.remove(userId)

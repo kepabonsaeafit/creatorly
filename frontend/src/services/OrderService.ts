@@ -8,13 +8,13 @@ import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import { DateUtil } from '@/utils/DateUtil'
 import {
   FINAL_STATUSES,
   type OrderInterface,
   type OrderStatus,
   STATUSES,
 } from '@/interfaces/OrderInterface'
-import { formatMonthLabel, todayIso } from '@/utils/formatDate'
 import type { HomeStatInterface } from '@/interfaces/HomeStatInterface'
 import type { MonthTotalsInterface } from '@/interfaces/MonthTotalsInterface'
 import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
@@ -149,7 +149,7 @@ export class OrderService {
     // deliveryDate, without going through Date: this avoids a date-only value
     // being interpreted as UTC midnight and moving to another month in
     // timezones west of UTC.
-    const currentMonth = todayIso().slice(0, 7)
+    const currentMonth = DateUtil.todayIso().slice(0, 7)
     const deliveriesThisMonth = orders.filter(
       (order: OrderInterface): boolean =>
         FINAL_STATUSES.includes(order.status) &&
@@ -323,7 +323,7 @@ export class OrderService {
       )
       .map(([month, values]: [string, MonthTotalsInterface]): OrdersByMonthDTO => ({
         month,
-        label: formatMonthLabel(`${month}-01`),
+        label: DateUtil.formatMonthLabel(`${month}-01`),
         count: values.count,
         budget: values.budget,
       }))

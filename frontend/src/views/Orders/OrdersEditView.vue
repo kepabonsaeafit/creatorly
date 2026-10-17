@@ -10,7 +10,7 @@ import { useToast } from 'vue-toastification'
 import { AuthService } from '@/services/AuthService'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
-import { confirmDeletion } from '@/utils/confirmDeletion'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
@@ -76,7 +76,7 @@ async function onSubmit(orderData: CreateOrderDTO): Promise<void> {
 }
 
 async function onDelete(): Promise<void> {
-  if (!confirmDeletion('order')) return
+  if (!ConfirmUtil.confirmDeletion('order')) return
 
   try {
     await OrderService.remove(orderId)

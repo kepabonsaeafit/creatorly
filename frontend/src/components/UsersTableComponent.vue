@@ -2,9 +2,9 @@
 // Author: Gerónimo Montes
 
 // internal imports
-import { confirmDeletion } from '@/utils/confirmDeletion'
-import { formatDate } from '@/utils/formatDate'
-import { formatRole } from '@/utils/labels'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
+import { DateUtil } from '@/utils/DateUtil'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { UserInterface } from '@/interfaces/UserInterface'
 
 // props
@@ -22,7 +22,7 @@ const emit = defineEmits<{ delete: [id: number] }>()
 
 // functions
 function onDelete(id: number): void {
-  if (!confirmDeletion('user')) return
+  if (!ConfirmUtil.confirmDeletion('user')) return
   emit('delete', id)
 }
 </script>
@@ -46,10 +46,10 @@ function onDelete(id: number): void {
         <td>{{ user.email }}</td>
         <td>
           <span class="users-table__badge" :class="`users-table__badge--${user.role}`">
-            {{ formatRole(user.role) }}
+            {{ LabelUtil.formatRole(user.role) }}
           </span>
         </td>
-        <td>{{ formatDate(user.createdAt) }}</td>
+        <td>{{ DateUtil.format(user.createdAt) }}</td>
         <td class="users-table__actions">
           <RouterLink :to="{ name: 'users.edit', params: { id: user.id } }"> Edit </RouterLink>
           <button

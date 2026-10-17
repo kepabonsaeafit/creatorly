@@ -13,9 +13,9 @@ import BudgetByBrandChartComponent from '@/components/charts/BudgetByBrandChartC
 import type { BudgetByBrandDTO } from '@/dtos/Reports/BudgetByBrandDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
+import { CurrencyUtil } from '@/utils/CurrencyUtil'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
-import { formatCurrency } from '@/utils/formatCurrency'
-import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
 import OrdersByCreatorChartComponent from '@/components/charts/OrdersByCreatorChartComponent.vue'
@@ -66,7 +66,7 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'
 const reportType = ref<ReportType>('month')
 
 // computed variables
-const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
+const statusOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS))
 
 const completeFilters = computed<OrderFilterDTO>(() => ({
   ...filters,
@@ -119,7 +119,7 @@ const reportColumns = computed(() => {
 const reportRows = computed<Record<string, string>[]>(() => {
   if (reportType.value === 'status') {
     return byStatus.value.map((row: OrdersByStatusDTO): Record<string, string> => ({
-      status: formatStatus(row.status),
+      status: LabelUtil.formatStatus(row.status),
       count: String(row.count),
     }))
   }
@@ -132,13 +132,13 @@ const reportRows = computed<Record<string, string>[]>(() => {
   if (reportType.value === 'brand') {
     return byBrand.value.map((row: BudgetByBrandDTO): Record<string, string> => ({
       brand: row.brandName,
-      budget: formatCurrency(row.budget),
+      budget: CurrencyUtil.format(row.budget),
     }))
   }
   return byMonth.value.map((row: OrdersByMonthDTO): Record<string, string> => ({
     month: row.label,
     count: String(row.count),
-    budget: formatCurrency(row.budget),
+    budget: CurrencyUtil.format(row.budget),
   }))
 })
 

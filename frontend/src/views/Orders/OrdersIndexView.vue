@@ -9,11 +9,11 @@ import { useToast } from 'vue-toastification'
 import { AuthService } from '@/services/AuthService'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
+import { ColorUtil } from '@/utils/ColorUtil'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
-import { formatStatus, STATUS_LABELS, toSelectOptions } from '@/utils/labels'
-import { getChartPalette } from '@/utils/chartColors'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
 import OrdersByStatusChartComponent from '@/components/charts/OrdersByStatusChartComponent.vue'
@@ -37,7 +37,7 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
 })
 
 // computed variables
-const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
+const statusOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS))
 
 const completeFilters = computed<OrderFilterDTO>(() => ({ ...filters, text: text.value }))
 
@@ -45,7 +45,7 @@ const orders = computed(() => OrderService.filterSorted(allOrders.value, complet
 
 const byStatus = computed(() => OrderService.getOrdersByStatus(orders.value))
 
-const statusPalette = computed(() => getChartPalette())
+const statusPalette = computed(() => ColorUtil.getChartPalette())
 
 // functions
 async function loadOrders(): Promise<void> {
@@ -137,7 +137,7 @@ function clearFilters(): void {
                 class="orders__chart-dot"
                 :style="{ backgroundColor: statusPalette[index] }"
               ></span>
-              <span class="orders__chart-label">{{ formatStatus(row.status) }}</span>
+              <span class="orders__chart-label">{{ LabelUtil.formatStatus(row.status) }}</span>
               <span class="orders__chart-value">{{ row.count }}</span>
             </li>
           </ul>

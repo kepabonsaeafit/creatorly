@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 
 // internal imports
 import { AuthService } from '@/services/AuthService'
-import { formatRole } from '@/utils/labels'
+import { LabelUtil } from '@/utils/LabelUtil'
 
 /** A NavBarComponent link; the router decides which ones require the admin role (meta.admin). */
 interface NavLink {
@@ -110,7 +110,7 @@ function logout(): void {
       <span class="navbar__avatar" aria-hidden="true">{{ initials }}</span>
       <span class="navbar__user-info">
         <span class="navbar__user-name">{{ currentUser.name }}</span>
-        <span class="navbar__user-role">{{ formatRole(currentUser.role) }}</span>
+        <span class="navbar__user-role">{{ LabelUtil.formatRole(currentUser.role) }}</span>
       </span>
       <button type="button" class="navbar__logout" @click="logout">
         <svg class="navbar__logout-icon" viewBox="0 0 16 16" aria-hidden="true">

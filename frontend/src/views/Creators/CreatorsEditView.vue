@@ -8,7 +8,7 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import { AuthService } from '@/services/AuthService'
-import { confirmDeletion } from '@/utils/confirmDeletion'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import CreatorFormComponent from '@/components/CreatorFormComponent.vue'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
@@ -57,7 +57,7 @@ async function onSubmit(creatorData: CreateCreatorDTO): Promise<void> {
 }
 
 async function onDelete(): Promise<void> {
-  if (!confirmDeletion('creator')) return
+  if (!ConfirmUtil.confirmDeletion('creator')) return
 
   try {
     await CreatorService.remove(creatorId)

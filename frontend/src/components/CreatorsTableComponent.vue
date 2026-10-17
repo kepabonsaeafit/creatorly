@@ -2,9 +2,9 @@
 // Author: Gerónimo Montes
 
 // internal imports
-import { confirmDeletion } from '@/utils/confirmDeletion'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import { formatCurrency } from '@/utils/formatCurrency'
+import { CurrencyUtil } from '@/utils/CurrencyUtil'
 
 // props
 withDefaults(defineProps<{ creators: CreatorInterface[]; actionable?: boolean }>(), {
@@ -16,7 +16,7 @@ const emit = defineEmits<{ delete: [id: number] }>()
 
 // functions
 function onDelete(id: number): void {
-  if (!confirmDeletion('creator')) return
+  if (!ConfirmUtil.confirmDeletion('creator')) return
   emit('delete', id)
 }
 </script>
@@ -40,7 +40,7 @@ function onDelete(id: number): void {
         <td>{{ creator.name }}</td>
         <td>{{ creator.niche }}</td>
         <td>{{ creator.contentType }}</td>
-        <td>{{ formatCurrency(creator.rate) }}</td>
+        <td>{{ CurrencyUtil.format(creator.rate) }}</td>
         <td>
           <span
             class="creators-table__badge"
