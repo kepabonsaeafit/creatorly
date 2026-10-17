@@ -5,9 +5,9 @@ import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator
 
 // internal imports
 import { ROLES } from '../entities/user.entity.js';
-import type { UserRole } from '../entities/user.entity.js';
 import { ToLowerCase } from '../../common/to-lower-case.decorator.js';
 import { Trim } from '../../common/trim.decorator.js';
+import type { UserRole } from '../entities/user.entity.js';
 
 export class CreateUserDto {
   @Trim()

@@ -16,8 +16,8 @@ import {
 // internal imports
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { Roles } from '../auth/roles.decorator.js';
-import { User } from './entities/user.entity.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
+import { User } from './entities/user.entity.js';
 import type { UserRequestInterface } from '../interfaces/auth/UserRequestInterface.js';
 import { UsersService } from './users.service.js';
 

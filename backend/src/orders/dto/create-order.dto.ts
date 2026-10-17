@@ -14,8 +14,8 @@ import {
 } from 'class-validator';
 
 // internal imports
-import { STATUSES } from '../entities/order.entity.js';
 import type { OrderStatus } from '../entities/order.entity.js';
+import { STATUSES } from '../entities/order.entity.js';
 import { Trim } from '../../common/trim.decorator.js';
 
 // day-only date, 'YYYY-MM-DD'; IsDateString({ strict: true }) also rejects
