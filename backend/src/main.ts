@@ -1,4 +1,4 @@
-// Author: Kevin Pabón
+// Author: Felipe Gómez
 
 // external imports
 import { ValidationPipe } from '@nestjs/common';
