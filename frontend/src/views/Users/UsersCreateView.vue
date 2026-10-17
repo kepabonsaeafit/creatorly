@@ -7,8 +7,8 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import UserFormComponent from '@/components/UserFormComponent.vue'
 import { UserService } from '@/services/UserService'
 
@@ -30,7 +30,7 @@ async function onSubmit(userData: CreateUserDTO): Promise<void> {
     toast.success('User created successfully')
     router.push({ name: 'users' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(caughtError, 'It was not possible to create the user')
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to create the user')
     toast.error(error.value)
   } finally {
     saving.value = false

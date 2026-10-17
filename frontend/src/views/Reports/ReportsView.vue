@@ -6,7 +6,6 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
 import BudgetByBrandChartComponent from '@/components/charts/BudgetByBrandChartComponent.vue'
@@ -15,6 +14,7 @@ import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
 import { CurrencyUtil } from '@/utils/CurrencyUtil'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
@@ -155,7 +155,7 @@ onMounted(async (): Promise<void> => {
     brands.value = loadedBrands
     creators.value = loadedCreators
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the reports'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the reports'))
   } finally {
     loading.value = false
   }

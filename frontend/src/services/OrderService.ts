@@ -22,6 +22,7 @@ import type { OrderFilterDTO } from '@/dtos/Orders/OrderFilterDTO'
 import type { OrdersByCreatorDTO } from '@/dtos/Reports/OrdersByCreatorDTO'
 import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
+import { StringUtil } from '@/utils/StringUtil'
 import type { UserInterface } from '@/interfaces/UserInterface'
 
 export class OrderService {
@@ -145,16 +146,13 @@ export class OrderService {
       0,
     )
 
-    // Compared by the first 7 characters (YYYY-MM) of today local date and of
-    // deliveryDate, without going through Date: this avoids a date-only value
-    // being interpreted as UTC midnight and moving to another month in
-    // timezones west of UTC.
-    const currentMonth = DateUtil.todayIso().slice(0, 7)
+    // Compared by the month key (YYYY-MM) of today local date and of deliveryDate.
+    const currentMonth = DateUtil.monthKey(DateUtil.todayIso())
     const deliveriesThisMonth = orders.filter(
       (order: OrderInterface): boolean =>
         FINAL_STATUSES.includes(order.status) &&
         order.deliveryDate !== null &&
-        order.deliveryDate.slice(0, 7) === currentMonth,
+        DateUtil.monthKey(order.deliveryDate) === currentMonth,
     ).length
 
     return [
@@ -203,11 +201,7 @@ export class OrderService {
       if (filter.creatorId && order.creatorId !== filter.creatorId) return false
       if (filter.from && order.requestDate < filter.from) return false
       if (filter.to && order.requestDate > filter.to) return false
-      if (filter.text) {
-        const text = filter.text.trim().toLowerCase()
-
-        if (text && !order.description.toLowerCase().includes(text)) return false
-      }
+      if (filter.text && !StringUtil.contains(order.description, filter.text)) return false
 
       return true
     })
@@ -250,20 +244,21 @@ export class OrderService {
     orders: OrderInterface[],
     creators: CreatorInterface[],
   ): OrdersByCreatorDTO[] {
-    const counts = new Map<number, number>()
+    const ordersByCreatorId = new Map<number, OrderInterface[]>()
 
     for (const order of orders) {
       if (order.creatorId === null) continue
-      counts.set(order.creatorId, (counts.get(order.creatorId) ?? 0) + 1)
+      ordersByCreatorId.set(order.creatorId, [
+        ...(ordersByCreatorId.get(order.creatorId) ?? []),
+        order,
+      ])
     }
 
-    return [...counts.entries()]
-      .map(([creatorId, count]: [number, number]): OrdersByCreatorDTO => ({
+    return [...ordersByCreatorId.entries()]
+      .map(([creatorId, creatorOrders]: [number, OrderInterface[]]): OrdersByCreatorDTO => ({
         creatorId,
-        creatorName:
-          creators.find((creator: CreatorInterface): boolean => creator.id === creatorId)?.name ??
-          'Creator deleted',
-        count,
+        creatorName: this.getCreator(creatorOrders[0], creators)?.name ?? 'Creator deleted',
+        count: creatorOrders.length,
       }))
       .sort(
         (first: OrdersByCreatorDTO, second: OrdersByCreatorDTO): number =>
@@ -278,19 +273,20 @@ export class OrderService {
    * @returns The committed budget per brand, sorted descending.
    */
   static getBudgetByBrand(orders: OrderInterface[], brands: BrandInterface[]): BudgetByBrandDTO[] {
-    const totals = new Map<number, number>()
+    const ordersByBrandId = new Map<number, OrderInterface[]>()
 
     for (const order of orders) {
-      totals.set(order.brandId, (totals.get(order.brandId) ?? 0) + order.budget)
+      ordersByBrandId.set(order.brandId, [...(ordersByBrandId.get(order.brandId) ?? []), order])
     }
 
-    return [...totals.entries()]
-      .map(([brandId, budget]: [number, number]): BudgetByBrandDTO => ({
+    return [...ordersByBrandId.entries()]
+      .map(([brandId, brandOrders]: [number, OrderInterface[]]): BudgetByBrandDTO => ({
         brandId,
-        brandName:
-          brands.find((brand: BrandInterface): boolean => brand.id === brandId)?.name ??
-          'Brand deleted',
-        budget,
+        brandName: this.getBrand(brandOrders[0], brands)?.name ?? 'Brand deleted',
+        budget: brandOrders.reduce(
+          (sum: number, order: OrderInterface): number => sum + order.budget,
+          0,
+        ),
       }))
       .sort(
         (first: BudgetByBrandDTO, second: BudgetByBrandDTO): number => second.budget - first.budget,
@@ -306,7 +302,7 @@ export class OrderService {
     const aggregates = new Map<string, MonthTotalsInterface>()
 
     for (const order of orders) {
-      const month = order.requestDate.slice(0, 7)
+      const month = DateUtil.monthKey(order.requestDate)
       const current = aggregates.get(month) ?? { count: 0, budget: 0 }
       aggregates.set(month, {
         count: current.count + 1,

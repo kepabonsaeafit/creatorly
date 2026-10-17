@@ -7,13 +7,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
 import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import OrderFormComponent from '@/components/OrderFormComponent.vue'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
 import { OrderService } from '@/services/OrderService'
@@ -50,7 +50,7 @@ onMounted(async (): Promise<void> => {
     creators.value = loadedCreators
     users.value = loadedUsers
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the order'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the order'))
   } finally {
     loading.value = false
   }
@@ -65,10 +65,7 @@ async function onSubmit(orderData: CreateOrderDTO): Promise<void> {
     toast.success('Order updated successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(
-      caughtError,
-      'It was not possible to update the order',
-    )
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to update the order')
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -83,7 +80,7 @@ async function onDelete(): Promise<void> {
     toast.success('Order deleted successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the order'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to delete the order'))
   }
 }
 </script>

@@ -125,21 +125,4 @@ export class AuthService {
   static isAdmin(): boolean {
     return useSessionStore().currentUser?.role === 'admin'
   }
-
-  /**
-   * Reads the backend error message out of a failed request, to show it in a toast.
-   * @param caughtError - Error caught from an axios call.
-   * @param fallback - Message to use when the API sent none.
-   * @returns The message to display.
-   */
-  static getErrorMessage(caughtError: unknown, fallback: string): string {
-    if (axios.isAxiosError(caughtError)) {
-      const message = caughtError.response?.data?.message
-
-      if (Array.isArray(message)) return message.join(', ')
-      if (typeof message === 'string') return message
-    }
-
-    return fallback
-  }
 }

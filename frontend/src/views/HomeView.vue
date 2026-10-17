@@ -7,9 +7,9 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import ActivityListComponent from '@/components/ActivityListComponent.vue'
-import { AuthService } from '@/services/AuthService'
 import { BrandService } from '@/services/BrandService'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import type { HomeStatInterface } from '@/interfaces/HomeStatInterface'
 import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
 import { OrderService } from '@/services/OrderService'
@@ -31,9 +31,7 @@ onMounted(async (): Promise<void> => {
     stats.value = OrderService.getStats(orders)
     recentOrders.value = OrderService.getRecentOrders(orders, brands)
   } catch (caughtError) {
-    toast.error(
-      AuthService.getErrorMessage(caughtError, 'It was not possible to load the dashboard'),
-    )
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the dashboard'))
   } finally {
     loading.value = false
   }

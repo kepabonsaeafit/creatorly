@@ -6,11 +6,11 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
 import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
 import CreatorsTableComponent from '@/components/CreatorsTableComponent.vue'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 
 // non-reactive variables
 const toast = useToast()
@@ -38,9 +38,7 @@ async function loadCreators(): Promise<void> {
   try {
     allCreators.value = await CreatorService.getAll()
   } catch (caughtError) {
-    toast.error(
-      AuthService.getErrorMessage(caughtError, 'It was not possible to load the creators'),
-    )
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the creators'))
   } finally {
     loading.value = false
   }
@@ -54,9 +52,7 @@ async function onDelete(id: number): Promise<void> {
     toast.success('Creator deleted successfully')
     await loadCreators()
   } catch (caughtError) {
-    toast.error(
-      AuthService.getErrorMessage(caughtError, 'It was not possible to delete the creator'),
-    )
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to delete the creator'))
   }
 }
 

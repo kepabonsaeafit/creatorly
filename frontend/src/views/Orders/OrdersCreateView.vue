@@ -7,12 +7,12 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import { BrandService } from '@/services/BrandService'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import OrderFormComponent from '@/components/OrderFormComponent.vue'
 import { OrderService } from '@/services/OrderService'
 import type { UserInterface } from '@/interfaces/UserInterface'
@@ -42,7 +42,7 @@ onMounted(async (): Promise<void> => {
     creators.value = loadedCreators
     users.value = loadedUsers
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the form'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the form'))
   }
 })
 
@@ -55,10 +55,7 @@ async function onSubmit(orderData: CreateOrderDTO): Promise<void> {
     toast.success('Order created successfully')
     router.push({ name: 'orders' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(
-      caughtError,
-      'It was not possible to create the order',
-    )
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to create the order')
     toast.error(error.value)
   } finally {
     saving.value = false

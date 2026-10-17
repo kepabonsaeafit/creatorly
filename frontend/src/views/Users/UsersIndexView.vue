@@ -7,6 +7,7 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import { AuthService } from '@/services/AuthService'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import { LabelUtil } from '@/utils/LabelUtil'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
@@ -37,7 +38,7 @@ async function loadUsers(): Promise<void> {
   try {
     allUsers.value = await UserService.getAll()
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the users'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the users'))
   } finally {
     loading.value = false
   }
@@ -56,7 +57,7 @@ async function onDelete(id: number): Promise<void> {
     toast.success('User deleted successfully')
     await loadUsers()
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the user'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to delete the user'))
   }
 }
 </script>

@@ -10,6 +10,7 @@ import { useToast } from 'vue-toastification'
 import { AuthService } from '@/services/AuthService'
 import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 import UserFormComponent from '@/components/UserFormComponent.vue'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
@@ -34,7 +35,7 @@ onMounted(async (): Promise<void> => {
   try {
     user.value = await UserService.getById(userId)
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the user'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the user'))
   } finally {
     loading.value = false
   }
@@ -55,7 +56,7 @@ async function onSubmit(userData: CreateUserDTO): Promise<void> {
     toast.success('User updated successfully')
     router.push({ name: 'users' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(caughtError, 'It was not possible to update the user')
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to update the user')
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -74,7 +75,7 @@ async function onDelete(): Promise<void> {
     toast.success('User deleted successfully')
     router.push({ name: 'users' })
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the user'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to delete the user'))
   }
 }
 </script>

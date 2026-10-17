@@ -5,6 +5,7 @@ import axios from 'axios'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
+import { StringUtil } from '@/utils/StringUtil'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 
@@ -90,16 +91,12 @@ export class UserService {
     return users
       .filter((user: UserInterface): boolean => {
         if (filter.role && user.role !== filter.role) return false
-        if (filter.text) {
-          const text = filter.text.trim().toLowerCase()
-
-          if (
-            text &&
-            !user.name.toLowerCase().includes(text) &&
-            !user.email.toLowerCase().includes(text)
-          ) {
-            return false
-          }
+        if (
+          filter.text &&
+          !StringUtil.contains(user.name, filter.text) &&
+          !StringUtil.contains(user.email, filter.text)
+        ) {
+          return false
         }
 
         return true
