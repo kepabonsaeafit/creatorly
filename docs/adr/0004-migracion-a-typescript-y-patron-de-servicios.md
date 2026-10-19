@@ -32,7 +32,7 @@ Migrate Creatorly to TypeScript and adopt the tutorials' three-layer pattern:
 - **`stores/`** — Pinia, only the entity's array, no logic.
 - **`services/`** — classes of static methods with all the business logic and validations.
 - **`seeders/`** — seed data, one per entity.
-- **`utils/`** — formatters and helpers.
+- **`utils/`** — classes of static methods with generic helpers (formatters, labels, colors, errors, strings), one class per file with the `Util` suffix.
 - **`components/charts/`** — all the Chart.js charts; no view imports them.
 
 The `composables/` folder is removed: its logic moves to the services.

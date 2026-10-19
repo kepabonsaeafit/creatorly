@@ -6,8 +6,8 @@ import { computed, ref } from 'vue'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
-import { normalizeEmail } from '@/utils/email'
-import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
+import { EmailUtil } from '@/utils/EmailUtil'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { UserRole } from '@/interfaces/UserInterface'
 
 // props
@@ -40,13 +40,13 @@ const password = ref('')
 const role = ref<UserRole>(props.initial.role ?? 'coordinator')
 
 // computed variables
-const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))
+const roleOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.USER_ROLE))
 
 // functions
 function onSubmit(): void {
   emit('submit', {
     name: name.value.trim(),
-    email: normalizeEmail(email.value),
+    email: EmailUtil.normalize(email.value),
     password: password.value,
     role: role.value,
   })

@@ -5,7 +5,7 @@
 import { computed } from 'vue'
 
 // internal imports
-import { formatDateTime } from '@/utils/formatDate'
+import { DateUtil } from '@/utils/DateUtil'
 import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
 
 // props
@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // computed variables
-const formattedTimestamp = computed(() => formatDateTime(props.timestamp))
+const formattedTimestamp = computed(() => DateUtil.formatDateTime(props.timestamp))
 </script>
 
 <template>

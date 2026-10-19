@@ -8,9 +8,9 @@ import { computed, ref } from 'vue'
 import type { BrandInterface } from '@/interfaces/BrandInterface'
 import type { CreateOrderDTO } from '@/dtos/Orders/CreateOrderDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import { DateUtil } from '@/utils/DateUtil'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
-import { STATUS_LABELS, toSelectOptions } from '@/utils/labels'
-import { todayIso } from '@/utils/formatDate'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 
@@ -39,7 +39,7 @@ const emit = defineEmits<{ submit: [orderData: CreateOrderDTO] }>()
 // reactive variables
 const description = ref(props.initial.description ?? '')
 const budget = ref(props.initial.budget ?? 0)
-const requestDate = ref(props.initial.requestDate ?? todayIso())
+const requestDate = ref(props.initial.requestDate ?? DateUtil.todayIso())
 const deliveryDate = ref(props.initial.deliveryDate ?? '')
 
 // selectors
@@ -50,7 +50,7 @@ const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
 // computed variables
 const coordinators = computed(() => UserService.getCoordinators(props.users))
-const statusOptions = computed(() => toSelectOptions(STATUS_LABELS))
+const statusOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS))
 
 // functions
 function onSubmit(): void {

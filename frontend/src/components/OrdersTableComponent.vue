@@ -3,11 +3,11 @@
 
 // internal imports
 import type { BrandInterface } from '@/interfaces/BrandInterface'
-import { confirmDeletion } from '@/utils/confirmDeletion'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
-import { formatCurrency } from '@/utils/formatCurrency'
-import { formatDate } from '@/utils/formatDate'
-import { formatStatus } from '@/utils/labels'
+import { CurrencyUtil } from '@/utils/CurrencyUtil'
+import { DateUtil } from '@/utils/DateUtil'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
 import { OrderService } from '@/services/OrderService'
 
@@ -36,7 +36,7 @@ function creatorName(order: OrderInterface): string {
 }
 
 function onDelete(id: number): void {
-  if (!confirmDeletion('order')) return
+  if (!ConfirmUtil.confirmDeletion('order')) return
   emit('delete', id)
 }
 </script>
@@ -62,14 +62,14 @@ function onDelete(id: number): void {
         <td>{{ order.description }}</td>
         <td>{{ brandName(order) }}</td>
         <td>{{ creatorName(order) }}</td>
-        <td>{{ formatCurrency(order.budget) }}</td>
+        <td>{{ CurrencyUtil.format(order.budget) }}</td>
         <td>
           <span class="orders-table__badge" :class="`orders-table__badge--${order.status}`">
-            {{ formatStatus(order.status) }}
+            {{ LabelUtil.formatStatus(order.status) }}
           </span>
         </td>
-        <td>{{ formatDate(order.requestDate) }}</td>
-        <td>{{ formatDate(order.deliveryDate) }}</td>
+        <td>{{ DateUtil.format(order.requestDate) }}</td>
+        <td>{{ DateUtil.format(order.deliveryDate) }}</td>
         <td v-if="actionable" class="orders-table__actions">
           <RouterLink :to="{ name: 'orders.edit', params: { id: order.id } }">Edit</RouterLink>
           <button type="button" class="orders-table__delete" @click="onDelete(order.id)">

@@ -7,6 +7,7 @@ import axios from 'axios'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
+import { StringUtil } from '@/utils/StringUtil'
 
 export class CreatorService {
   private static readonly API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/creators`
@@ -80,11 +81,7 @@ export class CreatorService {
       .filter((creator: CreatorInterface): boolean => {
         if (filter.niche && creator.niche !== filter.niche) return false
         if (filter.available !== undefined && creator.available !== filter.available) return false
-        if (filter.text) {
-          const text = filter.text.trim().toLowerCase()
-
-          if (text && !creator.name.toLowerCase().includes(text)) return false
-        }
+        if (filter.text && !StringUtil.contains(creator.name, filter.text)) return false
 
         return true
       })

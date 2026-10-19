@@ -5,7 +5,7 @@
 import { computed } from 'vue'
 
 // internal imports
-import { formatCurrency } from '@/utils/formatCurrency'
+import { CurrencyUtil } from '@/utils/CurrencyUtil'
 
 // props
 interface Props {
@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
 // computed variables
 const formattedValue = computed(() => {
   if (props.unit === '$' && typeof props.value === 'number') {
-    return formatCurrency(props.value)
+    return CurrencyUtil.format(props.value)
   }
   return `${props.unit}${props.value.toLocaleString()}`
 })

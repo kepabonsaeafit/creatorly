@@ -7,12 +7,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
-import { confirmDeletion } from '@/utils/confirmDeletion'
+import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import CreatorFormComponent from '@/components/CreatorFormComponent.vue'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 
 // non-reactive variables
 const route = useRoute()
@@ -31,7 +31,7 @@ onMounted(async (): Promise<void> => {
   try {
     creator.value = await CreatorService.getById(creatorId)
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the creator'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the creator'))
   } finally {
     loading.value = false
   }
@@ -46,10 +46,7 @@ async function onSubmit(creatorData: CreateCreatorDTO): Promise<void> {
     toast.success('Creator updated successfully')
     router.push({ name: 'creators' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(
-      caughtError,
-      'It was not possible to update the creator',
-    )
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to update the creator')
     toast.error(error.value)
   } finally {
     saving.value = false
@@ -57,16 +54,14 @@ async function onSubmit(creatorData: CreateCreatorDTO): Promise<void> {
 }
 
 async function onDelete(): Promise<void> {
-  if (!confirmDeletion('creator')) return
+  if (!ConfirmUtil.confirmDeletion('creator')) return
 
   try {
     await CreatorService.remove(creatorId)
     toast.success('Creator deleted successfully')
     router.push({ name: 'creators' })
   } catch (caughtError) {
-    toast.error(
-      AuthService.getErrorMessage(caughtError, 'It was not possible to delete the creator'),
-    )
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to delete the creator'))
   }
 }
 </script>

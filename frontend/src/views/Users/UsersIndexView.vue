@@ -7,7 +7,8 @@ import { useToast } from 'vue-toastification'
 
 // internal imports
 import { AuthService } from '@/services/AuthService'
-import { ROLE_LABELS, toSelectOptions } from '@/utils/labels'
+import { ErrorUtil } from '@/utils/ErrorUtil'
+import { LabelUtil } from '@/utils/LabelUtil'
 import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
@@ -26,7 +27,7 @@ const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
 
 // computed variables
 const currentUser = computed(() => AuthService.getCurrentUser())
-const roleOptions = computed(() => toSelectOptions(ROLE_LABELS))
+const roleOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.USER_ROLE))
 
 const completeFilters = computed<UserFilterDTO>(() => ({ ...filters, text: text.value }))
 
@@ -37,7 +38,7 @@ async function loadUsers(): Promise<void> {
   try {
     allUsers.value = await UserService.getAll()
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to load the users'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the users'))
   } finally {
     loading.value = false
   }
@@ -56,7 +57,7 @@ async function onDelete(id: number): Promise<void> {
     toast.success('User deleted successfully')
     await loadUsers()
   } catch (caughtError) {
-    toast.error(AuthService.getErrorMessage(caughtError, 'It was not possible to delete the user'))
+    toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to delete the user'))
   }
 }
 </script>

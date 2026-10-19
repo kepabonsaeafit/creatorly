@@ -7,10 +7,10 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 // internal imports
-import { AuthService } from '@/services/AuthService'
 import type { CreateCreatorDTO } from '@/dtos/Creators/CreateCreatorDTO'
 import CreatorFormComponent from '@/components/CreatorFormComponent.vue'
 import { CreatorService } from '@/services/CreatorService'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 
 // non-reactive variables
 const router = useRouter()
@@ -30,10 +30,7 @@ async function onSubmit(creatorData: CreateCreatorDTO): Promise<void> {
     toast.success('Creator created successfully')
     router.push({ name: 'creators' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(
-      caughtError,
-      'It was not possible to create the creator',
-    )
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to create the creator')
     toast.error(error.value)
   } finally {
     saving.value = false

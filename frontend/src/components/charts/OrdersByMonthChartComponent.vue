@@ -7,7 +7,7 @@ import { computed } from 'vue'
 
 // internal imports
 import BaseChartComponent from '@/components/charts/BaseChartComponent.vue'
-import { getChartGridColor, getChartPalette, getChartTextColor } from '@/utils/chartColors'
+import { ColorUtil } from '@/utils/ColorUtil'
 import type { OrdersByMonthDTO } from '@/dtos/Reports/OrdersByMonthDTO'
 
 // props
@@ -20,8 +20,8 @@ const data = computed<ChartData<'line'>>(() => ({
     {
       label: 'Orders',
       data: props.items.map((row: OrdersByMonthDTO): number => row.count),
-      borderColor: getChartPalette()[0],
-      backgroundColor: getChartPalette()[0],
+      borderColor: ColorUtil.getChartPalette()[0],
+      backgroundColor: ColorUtil.getChartPalette()[0],
       tension: 0.3,
     },
   ],
@@ -29,8 +29,11 @@ const data = computed<ChartData<'line'>>(() => ({
 
 const options = computed<ChartOptions<'line'>>(() => ({
   scales: {
-    x: { ticks: { color: getChartTextColor() }, grid: { display: false } },
-    y: { ticks: { color: getChartTextColor() }, grid: { color: getChartGridColor() } },
+    x: { ticks: { color: ColorUtil.getChartTextColor() }, grid: { display: false } },
+    y: {
+      ticks: { color: ColorUtil.getChartTextColor() },
+      grid: { color: ColorUtil.getChartGridColor() },
+    },
   },
   plugins: { legend: { display: false } },
 }))

@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router'
 
 // internal imports
 import { AuthService } from '@/services/AuthService'
+import { ErrorUtil } from '@/utils/ErrorUtil'
 
 // non-reactive variables
 const router = useRouter()
@@ -26,7 +27,7 @@ async function onSubmit(): Promise<void> {
     await AuthService.login({ email: email.value, password: password.value })
     router.push({ name: 'home' })
   } catch (caughtError) {
-    error.value = AuthService.getErrorMessage(caughtError, 'It was not possible to log in')
+    error.value = ErrorUtil.getMessage(caughtError, 'It was not possible to log in')
   } finally {
     saving.value = false
   }
