@@ -15,4 +15,13 @@ export class StringUtil {
 
     return text.toLowerCase().includes(normalizedSearch)
   }
+
+  /**
+   * Uppercases the first letter of a text and leaves the rest unchanged.
+   * @param text - Text to capitalize.
+   * @returns The text with its first letter in uppercase (an empty text stays empty).
+   */
+  static capitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
 }

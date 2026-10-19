@@ -70,7 +70,7 @@
 - Validate the input in the DTOs with `class-validator` decorators, and keep the default error messages of the library (no custom `message`).
 - Keep one Create DTO per resource in its dto folder (`create-<resource>.dto.ts`).
 - Create the Update DTO with `PartialType(CreateDto)` from `@nestjs/mapped-types` (`update-<resource>.dto.ts`). Update methods receive it instead of `Partial<CreateDto>`.
-- Clean the input in the DTO with `class-transformer` decorators: `@Trim()` on text properties and `@ToLowerCase()` on emails. Both live in `src/common`.
+- Clean the input in the DTO with `class-transformer` decorators: `@Trim()` on text properties and `@ToLowerCase()` on emails and on the creator `niche`. Both live in `src/common`.
 - Validate allowed values with `@IsIn(LIST)`, using the lists exported by the entities (`ROLES`, `STATUSES`).
 - Validate day-only dates with `@Matches(/^\d{4}-\d{2}-\d{2}$/)` plus `@IsDateString({ strict: true })`, so impossible days such as `2026-02-30` are rejected.
 - Mark with `@IsOptional()` the properties that have a default (`available`, `status`, `requestDate`, `role`) and the ones that accept `null` (`deliveryDate`, `creatorId`). The service assigns the default.

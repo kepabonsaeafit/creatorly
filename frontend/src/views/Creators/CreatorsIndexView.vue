@@ -12,6 +12,7 @@ import { CreatorService } from '@/services/CreatorService'
 import CreatorsTableComponent from '@/components/CreatorsTableComponent.vue'
 import { ErrorUtil } from '@/utils/ErrorUtil'
 import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
+import { StringUtil } from '@/utils/StringUtil'
 
 // non-reactive variables
 const toast = useToast()
@@ -29,7 +30,7 @@ const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
 const selectorNiches = computed(() =>
   CreatorService.getNiches(allCreators.value).map((niche: string): SelectOptionInterface => ({
     value: niche,
-    label: niche,
+    label: StringUtil.capitalize(niche),
   })),
 )
 
