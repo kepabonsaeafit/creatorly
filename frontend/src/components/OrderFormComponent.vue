@@ -11,6 +11,7 @@ import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { DateUtil } from '@/utils/DateUtil'
 import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
+import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 
@@ -41,16 +42,36 @@ const description = ref(props.initial.description ?? '')
 const budget = ref(props.initial.budget ?? 0)
 const requestDate = ref(props.initial.requestDate ?? DateUtil.todayIso())
 const deliveryDate = ref(props.initial.deliveryDate ?? '')
-
-// selectors
 const brandId = ref<number | null>(props.initial.brandId ?? null)
 const creatorId = ref<number | null>(props.initial.creatorId ?? null)
 const userId = ref<number | null>(props.initial.userId ?? null)
 const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
-// computed variables
-const coordinators = computed(() => UserService.getCoordinators(props.users))
-const statusOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS))
+// selectors
+const selectorBrands = computed(() =>
+  props.brands.map((brand: BrandInterface): SelectOptionInterface<number> => ({
+    value: brand.id,
+    label: brand.name,
+  })),
+)
+
+const selectorCreators = computed(() =>
+  props.creators.map((creator: CreatorInterface): SelectOptionInterface<number> => ({
+    value: creator.id,
+    label: creator.name,
+  })),
+)
+
+const selectorCoordinators = computed(() =>
+  UserService.getCoordinators(props.users).map(
+    (coordinator: UserInterface): SelectOptionInterface<number> => ({
+      value: coordinator.id,
+      label: coordinator.name,
+    }),
+  ),
+)
+
+const selectorStatuses = LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS)
 
 // functions
 function onSubmit(): void {
@@ -101,8 +122,8 @@ function onSubmit(): void {
       <label class="order-form__label" for="brand">Brand</label>
       <select id="brand" v-model="brandId" class="order-form__input" required>
         <option :value="null" disabled>Select a brand</option>
-        <option v-for="brand in brands" :key="brand.id" :value="brand.id">
-          {{ brand.name }}
+        <option v-for="option in selectorBrands" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
     </div>
@@ -111,8 +132,8 @@ function onSubmit(): void {
       <label class="order-form__label" for="creator">Creator</label>
       <select id="creator" v-model="creatorId" class="order-form__input">
         <option :value="null">Unassigned</option>
-        <option v-for="creator in creators" :key="creator.id" :value="creator.id">
-          {{ creator.name }}
+        <option v-for="option in selectorCreators" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
     </div>
@@ -121,8 +142,8 @@ function onSubmit(): void {
       <label class="order-form__label" for="coordinator">Coordinator</label>
       <select id="coordinator" v-model="userId" class="order-form__input" required>
         <option :value="null" disabled>Select a coordinator</option>
-        <option v-for="coordinator in coordinators" :key="coordinator.id" :value="coordinator.id">
-          {{ coordinator.name }}
+        <option v-for="option in selectorCoordinators" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
     </div>
@@ -146,7 +167,7 @@ function onSubmit(): void {
     <div v-if="editMode" class="order-form__field">
       <label class="order-form__label" for="status">Status</label>
       <select id="status" v-model="status" class="order-form__input">
-        <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+        <option v-for="option in selectorStatuses" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>

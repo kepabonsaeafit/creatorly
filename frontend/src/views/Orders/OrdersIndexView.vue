@@ -19,6 +19,7 @@ import type { OrderInterface } from '@/interfaces/OrderInterface'
 import OrdersByStatusChartComponent from '@/components/charts/OrdersByStatusChartComponent.vue'
 import { OrderService } from '@/services/OrderService'
 import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
+import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 
 // non-reactive variables
 const toast = useToast()
@@ -29,16 +30,22 @@ const brands = ref<BrandInterface[]>([])
 const creators = ref<CreatorInterface[]>([])
 const text = ref('')
 const loading = ref(true)
-
-// selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
   status: undefined,
   brandId: undefined,
 })
 
-// computed variables
-const statusOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS))
+// selectors
+const selectorStatuses = LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS)
 
+const selectorBrands = computed(() =>
+  brands.value.map((brand: BrandInterface): SelectOptionInterface<number> => ({
+    value: brand.id,
+    label: brand.name,
+  })),
+)
+
+// computed variables
 const completeFilters = computed<OrderFilterDTO>(() => ({ ...filters, text: text.value }))
 
 const orders = computed(() => OrderService.filterSorted(allOrders.value, completeFilters.value))
@@ -102,15 +109,15 @@ function clearFilters(): void {
 
       <select v-model="filters.status" class="orders__filter-input">
         <option :value="undefined">All statuses</option>
-        <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+        <option v-for="option in selectorStatuses" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
       <select v-model="filters.brandId" class="orders__filter-input">
         <option :value="undefined">All brands</option>
-        <option v-for="brand in brands" :key="brand.id" :value="brand.id">
-          {{ brand.name }}
+        <option v-for="option in selectorBrands" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
 

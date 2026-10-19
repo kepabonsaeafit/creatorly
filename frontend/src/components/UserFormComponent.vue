@@ -2,7 +2,7 @@
 // Author: Gerónimo Montes
 
 // external imports
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 // internal imports
 import type { CreateUserDTO } from '@/dtos/Users/CreateUserDTO'
@@ -35,12 +35,10 @@ const email = ref(props.initial.email ?? '')
 // empty field means "keep the current one" and the view leaves it out of the
 // payload. It is only required when creating.
 const password = ref('')
-
-// selectors
 const role = ref<UserRole>(props.initial.role ?? 'coordinator')
 
-// computed variables
-const roleOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.USER_ROLE))
+// selectors
+const selectorRoles = LabelUtil.toSelectOptions(LabelUtil.USER_ROLE)
 
 // functions
 function onSubmit(): void {
@@ -80,7 +78,7 @@ function onSubmit(): void {
     <div class="user-form__field">
       <label class="user-form__label" for="user-role">Role</label>
       <select id="user-role" v-model="role" class="user-form__input">
-        <option v-for="option in roleOptions" :key="option.value" :value="option.value">
+        <option v-for="option in selectorRoles" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>

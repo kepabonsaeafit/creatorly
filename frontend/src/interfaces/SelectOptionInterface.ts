@@ -1,7 +1,7 @@
 // Author: Kevin Pabón
 
-/** Option ready for a <select>, derived from a label map. */
-export interface SelectOptionInterface<Value extends string> {
+/** Option of a <select>: the value it binds and the text it shows. */
+export interface SelectOptionInterface<Value extends string | number | boolean = string> {
   value: Value
   label: string
 }
