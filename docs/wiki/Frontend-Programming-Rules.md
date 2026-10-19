@@ -66,7 +66,8 @@
   - Computed variables
   - Functions
   - Watchers
-- Selectors are only the variables bound with `v-model` to a `<select>`. Any other reactive variable goes in the reactive variables.
+- Selectors are the option lists that feed a `<select>`. Name them with the `selector` prefix (`selectorStatuses`) and shape them as `{ value, label }` options typed with `SelectOptionInterface`.
+- The value bound with `v-model` to a `<select>` is a reactive variable, not a selector.
 - Do not define reusable code inside a view. Use a util for this instead.
 - Do not call a store from a view.
 - Do not write a chart inside a view. Charts live in the charts folder of the components.
