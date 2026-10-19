@@ -5,6 +5,7 @@
 import { ConfirmUtil } from '@/utils/ConfirmUtil'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CurrencyUtil } from '@/utils/CurrencyUtil'
+import { StringUtil } from '@/utils/StringUtil'
 
 // props
 withDefaults(defineProps<{ creators: CreatorInterface[]; actionable?: boolean }>(), {
@@ -38,7 +39,7 @@ function onDelete(id: number): void {
     <tbody>
       <tr v-for="creator in creators" :key="creator.id">
         <td>{{ creator.name }}</td>
-        <td>{{ creator.niche }}</td>
+        <td>{{ StringUtil.capitalize(creator.niche) }}</td>
         <td>{{ creator.contentType }}</td>
         <td>{{ CurrencyUtil.format(creator.rate) }}</td>
         <td>
