@@ -15,7 +15,7 @@ The services also repeated the same input checks (`validate`, `isDate`, `EMAIL_R
 - **`class-validator` and `class-transformer`** in `backend/`, and a global `ValidationPipe` in `main.ts` with `whitelist: true`, `forbidNonWhitelisted: true` and `transform: true`, like the professor's. An unknown property in a body answers 400.
 - **Validation decorators in the five input DTOs** (sign-in, brand, creator, user, order). Roles and statuses use `@IsIn(ROLES)` and `@IsIn(STATUSES)`; day-only dates use `@Matches(/^\d{4}-\d{2}-\d{2}$/)` together with `@IsDateString({ strict: true })`: the first one forces the shape (no time part) and the second one rejects days that do not exist. Properties with a default or that accept `null` use `@IsOptional()`; the service still assigns the defaults.
 - **Error messages are the library's defaults**, with no custom `message`. The API keeps answering `{ statusCode, message, error }`, where `message` is now an array for DTO errors.
-- **Cleaning in the DTO**, not in the service: a `@Trim()` decorator (the Trazo pattern) on text properties and a `@ToLowerCase()` decorator, in `src/common`, on emails. The services no longer normalize.
+- **Cleaning in the DTO**, not in the service: a `@Trim()` decorator (the Trazo pattern) on text properties and a `@ToLowerCase()` decorator, in `src/common`, on emails and on the creator `niche`. The services no longer normalize.
 - **Update DTOs** with `PartialType(CreateDto)` from `@nestjs/mapped-types` (`UpdateCreatorDto`, `UpdateUserDto`, `UpdateOrderDto`). Controllers and services receive them instead of `Partial<CreateDto>`.
 - **Business rules stay in the services**: unique email, no removing your own admin role, no deleting yourself, no deleting a user with orders, existence of the referenced brand, creator and user, `NotFoundException`, the login `UnauthorizedException`, defaults and password hashing.
 
@@ -29,6 +29,6 @@ The services also repeated the same input checks (`validate`, `isDate`, `EMAIL_R
 
 - Each date needs two decorators: `@Matches` alone would accept an impossible day such as `2026-02-30`, which the old `isDate` rejected.
 - Every property the frontend sends must be declared in a DTO, or the request fails with 400 (`forbidNonWhitelisted`).
-- `niche` is not lowercased yet: the duplicated-niche fix ("gaming" and "Gaming") is a later change.
+- `niche` is stored in lowercase (`@Trim()` + `@ToLowerCase()`), so "gaming" and "Gaming" are the same niche. Rows saved before this change keep their original case until they are normalized once with SQL; the frontend compares and groups niches ignoring case, and capitalizes the first letter only when it displays them.
 - The frontend's `getErrorMessage` already joins array messages, so DTO errors are shown in the toasts without changes.
 - DTO rules are tested with `plainToInstance` and `validate`, without starting Nest.

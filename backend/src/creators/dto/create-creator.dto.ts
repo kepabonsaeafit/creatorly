@@ -4,6 +4,7 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 // internal imports
+import { ToLowerCase } from '../../common/to-lower-case.decorator.js';
 import { Trim } from '../../common/trim.decorator.js';
 
 export class CreateCreatorDto {
@@ -12,7 +13,9 @@ export class CreateCreatorDto {
   @IsNotEmpty()
   name: string;
 
+  // lowercased so "gaming" and "Gaming" are stored as the same niche
   @Trim()
+  @ToLowerCase()
   @IsString()
   @IsNotEmpty()
   niche: string;
