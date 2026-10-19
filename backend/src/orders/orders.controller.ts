@@ -7,6 +7,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from 
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { Order } from './entities/order.entity.js';
 import { OrdersService } from './orders.service.js';
+import { UpdateOrderDto } from './dto/update-order.dto.js';
 
 @Controller('orders')
 export class OrdersController {
@@ -30,7 +31,7 @@ export class OrdersController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateOrderDto: Partial<CreateOrderDto>,
+    @Body() updateOrderDto: UpdateOrderDto,
   ): Promise<Order> {
     return this.ordersService.update(id, updateOrderDto);
   }

@@ -59,7 +59,7 @@ Base URL: `http://localhost:3000/api`. Every route except `POST /auth/login` req
 | GET | `/auth/profile` | — | current `User` | logged in |
 | GET | `/users`, `/users/:id` | — | `User[]`, `User` | logged in |
 | POST | `/users` | `CreateUserDto` (with `password`) | `User` | admin |
-| PATCH | `/users/:id` | `Partial<CreateUserDto>` | `User` | admin |
+| PATCH | `/users/:id` | `UpdateUserDto` | `User` | admin |
 | DELETE | `/users/:id` | — | `void` | admin |
 | GET | `/creators`, `/creators/:id` | — | `Creator[]`, `Creator` | logged in |
 | POST · PATCH · DELETE | `/creators`, `/creators/:id` | as users | as users | admin |
@@ -68,6 +68,6 @@ Base URL: `http://localhost:3000/api`. Every route except `POST /auth/login` req
 | GET | `/orders`, `/orders/:id` | — | `Order[]`, `Order` | logged in |
 | POST · PATCH · DELETE | `/orders`, `/orders/:id` | as users | as users | logged in |
 
-Domain rules enforced by the backend (moved from the Deliverable 1 frontend services): required fields, email format, `rate` and `budget` ≥ 0, valid `status` and `role`; an admin can't remove their own admin role or delete themselves; a user with orders can't be deleted (400) (brands have no delete endpoint: they are only created and listed); deleting a creator sets `creatorId` to `null` in its orders. Every `:id` must be a number (`ParseIntPipe`: `/orders/abc` is a 400) and an id that doesn't exist is a 404 (`Order: not found`, ...). Referencing a `brandId`, `creatorId` or `userId` that doesn't exist is a 400 (`Order: brand not found`, ...), never a 500. Demo login: `admin@creatorly.com` / `1234` (admin), `laura@creatorly.com` / `1234` (coordinator).
+Input validation lives in the DTOs (`class-validator` with a global `ValidationPipe` using `whitelist` and `forbidNonWhitelisted`, so a body with an unknown property is a 400; see ADR-0007): required fields, email format, `rate` and `budget` ≥ 0, `YYYY-MM-DD` dates, valid `status` and `role`; texts are trimmed and emails lowercased there. Business rules enforced by the services (moved from the Deliverable 1 frontend services): an admin can't remove their own admin role or delete themselves; a user with orders can't be deleted (400) (brands have no delete endpoint: they are only created and listed); deleting a creator sets `creatorId` to `null` in its orders. Every `:id` must be a number (`ParseIntPipe`: `/orders/abc` is a 400) and an id that doesn't exist is a 404 (`Order: not found`, ...). Referencing a `brandId`, `creatorId` or `userId` that doesn't exist is a 400 (`Order: brand not found`, ...), never a 500. Demo login: `admin@creatorly.com` / `1234` (admin), `laura@creatorly.com` / `1234` (coordinator).
 
 Session in the frontend: after login, keep `access_token` through `StorageService`, send it on every request (header `Authorization: Bearer <token>`, set once in `AuthService` on `axios.defaults.headers.common`), and load the current user with `GET /auth/profile`. The token lasts 1 hour and carries the role at login time: on any 401 the frontend clears the token and goes to the login view.

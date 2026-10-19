@@ -16,6 +16,7 @@ import {
 // internal imports
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { Roles } from '../auth/roles.decorator.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
 import { User } from './entities/user.entity.js';
 import type { UserRequestInterface } from '../interfaces/auth/UserRequestInterface.js';
 import { UsersService } from './users.service.js';
@@ -44,7 +45,7 @@ export class UsersController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: Partial<CreateUserDto>,
+    @Body() updateUserDto: UpdateUserDto,
     @Request() request: UserRequestInterface,
   ): Promise<User> {
     return this.usersService.update(id, updateUserDto, request.user.sub);

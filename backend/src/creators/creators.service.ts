@@ -1,13 +1,14 @@
 // Author: Kevin Pabón
 
 // external imports
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // internal imports
 import { CreateCreatorDto } from './dto/create-creator.dto.js';
 import { Creator } from './entities/creator.entity.js';
+import { UpdateCreatorDto } from './dto/update-creator.dto.js';
 
 @Injectable()
 export class CreatorsService {
@@ -15,28 +16,6 @@ export class CreatorsService {
     @InjectRepository(Creator)
     private creatorsRepository: Repository<Creator>,
   ) {}
-
-  private validate(createCreatorDto: CreateCreatorDto): void {
-    if (!createCreatorDto.name || typeof createCreatorDto.name !== 'string') {
-      throw new BadRequestException('Creator: name is required');
-    }
-
-    if (!createCreatorDto.niche || typeof createCreatorDto.niche !== 'string') {
-      throw new BadRequestException('Creator: niche is required');
-    }
-
-    if (!createCreatorDto.contentType || typeof createCreatorDto.contentType !== 'string') {
-      throw new BadRequestException('Creator: content type is required');
-    }
-
-    if (
-      typeof createCreatorDto.rate !== 'number' ||
-      Number.isNaN(createCreatorDto.rate) ||
-      createCreatorDto.rate < 0
-    ) {
-      throw new BadRequestException('Creator: rate must be a number >= 0');
-    }
-  }
 
   /**
    * Finds every creator.
@@ -63,49 +42,37 @@ export class CreatorsService {
   }
 
   /**
-   * Validates and creates a new creator; `available` defaults to `true`.
+   * Creates a new creator; `available` defaults to `true`. CreateCreatorDto has already
+   * validated and normalized the data.
    * @param createCreatorDto - Data of the new creator.
    * @returns The created creator, with its id and timestamps.
-   * @throws {BadRequestException} If any required field is missing or invalid.
    */
   create(createCreatorDto: CreateCreatorDto): Promise<Creator> {
-    const creatorData: CreateCreatorDto = {
-      name: createCreatorDto.name,
-      niche: createCreatorDto.niche,
-      contentType: createCreatorDto.contentType,
-      rate: createCreatorDto.rate,
-      available: Boolean(createCreatorDto.available ?? true),
-    };
-
-    this.validate(creatorData);
-
-    const creator = this.creatorsRepository.create(creatorData);
+    const creator = this.creatorsRepository.create({
+      ...createCreatorDto,
+      available: createCreatorDto.available ?? true,
+    });
 
     return this.creatorsRepository.save(creator);
   }
 
   /**
-   * Validates and applies partial changes to a creator.
+   * Applies partial changes to a creator; UpdateCreatorDto has already validated them.
    * @param id - Id of the creator to update.
    * @param updateCreatorDto - Fields to change.
    * @returns The updated creator.
    * @throws {NotFoundException} If no creator has that id.
-   * @throws {BadRequestException} If the merged data fails validation.
    */
-  async update(id: number, updateCreatorDto: Partial<CreateCreatorDto>): Promise<Creator> {
+  async update(id: number, updateCreatorDto: UpdateCreatorDto): Promise<Creator> {
     const creator = await this.findOne(id);
 
-    const merged: CreateCreatorDto = {
+    this.creatorsRepository.merge(creator, {
       name: updateCreatorDto.name ?? creator.name,
       niche: updateCreatorDto.niche ?? creator.niche,
       contentType: updateCreatorDto.contentType ?? creator.contentType,
       rate: updateCreatorDto.rate ?? creator.rate,
-      available: Boolean(updateCreatorDto.available ?? creator.available),
-    };
-
-    this.validate(merged);
-
-    this.creatorsRepository.merge(creator, merged);
+      available: updateCreatorDto.available ?? creator.available,
+    });
 
     return this.creatorsRepository.save(creator);
   }
