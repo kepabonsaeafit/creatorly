@@ -27,26 +27,14 @@ import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import { OrderService } from '@/services/OrderService'
 import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
 import ReportTableComponent from '@/components/ReportTableComponent.vue'
+import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 import StatCardGridComponent from '@/components/StatCardGridComponent.vue'
 
 /** Report types available in this view. */
 type ReportType = 'month' | 'status' | 'creator' | 'brand'
 
-/** An option of the report-type selector. */
-interface ReportOption {
-  id: ReportType
-  label: string
-}
-
 // non-reactive variables
 const toast = useToast()
-
-const REPORT_OPTIONS: ReportOption[] = [
-  { id: 'month', label: 'Orders by month' },
-  { id: 'status', label: 'Orders by status' },
-  { id: 'creator', label: 'Orders by creator' },
-  { id: 'brand', label: 'Budget by brand' },
-]
 
 // reactive variables
 const loading = ref(true)
@@ -55,19 +43,38 @@ const brands = ref<BrandInterface[]>([])
 const creators = ref<CreatorInterface[]>([])
 const from = ref('')
 const to = ref('')
-
-// selectors
 const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId' | 'creatorId'>>({
   status: undefined,
   brandId: undefined,
   creatorId: undefined,
 })
-
 const reportType = ref<ReportType>('month')
 
-// computed variables
-const statusOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS))
+// selectors
+const selectorStatuses = LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS)
 
+const selectorBrands = computed(() =>
+  brands.value.map((brand: BrandInterface): SelectOptionInterface<number> => ({
+    value: brand.id,
+    label: brand.name,
+  })),
+)
+
+const selectorCreators = computed(() =>
+  creators.value.map((creator: CreatorInterface): SelectOptionInterface<number> => ({
+    value: creator.id,
+    label: creator.name,
+  })),
+)
+
+const selectorReportTypes: SelectOptionInterface<ReportType>[] = [
+  { value: 'month', label: 'Orders by month' },
+  { value: 'status', label: 'Orders by status' },
+  { value: 'creator', label: 'Orders by creator' },
+  { value: 'brand', label: 'Budget by brand' },
+]
+
+// computed variables
 const completeFilters = computed<OrderFilterDTO>(() => ({
   ...filters,
   from: from.value,
@@ -86,8 +93,9 @@ const byMonth = computed(() => OrderService.getOrdersByMonth(filteredOrders.valu
 
 const currentReportOption = computed(
   () =>
-    REPORT_OPTIONS.find((option: ReportOption): boolean => option.id === reportType.value) ??
-    REPORT_OPTIONS[0],
+    selectorReportTypes.find(
+      (option: SelectOptionInterface<ReportType>): boolean => option.value === reportType.value,
+    ) ?? selectorReportTypes[0],
 )
 
 const reportColumns = computed(() => {
@@ -177,22 +185,22 @@ function clearFilters(): void {
     <div class="reports__filters">
       <select v-model="filters.status" class="reports__filter-input">
         <option :value="undefined">All statuses</option>
-        <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+        <option v-for="option in selectorStatuses" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
 
       <select v-model="filters.brandId" class="reports__filter-input">
         <option :value="undefined">All brands</option>
-        <option v-for="brand in brands" :key="brand.id" :value="brand.id">
-          {{ brand.name }}
+        <option v-for="option in selectorBrands" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
 
       <select v-model="filters.creatorId" class="reports__filter-input">
         <option :value="undefined">All creators</option>
-        <option v-for="creator in creators" :key="creator.id" :value="creator.id">
-          {{ creator.name }}
+        <option v-for="option in selectorCreators" :key="option.value" :value="option.value">
+          {{ option.label }}
         </option>
       </select>
 
@@ -224,7 +232,11 @@ function clearFilters(): void {
           <label class="reports__report-selector">
             Report type
             <select v-model="reportType" class="reports__filter-input">
-              <option v-for="option in REPORT_OPTIONS" :key="option.id" :value="option.id">
+              <option
+                v-for="option in selectorReportTypes"
+                :key="option.value"
+                :value="option.value"
+              >
                 {{ option.label }}
               </option>
             </select>

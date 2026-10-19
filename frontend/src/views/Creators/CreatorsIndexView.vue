@@ -11,6 +11,7 @@ import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
 import CreatorsTableComponent from '@/components/CreatorsTableComponent.vue'
 import { ErrorUtil } from '@/utils/ErrorUtil'
+import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 
 // non-reactive variables
 const toast = useToast()
@@ -19,16 +20,25 @@ const toast = useToast()
 const allCreators = ref<CreatorInterface[]>([])
 const text = ref('')
 const loading = ref(true)
-
-// selectors
 const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
   niche: undefined,
   available: undefined,
 })
 
-// computed variables
-const niches = computed(() => CreatorService.getNiches(allCreators.value))
+// selectors
+const selectorNiches = computed(() =>
+  CreatorService.getNiches(allCreators.value).map((niche: string): SelectOptionInterface => ({
+    value: niche,
+    label: niche,
+  })),
+)
 
+const selectorAvailability: SelectOptionInterface<boolean>[] = [
+  { value: true, label: 'Available' },
+  { value: false, label: 'Not available' },
+]
+
+// computed variables
 const completeFilters = computed<CreatorFilterDTO>(() => ({ ...filters, text: text.value }))
 
 const creators = computed(() => CreatorService.filter(allCreators.value, completeFilters.value))
@@ -82,13 +92,16 @@ function clearFilters(): void {
 
       <select v-model="filters.niche" class="creators__filter-input">
         <option :value="undefined">All niches</option>
-        <option v-for="option in niches" :key="option" :value="option">{{ option }}</option>
+        <option v-for="option in selectorNiches" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
       </select>
 
       <select v-model="filters.available" class="creators__filter-input">
         <option :value="undefined">Any availability</option>
-        <option :value="true">Available</option>
-        <option :value="false">Not available</option>
+        <option v-for="option in selectorAvailability" :key="option.label" :value="option.value">
+          {{ option.label }}
+        </option>
       </select>
 
       <button type="button" class="creators__clear" @click="clearFilters">Clear filters</button>

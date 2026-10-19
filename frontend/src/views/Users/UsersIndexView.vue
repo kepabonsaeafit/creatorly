@@ -21,13 +21,13 @@ const toast = useToast()
 const allUsers = ref<UserInterface[]>([])
 const text = ref('')
 const loading = ref(true)
+const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
 
 // selectors
-const filters = reactive<Pick<UserFilterDTO, 'role'>>({ role: undefined })
+const selectorRoles = LabelUtil.toSelectOptions(LabelUtil.USER_ROLE)
 
 // computed variables
 const currentUser = computed(() => AuthService.getCurrentUser())
-const roleOptions = computed(() => LabelUtil.toSelectOptions(LabelUtil.USER_ROLE))
 
 const completeFilters = computed<UserFilterDTO>(() => ({ ...filters, text: text.value }))
 
@@ -79,7 +79,7 @@ async function onDelete(id: number): Promise<void> {
 
       <select v-model="filters.role" class="users__filter-input">
         <option :value="undefined">All roles</option>
-        <option v-for="option in roleOptions" :key="option.value" :value="option.value">
+        <option v-for="option in selectorRoles" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>
