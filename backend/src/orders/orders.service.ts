@@ -9,7 +9,8 @@ import { Repository } from 'typeorm';
 import { Brand } from '../brands/entities/brand.entity.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { Creator } from '../creators/entities/creator.entity.js';
-import { Order, STATUSES } from './entities/order.entity.js';
+import { Order } from './entities/order.entity.js';
+import { UpdateOrderDto } from './dto/update-order.dto.js';
 import { User } from '../users/entities/user.entity.js';
 
 @Injectable()
@@ -25,73 +26,24 @@ export class OrdersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  private validate(createOrderDto: CreateOrderDto): void {
-    if (!createOrderDto.description || typeof createOrderDto.description !== 'string') {
-      throw new BadRequestException('Order: description is required');
-    }
-
-    if (
-      typeof createOrderDto.budget !== 'number' ||
-      Number.isNaN(createOrderDto.budget) ||
-      createOrderDto.budget < 0
-    ) {
-      throw new BadRequestException('Order: budget must be a number >= 0');
-    }
-
-    if (!this.isDate(createOrderDto.requestDate)) {
-      throw new BadRequestException('Order: requestDate must be a date YYYY-MM-DD');
-    }
-
-    if (createOrderDto.deliveryDate !== null && !this.isDate(createOrderDto.deliveryDate)) {
-      throw new BadRequestException('Order: deliveryDate must be a date YYYY-MM-DD or null');
-    }
-
-    if (!STATUSES.includes(createOrderDto.status)) {
-      throw new BadRequestException(`Order: status must be one of ${STATUSES.join(' | ')}`);
-    }
-
-    if (!createOrderDto.brandId || typeof createOrderDto.brandId !== 'number') {
-      throw new BadRequestException('Order: brandId is required');
-    }
-
-    if (!createOrderDto.userId || typeof createOrderDto.userId !== 'number') {
-      throw new BadRequestException('Order: userId is required');
-    }
-
-    if (createOrderDto.creatorId !== null && typeof createOrderDto.creatorId !== 'number') {
-      throw new BadRequestException('Order: creatorId must be an id or null');
-    }
-  }
-
   // checked before saving, so a missing reference answers 400 instead of a
   // SQLite FOREIGN KEY failure (500)
-  private async validateReferences(createOrderDto: CreateOrderDto): Promise<void> {
-    if (!(await this.brandsRepository.existsBy({ id: createOrderDto.brandId }))) {
+  private async validateReferences(
+    brandId: number,
+    creatorId: number | null,
+    userId: number,
+  ): Promise<void> {
+    if (!(await this.brandsRepository.existsBy({ id: brandId }))) {
       throw new BadRequestException('Order: brand not found');
     }
 
-    if (
-      createOrderDto.creatorId !== null &&
-      !(await this.creatorsRepository.existsBy({ id: createOrderDto.creatorId }))
-    ) {
+    if (creatorId !== null && !(await this.creatorsRepository.existsBy({ id: creatorId }))) {
       throw new BadRequestException('Order: creator not found');
     }
 
-    if (!(await this.usersRepository.existsBy({ id: createOrderDto.userId }))) {
+    if (!(await this.usersRepository.existsBy({ id: userId }))) {
       throw new BadRequestException('Order: user not found');
     }
-  }
-
-  // true only for a real calendar day written as 'YYYY-MM-DD', so '24/12/2026'
-  // and '2026-02-30' are rejected
-  private isDate(value: unknown): boolean {
-    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return false;
-    }
-
-    const date = new Date(`${value}T00:00:00Z`);
-
-    return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
   }
 
   // today's date in the server's local time, as 'YYYY-MM-DD'
@@ -129,34 +81,27 @@ export class OrdersService {
   }
 
   /**
-   * Validates and creates a new order; by default it has no delivery date,
-   * no creator, status 'requested' and today as its request date.
+   * Creates a new order; by default it has no delivery date, no creator, status
+   * 'requested' and today as its request date. CreateOrderDto has already validated
+   * the data.
    * @param createOrderDto - Data of the new order.
    * @returns The created order, with its id, timestamps and relation ids.
-   * @throws {BadRequestException} If any required field is missing or invalid, or the
-   * brand, creator or user it references does not exist.
+   * @throws {BadRequestException} If the brand, creator or user it references does not exist.
    */
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    const orderData: CreateOrderDto = {
+    const creatorId = createOrderDto.creatorId ?? null;
+
+    await this.validateReferences(createOrderDto.brandId, creatorId, createOrderDto.userId);
+
+    const order = this.ordersRepository.create({
       description: createOrderDto.description,
       budget: createOrderDto.budget,
       requestDate: createOrderDto.requestDate ?? this.today(),
       deliveryDate: createOrderDto.deliveryDate ?? null,
       status: createOrderDto.status ?? 'requested',
-      brandId: createOrderDto.brandId,
-      creatorId: createOrderDto.creatorId ?? null,
-      userId: createOrderDto.userId,
-    };
-
-    this.validate(orderData);
-    await this.validateReferences(orderData);
-
-    const { brandId, creatorId, userId, ...rest } = orderData;
-    const order = this.ordersRepository.create({
-      ...rest,
-      brand: { id: brandId },
+      brand: { id: createOrderDto.brandId },
       creator: creatorId === null ? null : { id: creatorId },
-      user: { id: userId },
+      user: { id: createOrderDto.userId },
     });
 
     const saved = await this.ordersRepository.save(order);
@@ -166,21 +111,27 @@ export class OrdersService {
   }
 
   /**
-   * Validates and applies partial changes to an order; `deliveryDate` and
-   * `creatorId` can be cleared on purpose by sending `null`.
+   * Applies partial changes to an order; UpdateOrderDto has already validated them.
+   * `deliveryDate` and `creatorId` can be cleared on purpose by sending `null`.
    * @param id - Id of the order to update.
    * @param updateOrderDto - Fields to change.
    * @returns The updated order, with its relation ids.
    * @throws {NotFoundException} If no order has that id.
-   * @throws {BadRequestException} If the merged data fails validation, or the brand,
-   * creator or user it references does not exist.
+   * @throws {BadRequestException} If the brand, creator or user it references does not exist.
    */
-  async update(id: number, updateOrderDto: Partial<CreateOrderDto>): Promise<Order> {
+  async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
     const order = await this.findOne(id);
 
     // deliveryDate and creatorId accept null on purpose, so they are compared
     // against undefined to tell "not sent" from "cleared"
-    const merged: CreateOrderDto = {
+    const brandId = updateOrderDto.brandId ?? order.brandId;
+    const creatorId =
+      updateOrderDto.creatorId !== undefined ? updateOrderDto.creatorId : order.creatorId;
+    const userId = updateOrderDto.userId ?? order.userId;
+
+    await this.validateReferences(brandId, creatorId, userId);
+
+    this.ordersRepository.merge(order, {
       description: updateOrderDto.description ?? order.description,
       budget: updateOrderDto.budget ?? order.budget,
       requestDate: updateOrderDto.requestDate ?? order.requestDate,
@@ -189,18 +140,6 @@ export class OrdersService {
           ? updateOrderDto.deliveryDate
           : order.deliveryDate,
       status: updateOrderDto.status ?? order.status,
-      brandId: updateOrderDto.brandId ?? order.brandId,
-      creatorId:
-        updateOrderDto.creatorId !== undefined ? updateOrderDto.creatorId : order.creatorId,
-      userId: updateOrderDto.userId ?? order.userId,
-    };
-
-    this.validate(merged);
-    await this.validateReferences(merged);
-
-    const { brandId, creatorId, userId, ...rest } = merged;
-    this.ordersRepository.merge(order, {
-      ...rest,
       brand: { id: brandId },
       creator: creatorId === null ? null : { id: creatorId },
       user: { id: userId },

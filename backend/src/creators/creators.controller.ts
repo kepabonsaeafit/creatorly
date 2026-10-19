@@ -8,6 +8,7 @@ import { CreateCreatorDto } from './dto/create-creator.dto.js';
 import { Creator } from './entities/creator.entity.js';
 import { CreatorsService } from './creators.service.js';
 import { Roles } from '../auth/roles.decorator.js';
+import { UpdateCreatorDto } from './dto/update-creator.dto.js';
 
 @Controller('creators')
 export class CreatorsController {
@@ -33,7 +34,7 @@ export class CreatorsController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateCreatorDto: Partial<CreateCreatorDto>,
+    @Body() updateCreatorDto: UpdateCreatorDto,
   ): Promise<Creator> {
     return this.creatorsService.update(id, updateCreatorDto);
   }

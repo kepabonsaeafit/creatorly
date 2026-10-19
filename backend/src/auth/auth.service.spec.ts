@@ -34,7 +34,7 @@ describe('AuthService.signIn', () => {
   });
 
   it('returns a token carrying the id, email and role for valid credentials', async () => {
-    const { access_token } = await authService.signIn('  Laura@Creatorly.com ', '1234');
+    const { access_token } = await authService.signIn('laura@creatorly.com', '1234');
     const payload = await jwtService.verifyAsync(access_token);
 
     expect(payload).toMatchObject({ sub: 7, email: 'laura@creatorly.com', role: 'coordinator' });

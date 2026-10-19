@@ -16,25 +16,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // same normalization UsersService applies before storing an email
-  private normalizeEmail(email: string): string {
-    return String(email ?? '')
-      .trim()
-      .toLowerCase();
-  }
-
   /**
    * Checks the credentials against the stored bcrypt hash and signs an access token.
-   * @param email - Email of the user.
+   * @param email - Email of the user (already trimmed and lowercased by SignInDto).
    * @param password - Plain password to check.
    * @returns The signed JWT, as `access_token`.
    * @throws {UnauthorizedException} If the email is unknown or the password is wrong
    * (same message for both, so the response doesn't reveal which emails exist).
    */
   async signIn(email: string, password: string): Promise<{ access_token: string }> {
-    const user = await this.usersService.findByEmail(this.normalizeEmail(email));
+    const user = await this.usersService.findByEmail(email);
 
-    if (!user || typeof password !== 'string' || !(await compare(password, user.passwordHash))) {
+    if (!user || !(await compare(password, user.passwordHash))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
