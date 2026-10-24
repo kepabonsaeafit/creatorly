@@ -24,9 +24,4 @@ npm run format
 npm run lint
 ```
 
-### Type check
-```bash
-npm run type-check
-```
-
-> If `npm run format` modifies files, those changes go in the same commit. Run `npm run build` before opening a Pull Request.
+> If `npm run format` modifies files, those changes go in the same commit.
