@@ -26,7 +26,9 @@ import OrdersByStatusChartComponent from '@/components/charts/OrdersByStatusChar
 import type { OrdersByStatusDTO } from '@/dtos/Reports/OrdersByStatusDTO'
 import { OrderService } from '@/services/OrderService'
 import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
+import { OrderUtil } from '@/utils/OrderUtil'
 import ReportTableComponent from '@/components/ReportTableComponent.vue'
+import { ReportUtil } from '@/utils/ReportUtil'
 import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 import StatCardGridComponent from '@/components/StatCardGridComponent.vue'
 
@@ -81,15 +83,15 @@ const completeFilters = computed<OrderFilterDTO>(() => ({
   to: to.value,
 }))
 
-const filteredOrders = computed(() => OrderService.filter(allOrders.value, completeFilters.value))
+const filteredOrders = computed(() => OrderUtil.filter(allOrders.value, completeFilters.value))
 
-const stats = computed(() => OrderService.getReportStats(filteredOrders.value))
-const byStatus = computed(() => OrderService.getOrdersByStatus(filteredOrders.value))
+const stats = computed(() => ReportUtil.getReportStats(filteredOrders.value))
+const byStatus = computed(() => ReportUtil.getOrdersByStatus(filteredOrders.value))
 const byCreator = computed(() =>
-  OrderService.getOrdersByCreator(filteredOrders.value, creators.value),
+  ReportUtil.getOrdersByCreator(filteredOrders.value, creators.value),
 )
-const byBrand = computed(() => OrderService.getBudgetByBrand(filteredOrders.value, brands.value))
-const byMonth = computed(() => OrderService.getOrdersByMonth(filteredOrders.value))
+const byBrand = computed(() => ReportUtil.getBudgetByBrand(filteredOrders.value, brands.value))
+const byMonth = computed(() => ReportUtil.getOrdersByMonth(filteredOrders.value))
 
 const currentReportOption = computed(
   () =>

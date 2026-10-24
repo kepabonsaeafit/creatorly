@@ -9,7 +9,7 @@ import { CurrencyUtil } from '@/utils/CurrencyUtil'
 import { DateUtil } from '@/utils/DateUtil'
 import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderInterface } from '@/interfaces/OrderInterface'
-import { OrderService } from '@/services/OrderService'
+import { OrderUtil } from '@/utils/OrderUtil'
 
 // props
 const props = withDefaults(
@@ -28,11 +28,11 @@ const emit = defineEmits<{ delete: [id: number] }>()
 
 // functions
 function brandName(order: OrderInterface): string {
-  return OrderService.getBrand(order, props.brands)?.name ?? 'Brand deleted'
+  return OrderUtil.getBrand(order, props.brands)?.name ?? 'Brand deleted'
 }
 
 function creatorName(order: OrderInterface): string {
-  return OrderService.getCreator(order, props.creators)?.name ?? 'Unassigned'
+  return OrderUtil.getCreator(order, props.creators)?.name ?? 'Unassigned'
 }
 
 function onDelete(id: number): void {

@@ -37,13 +37,13 @@
 - Read the base URL of the API from the environment variable, never write it in a service.
 - Name the CRUD methods getAll, getById, create, update, and remove. They are async and return Promise<T>.
 - Use DTOs to create or update registries.
-- Write the filters and aggregations as pure static methods over the arrays already fetched from the API.
+- Services only call the API: they do not hold filters, lookups, or aggregations. Those go in a domain util.
 - Do not duplicate the business validations of the backend. Show the error message of the API in a toast.
 
 # Utils
 - Define each util as a class of static methods, in its own file named in pascal case with the `Util` suffix (`DateUtil.ts`, `ErrorUtil.ts`).
 - Do not write constants or functions outside the class. Constants are `static readonly` and internal helpers are `private static`.
-- Utils hold generic helpers: formatting, labels, colors, errors, and strings. They do not call the API and do not read the store.
+- Generic utils hold formatting, labels, colors, errors, and strings. Domain utils (`CreatorUtil`, `UserUtil`, `OrderUtil`, `ReportUtil`) hold the filters, lookups, and aggregations over the arrays already fetched from the API. Utils do not call the API and do not read the store.
 - Views and components call them as `XUtil.method()` (`DateUtil.format(order.requestDate)`).
 
 # Stores

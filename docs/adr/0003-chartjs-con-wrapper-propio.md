@@ -10,7 +10,7 @@ The course requirements mandate Chart.js as the required charting library. We de
 
 ## Consequences
 
-- **No view instantiates or imports Chart.js.** Every chart is composed inside `components/charts/`, and views only receive data from a service and pass it as props. This rule is also an explicit criterion of the professor's rubric.
+- **No view instantiates or imports Chart.js.** Every chart is composed inside `components/charts/`, and views only receive data computed by a util and pass it as props. This rule is also an explicit criterion of the professor's rubric.
 - `BaseChart` is responsible for destroying the chart instance on unmount (Chart.js doesn't clean up on its own).
-- The data that feeds each chart is computed in the corresponding service and returned typed as a DTO (for example `OrdersByStatusDTO`), not aggregated inside the component.
+- The data that feeds each chart is computed in a domain util (`ReportUtil`) and returned typed as a DTO (for example `OrdersByStatusDTO`), not aggregated inside the component.
 - Series colors come from the brand variables in `src/assets/base.css`; no magic colors in the Chart.js configuration.

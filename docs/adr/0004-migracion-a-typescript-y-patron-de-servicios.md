@@ -30,9 +30,9 @@ Migrate Creatorly to TypeScript and adopt the tutorials' three-layer pattern:
 - **`interfaces/`** — each entity's shape, attributes only, no methods.
 - **`dtos/`** — types derived with `Omit`/`Pick`, one per use case.
 - **`stores/`** — Pinia, only the entity's array, no logic.
-- **`services/`** — classes of static methods with all the business logic and validations.
+- **`services/`** — classes of static methods that only call the API (the validations live in the backend DTOs).
 - **`seeders/`** — seed data, one per entity.
-- **`utils/`** — classes of static methods with generic helpers (formatters, labels, colors, errors, strings), one class per file with the `Util` suffix.
+- **`utils/`** — classes of static methods, one class per file with the `Util` suffix: generic helpers (formatters, labels, colors, errors, strings) and domain helpers (`CreatorUtil`, `UserUtil`, `OrderUtil`, `ReportUtil`) with the filters, lookups, and aggregations over the arrays fetched from the API.
 - **`components/charts/`** — all the Chart.js charts; no view imports them.
 
 The `composables/` folder is removed: its logic moves to the services.

@@ -19,6 +19,8 @@ import type { OrderInterface } from '@/interfaces/OrderInterface'
 import OrdersByStatusChartComponent from '@/components/charts/OrdersByStatusChartComponent.vue'
 import { OrderService } from '@/services/OrderService'
 import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
+import { OrderUtil } from '@/utils/OrderUtil'
+import { ReportUtil } from '@/utils/ReportUtil'
 import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 
 // non-reactive variables
@@ -48,9 +50,9 @@ const selectorBrands = computed(() =>
 // computed variables
 const completeFilters = computed<OrderFilterDTO>(() => ({ ...filters, text: text.value }))
 
-const orders = computed(() => OrderService.filterSorted(allOrders.value, completeFilters.value))
+const orders = computed(() => OrderUtil.filterSorted(allOrders.value, completeFilters.value))
 
-const byStatus = computed(() => OrderService.getOrdersByStatus(orders.value))
+const byStatus = computed(() => ReportUtil.getOrdersByStatus(orders.value))
 
 const statusPalette = computed(() => ColorUtil.getChartPalette())
 
