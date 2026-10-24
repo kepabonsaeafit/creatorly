@@ -31,5 +31,5 @@ The professor's reference project (https://github.com/danielgara/courseprojects-
 
 - The database file `backend/database.sqlite` is created on first start and ignored by git.
 - Every request except `POST /api/auth/login` needs the header `Authorization: Bearer <token>`.
-- Filters and chart aggregations stay as pure static methods of the frontend services, applied to arrays fetched from the API.
+- Filters and chart aggregations are pure static methods of the frontend domain utils (`CreatorUtil`, `UserUtil`, `OrderUtil`, `ReportUtil`), applied to arrays fetched from the API; the frontend services only call the API.
 - The "Reset demo data" button disappears: deleting `backend/database.sqlite` and restarting the backend re-seeds it.

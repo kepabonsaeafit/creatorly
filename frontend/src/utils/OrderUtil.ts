@@ -68,7 +68,7 @@ export class OrderUtil {
   /**
    * Same as filter(), but sorted by request date descending (most recent
    * first). Used by OrdersIndexView; ReportsView keeps using filter()
-   * unsorted because its detail table order must not change in this phase.
+   * unsorted, so its detail table keeps the order returned by the API.
    * @param orders - Orders to filter.
    * @param filter - Filter criteria.
    * @returns The filtered orders, sorted by request date descending.
