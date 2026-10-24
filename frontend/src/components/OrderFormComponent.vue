@@ -13,7 +13,7 @@ import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
 import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
-import { UserService } from '@/services/UserService'
+import { UserUtil } from '@/utils/UserUtil'
 
 // props
 interface Props {
@@ -63,7 +63,7 @@ const selectorCreators = computed(() =>
 )
 
 const selectorCoordinators = computed(() =>
-  UserService.getCoordinators(props.users).map(
+  UserUtil.getCoordinators(props.users).map(
     (coordinator: UserInterface): SelectOptionInterface<number> => ({
       value: coordinator.id,
       label: coordinator.name,

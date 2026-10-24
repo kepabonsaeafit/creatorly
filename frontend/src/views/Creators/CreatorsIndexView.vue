@@ -10,6 +10,7 @@ import type { CreatorFilterDTO } from '@/dtos/Creators/CreatorFilterDTO'
 import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { CreatorService } from '@/services/CreatorService'
 import CreatorsTableComponent from '@/components/CreatorsTableComponent.vue'
+import { CreatorUtil } from '@/utils/CreatorUtil'
 import { ErrorUtil } from '@/utils/ErrorUtil'
 import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 import { StringUtil } from '@/utils/StringUtil'
@@ -28,7 +29,7 @@ const filters = reactive<Pick<CreatorFilterDTO, 'niche' | 'available'>>({
 
 // selectors
 const selectorNiches = computed(() =>
-  CreatorService.getNiches(allCreators.value).map((niche: string): SelectOptionInterface => ({
+  CreatorUtil.getNiches(allCreators.value).map((niche: string): SelectOptionInterface => ({
     value: niche,
     label: StringUtil.capitalize(niche),
   })),
@@ -42,7 +43,7 @@ const selectorAvailability: SelectOptionInterface<boolean>[] = [
 // computed variables
 const completeFilters = computed<CreatorFilterDTO>(() => ({ ...filters, text: text.value }))
 
-const creators = computed(() => CreatorService.filter(allCreators.value, completeFilters.value))
+const creators = computed(() => CreatorUtil.filter(allCreators.value, completeFilters.value))
 
 // functions
 async function loadCreators(): Promise<void> {

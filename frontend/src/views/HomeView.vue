@@ -13,6 +13,7 @@ import { ErrorUtil } from '@/utils/ErrorUtil'
 import type { HomeStatInterface } from '@/interfaces/HomeStatInterface'
 import type { OrderActivityInterface } from '@/interfaces/OrderActivityInterface'
 import { OrderService } from '@/services/OrderService'
+import { ReportUtil } from '@/utils/ReportUtil'
 import StatCardGridComponent from '@/components/StatCardGridComponent.vue'
 
 // non-reactive variables
@@ -28,8 +29,8 @@ onMounted(async (): Promise<void> => {
   try {
     const [orders, brands] = await Promise.all([OrderService.getAll(), BrandService.getAll()])
 
-    stats.value = OrderService.getStats(orders)
-    recentOrders.value = OrderService.getRecentOrders(orders, brands)
+    stats.value = ReportUtil.getStats(orders)
+    recentOrders.value = ReportUtil.getRecentOrders(orders, brands)
   } catch (caughtError) {
     toast.error(ErrorUtil.getMessage(caughtError, 'It was not possible to load the dashboard'))
   } finally {

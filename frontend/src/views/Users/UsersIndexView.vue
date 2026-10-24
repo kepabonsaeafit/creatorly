@@ -13,6 +13,7 @@ import type { UserFilterDTO } from '@/dtos/Users/UserFilterDTO'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserService } from '@/services/UserService'
 import UsersTableComponent from '@/components/UsersTableComponent.vue'
+import { UserUtil } from '@/utils/UserUtil'
 
 // non-reactive variables
 const toast = useToast()
@@ -31,7 +32,7 @@ const currentUser = computed(() => AuthService.getCurrentUser())
 
 const completeFilters = computed<UserFilterDTO>(() => ({ ...filters, text: text.value }))
 
-const users = computed(() => UserService.filter(allUsers.value, completeFilters.value))
+const users = computed(() => UserUtil.filter(allUsers.value, completeFilters.value))
 
 // functions
 async function loadUsers(): Promise<void> {
