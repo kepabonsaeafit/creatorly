@@ -1,7 +1,7 @@
 # ADR-0004: Migration to TypeScript and the interfaces + stores + services pattern
 
 - **Date:** 2026-09-02
-- **Status:** Accepted
+- **Status:** Accepted — `stores/` and `seeders/` updated by ADR-0005
 - **Decided by:** Kevin Pabón (architect)
 
 ## Context
@@ -29,15 +29,15 @@ Migrate Creatorly to TypeScript and adopt the tutorials' three-layer pattern:
 
 - **`interfaces/`** — each entity's shape, attributes only, no methods.
 - **`dtos/`** — types derived with `Omit`/`Pick`, one per use case.
-- **`stores/`** — Pinia, only the entity's array, no logic.
+- **`stores/`** — Pinia, only the entity's array, no logic. *Update (ADR-0005, 2026-10-04): the entity stores were removed when the data moved to the backend; `SessionStore` is the only store left, and it keeps the token and the current user.*
 - **`services/`** — classes of static methods that only call the API (the validations live in the backend DTOs).
-- **`seeders/`** — seed data, one per entity.
+- **`seeders/`** — seed data, one per entity. *Update (ADR-0005, 2026-10-04): the seeders moved to the backend (`*.seeder.ts` in each module); the frontend has none.*
 - **`utils/`** — classes of static methods, one class per file with the `Util` suffix: generic helpers (formatters, labels, colors, errors, strings) and domain helpers (`CreatorUtil`, `UserUtil`, `OrderUtil`, `ReportUtil`) with the filters, lookups, and aggregations over the arrays fetched from the API.
 - **`components/charts/`** — all the Chart.js charts; no view imports them.
 
-The `composables/` folder is removed: its logic moves to the services.
+The `composables/` folder is removed: its logic moves to the services. *Update (2026-10-24): that logic now lives in the domain utils, since the services only call the API.*
 
-The 7-step execution plan lives in `PLAN_MIGRACION_TS.md`.
+The migration ran in 7 steps on the branch `feat/migracion-ts-paso1`. Its working plan (`PLAN_MIGRACION_TS.md`) was not kept in the repository; the commits of that branch record each step.
 
 ## Alternatives Considered
 

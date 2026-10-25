@@ -30,5 +30,5 @@ The services also repeated the same input checks (`validate`, `isDate`, `EMAIL_R
 - Each date needs two decorators: `@Matches` alone would accept an impossible day such as `2026-02-30`, which the old `isDate` rejected.
 - Every property the frontend sends must be declared in a DTO, or the request fails with 400 (`forbidNonWhitelisted`).
 - `niche` is stored in lowercase (`@Trim()` + `@ToLowerCase()`), so "gaming" and "Gaming" are the same niche. Rows saved before this change keep their original case until they are normalized once with SQL; the frontend compares and groups niches ignoring case, and capitalizes the first letter only when it displays them.
-- The frontend's `getErrorMessage` already joins array messages, so DTO errors are shown in the toasts without changes.
+- The frontend's `ErrorUtil.getMessage` already joins array messages, so DTO errors are shown in the toasts without changes.
 - DTO rules are tested with `plainToInstance` and `validate`, without starting Nest.
