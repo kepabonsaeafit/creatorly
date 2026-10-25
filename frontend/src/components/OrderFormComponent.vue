@@ -11,7 +11,6 @@ import type { CreatorInterface } from '@/interfaces/CreatorInterface'
 import { DateUtil } from '@/utils/DateUtil'
 import { LabelUtil } from '@/utils/LabelUtil'
 import type { OrderStatus } from '@/interfaces/OrderInterface'
-import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 import type { UserInterface } from '@/interfaces/UserInterface'
 import { UserUtil } from '@/utils/UserUtil'
 
@@ -48,27 +47,12 @@ const userId = ref<number | null>(props.initial.userId ?? null)
 const status = ref<OrderStatus>(props.initial.status ?? 'requested')
 
 // selectors
-const selectorBrands = computed(() =>
-  props.brands.map((brand: BrandInterface): SelectOptionInterface<number> => ({
-    value: brand.id,
-    label: brand.name,
-  })),
-)
+const selectorBrands = computed(() => LabelUtil.toEntityOptions(props.brands))
 
-const selectorCreators = computed(() =>
-  props.creators.map((creator: CreatorInterface): SelectOptionInterface<number> => ({
-    value: creator.id,
-    label: creator.name,
-  })),
-)
+const selectorCreators = computed(() => LabelUtil.toEntityOptions(props.creators))
 
 const selectorCoordinators = computed(() =>
-  UserUtil.getCoordinators(props.users).map(
-    (coordinator: UserInterface): SelectOptionInterface<number> => ({
-      value: coordinator.id,
-      label: coordinator.name,
-    }),
-  ),
+  LabelUtil.toEntityOptions(UserUtil.getCoordinators(props.users)),
 )
 
 const selectorStatuses = LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS)

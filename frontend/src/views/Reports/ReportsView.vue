@@ -55,19 +55,9 @@ const reportType = ref<ReportType>('month')
 // selectors
 const selectorStatuses = LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS)
 
-const selectorBrands = computed(() =>
-  brands.value.map((brand: BrandInterface): SelectOptionInterface<number> => ({
-    value: brand.id,
-    label: brand.name,
-  })),
-)
+const selectorBrands = computed(() => LabelUtil.toEntityOptions(brands.value))
 
-const selectorCreators = computed(() =>
-  creators.value.map((creator: CreatorInterface): SelectOptionInterface<number> => ({
-    value: creator.id,
-    label: creator.name,
-  })),
-)
+const selectorCreators = computed(() => LabelUtil.toEntityOptions(creators.value))
 
 const selectorReportTypes: SelectOptionInterface<ReportType>[] = [
   { value: 'month', label: 'Orders by month' },
