@@ -21,7 +21,6 @@ import { OrderService } from '@/services/OrderService'
 import OrdersTableComponent from '@/components/OrdersTableComponent.vue'
 import { OrderUtil } from '@/utils/OrderUtil'
 import { ReportUtil } from '@/utils/ReportUtil'
-import type { SelectOptionInterface } from '@/interfaces/SelectOptionInterface'
 
 // non-reactive variables
 const toast = useToast()
@@ -40,12 +39,7 @@ const filters = reactive<Pick<OrderFilterDTO, 'status' | 'brandId'>>({
 // selectors
 const selectorStatuses = LabelUtil.toSelectOptions(LabelUtil.ORDER_STATUS)
 
-const selectorBrands = computed(() =>
-  brands.value.map((brand: BrandInterface): SelectOptionInterface<number> => ({
-    value: brand.id,
-    label: brand.name,
-  })),
-)
+const selectorBrands = computed(() => LabelUtil.toEntityOptions(brands.value))
 
 // computed variables
 const completeFilters = computed<OrderFilterDTO>(() => ({ ...filters, text: text.value }))

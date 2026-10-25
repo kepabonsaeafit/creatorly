@@ -12,6 +12,12 @@ interface LabelEntry {
   color: string
 }
 
+/** Any entity with an id and a name, such as a brand, a creator or a user. */
+interface NamedEntity {
+  id: number
+  name: string
+}
+
 export class LabelUtil {
   /**
    * Label and color of each OrderStatus, in the same order as STATUSES.
@@ -68,6 +74,19 @@ export class LabelUtil {
     return (Object.keys(labels) as Value[]).map((value: Value): SelectOptionInterface<Value> => ({
       value,
       label: labels[value].text,
+    }))
+  }
+
+  /**
+   * Builds a <select>'s options from entities already fetched from the API
+   * (brands, creators, coordinators), in the order they come.
+   * @param entities - Entities to read the options from.
+   * @returns The options, with the id as value and the name as label.
+   */
+  static toEntityOptions(entities: NamedEntity[]): SelectOptionInterface<number>[] {
+    return entities.map((entity: NamedEntity): SelectOptionInterface<number> => ({
+      value: entity.id,
+      label: entity.name,
     }))
   }
 }
