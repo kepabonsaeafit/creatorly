@@ -1,5 +1,9 @@
 // Author: Kevin Pabón
 
+// internal imports
+import type { ArticleInterface } from './app/interfaces/ArticleInterface'
+import { ARTICLES } from './app/data/ArticleData'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -9,6 +13,7 @@ export default defineNuxtConfig({
   // mode does not depend on whether /** also matches the root
   routeRules: {
     // SSG: rendered to static HTML at build time
+    '/blog': { prerender: true },
     '/blog/**': { prerender: true },
     // SSR: rendered on the server on every request
     '/creators': { ssr: true },
@@ -21,7 +26,10 @@ export default defineNuxtConfig({
     prerender: {
       // only the routes listed here are prerendered, not the links found in them
       crawlLinks: false,
-      routes: [],
+      routes: [
+        '/blog',
+        ...ARTICLES.map((article: ArticleInterface): string => `/blog/${article.id}`),
+      ],
     },
   },
   app: {
