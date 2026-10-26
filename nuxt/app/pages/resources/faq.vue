@@ -7,9 +7,6 @@ import { ref } from 'vue'
 // internal imports
 import { FAQS } from '~/data/FaqData'
 
-// non-reactive variables
-const faqs = FAQS
-
 // reactive variables
 // id of the open question, or null when every question is collapsed: only one
 // answer stays open at a time
@@ -30,7 +27,7 @@ function toggle(id: string): void {
     </p>
 
     <ul class="faq__list">
-      <li v-for="faq in faqs" :key="faq.id" class="faq__item">
+      <li v-for="faq in FAQS" :key="faq.id" class="faq__item">
         <button
           type="button"
           class="faq__question"
