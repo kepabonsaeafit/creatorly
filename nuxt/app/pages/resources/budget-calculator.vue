@@ -27,7 +27,7 @@ const commission = computed(() =>
 )
 
 const total = computed(() =>
-  BudgetUtil.getTotal(rate.value, pieces.value, usagePercent.value, commissionPercent.value),
+  BudgetUtil.getTotal(production.value, usageRights.value, commission.value),
 )
 </script>
 
