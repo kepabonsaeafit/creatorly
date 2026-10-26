@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // Author: Kevin Pabón
 
+// internal imports
+import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
+
 /** A section of the site shown as a card on the home page. */
 interface HomeSection {
   to: string
@@ -41,7 +44,7 @@ const SECTIONS: HomeSection[] = [
 
     <div class="home__sections">
       <NuxtLink v-for="section in SECTIONS" :key="section.to" :to="section.to" class="home__card">
-        <span class="home__badge">{{ section.rendering }}</span>
+        <RenderingBadgeComponent :rendering="section.rendering" />
         <h2 class="home__card-title">{{ section.title }}</h2>
         <p class="home__card-text">{{ section.description }}</p>
       </NuxtLink>
@@ -76,17 +79,6 @@ const SECTIONS: HomeSection[] = [
 
 .home__card:hover {
   border-color: var(--color-primary);
-}
-
-.home__badge {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .home__card-title {
