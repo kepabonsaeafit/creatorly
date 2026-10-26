@@ -2,6 +2,7 @@
 // Author: Felipe Gómez
 
 // internal imports
+import AvailabilityBadgeComponent from '~/components/AvailabilityBadgeComponent.vue'
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
 import { CurrencyUtil } from '~/utils/CurrencyUtil'
 import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
@@ -26,14 +27,7 @@ if (error.value || !creator.value) {
     <article v-if="creator" class="creator-detail__card">
       <div class="creator-detail__header">
         <RenderingBadgeComponent rendering="SSR" />
-        <span
-          class="creator-detail__status"
-          :class="
-            creator.available ? 'creator-detail__status--available' : 'creator-detail__status--busy'
-          "
-        >
-          {{ creator.available ? 'Available' : 'Not available' }}
-        </span>
+        <AvailabilityBadgeComponent :available="creator.available" />
       </div>
 
       <h1 class="creator-detail__name">{{ creator.name }}</h1>
@@ -86,23 +80,6 @@ if (error.value || !creator.value) {
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-}
-
-.creator-detail__status {
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.creator-detail__status--available {
-  background: var(--color-success);
-  color: var(--brand-white);
-}
-
-.creator-detail__status--busy {
-  background: var(--color-background-mute);
-  color: var(--color-text);
 }
 
 .creator-detail__name {

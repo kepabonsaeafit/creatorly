@@ -2,6 +2,7 @@
 // Author: Felipe Gómez
 
 // internal imports
+import AvailabilityBadgeComponent from '~/components/AvailabilityBadgeComponent.vue'
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
 import { CurrencyUtil } from '~/utils/CurrencyUtil'
 
@@ -13,14 +14,7 @@ defineProps<{ creator: CreatorInterface }>()
   <NuxtLink :to="`/creators/${creator.id}`" class="creator-card">
     <div class="creator-card__header">
       <h2 class="creator-card__name">{{ creator.name }}</h2>
-      <span
-        class="creator-card__status"
-        :class="
-          creator.available ? 'creator-card__status--available' : 'creator-card__status--busy'
-        "
-      >
-        {{ creator.available ? 'Available' : 'Not available' }}
-      </span>
+      <AvailabilityBadgeComponent :available="creator.available" />
     </div>
 
     <p class="creator-card__meta">
@@ -59,23 +53,6 @@ defineProps<{ creator: CreatorInterface }>()
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--color-heading);
-}
-
-.creator-card__status {
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.creator-card__status--available {
-  background: var(--color-success);
-  color: var(--brand-white);
-}
-
-.creator-card__status--busy {
-  background: var(--color-background-mute);
-  color: var(--color-text);
 }
 
 .creator-card__meta {
