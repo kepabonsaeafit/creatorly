@@ -8,6 +8,7 @@ import type { RouteLocationNormalized } from 'vue-router'
 // internal imports
 import { ARTICLES } from '~/data/ArticleData'
 import { ArticleUtil } from '~/utils/ArticleUtil'
+import { DateUtil } from '~/utils/DateUtil'
 
 // an unknown id never reaches the template: validate rejects the route first
 // and Nuxt answers with its 404 page
@@ -30,7 +31,8 @@ const article = computed(() => ArticleUtil.findById(ARTICLES, String(route.param
 
       <h1 class="article__title">{{ article.title }}</h1>
       <p class="article__meta">
-        {{ article.author }} · {{ article.date }} · {{ article.readingMinutes }} min read
+        {{ article.author }} · {{ DateUtil.format(article.date) }} ·
+        {{ article.readingMinutes }} min read
       </p>
       <p class="article__summary">{{ article.summary }}</p>
 

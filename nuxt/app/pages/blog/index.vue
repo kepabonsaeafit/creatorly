@@ -3,9 +3,7 @@
 
 // internal imports
 import { ARTICLES } from '~/data/ArticleData'
-
-// non-reactive variables
-const articles = ARTICLES
+import { DateUtil } from '~/utils/DateUtil'
 </script>
 
 <template>
@@ -18,11 +16,13 @@ const articles = ARTICLES
     </p>
 
     <ul class="blog__list">
-      <li v-for="article in articles" :key="article.id" class="blog__item">
+      <li v-for="article in ARTICLES" :key="article.id" class="blog__item">
         <NuxtLink :to="`/blog/${article.id}`" class="blog__link">
           <h2 class="blog__title">{{ article.title }}</h2>
           <p class="blog__summary">{{ article.summary }}</p>
-          <p class="blog__meta">{{ article.date }} · {{ article.readingMinutes }} min read</p>
+          <p class="blog__meta">
+            {{ DateUtil.format(article.date) }} · {{ article.readingMinutes }} min read
+          </p>
         </NuxtLink>
       </li>
     </ul>
