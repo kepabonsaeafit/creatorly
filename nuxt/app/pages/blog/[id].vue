@@ -3,21 +3,24 @@
 
 // external imports
 import { computed } from 'vue'
+import type { RouteLocationNormalized } from 'vue-router'
 
 // internal imports
 import { ARTICLES } from '~/data/ArticleData'
+import { ArticleUtil } from '~/utils/ArticleUtil'
 
 // an unknown id never reaches the template: validate rejects the route first
 // and Nuxt answers with its 404 page
 definePageMeta({
-  validate: (route) => ARTICLES.some((article) => article.id === String(route.params.id)),
+  validate: (route: RouteLocationNormalized): boolean =>
+    ArticleUtil.findById(ARTICLES, String(route.params.id)) !== undefined,
 })
 
 // non-reactive variables
 const route = useRoute()
 
 // computed variables
-const article = computed(() => ARTICLES.find((item) => item.id === String(route.params.id)))
+const article = computed(() => ArticleUtil.findById(ARTICLES, String(route.params.id)))
 </script>
 
 <template>

@@ -1,6 +1,7 @@
 // Author: Kevin Pabón
 
 // internal imports
+import type { ArticleInterface } from './app/interfaces/ArticleInterface'
 import { ARTICLES } from './app/data/ArticleData'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -25,7 +26,10 @@ export default defineNuxtConfig({
     prerender: {
       // only the routes listed here are prerendered, not the links found in them
       crawlLinks: false,
-      routes: ['/blog', ...ARTICLES.map((article) => `/blog/${article.id}`)],
+      routes: [
+        '/blog',
+        ...ARTICLES.map((article: ArticleInterface): string => `/blog/${article.id}`),
+      ],
     },
   },
   app: {
