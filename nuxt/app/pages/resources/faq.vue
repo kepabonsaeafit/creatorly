@@ -6,6 +6,7 @@ import { ref } from 'vue'
 
 // internal imports
 import { FAQS } from '~/data/FaqData'
+import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
 
 // reactive variables
 // id of the open question, or null when every question is collapsed: only one
@@ -20,7 +21,7 @@ function toggle(id: string): void {
 
 <template>
   <main class="faq">
-    <span class="faq__badge">CSR</span>
+    <RenderingBadgeComponent rendering="CSR" />
     <h1>Frequently asked questions</h1>
     <p class="faq__lead">
       What brands ask the agency most often. Select a question to read the answer.
@@ -50,17 +51,6 @@ function toggle(id: string): void {
 .faq {
   padding: 1rem 0;
   max-width: 70ch;
-}
-
-.faq__badge {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .faq__lead {

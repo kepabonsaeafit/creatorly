@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // Author: Gerónimo Montes
 
+// internal imports
+import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
+
 /** A resource of the section, shown as a card. */
 interface ResourceCard {
   to: string
@@ -27,7 +30,7 @@ const RESOURCES: ResourceCard[] = [
 
 <template>
   <main class="resources">
-    <span class="resources__badge">CSR</span>
+    <RenderingBadgeComponent rendering="CSR" />
     <h1>Resources</h1>
     <p class="resources__lead">
       Tools and answers for brands working with the agency. This section is rendered only in the
@@ -51,17 +54,6 @@ const RESOURCES: ResourceCard[] = [
 <style scoped>
 .resources {
   padding: 1rem 0;
-}
-
-.resources__badge {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .resources__lead {

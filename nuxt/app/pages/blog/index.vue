@@ -4,11 +4,12 @@
 // internal imports
 import { ARTICLES } from '~/data/ArticleData'
 import { DateUtil } from '~/utils/DateUtil'
+import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
 </script>
 
 <template>
   <main class="blog">
-    <span class="blog__badge">SSG</span>
+    <RenderingBadgeComponent rendering="SSG" />
     <h1>Blog</h1>
     <p class="blog__lead">
       Articles about running a UGC creator agency. These pages are rendered to static HTML at build
@@ -32,17 +33,6 @@ import { DateUtil } from '~/utils/DateUtil'
 <style scoped>
 .blog {
   padding: 1rem 0;
-}
-
-.blog__badge {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .blog__lead {
