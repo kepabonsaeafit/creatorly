@@ -103,12 +103,12 @@ const total = computed(() =>
           </div>
 
           <div class="calculator__row">
-            <dt class="calculator__term">Usage rights ({{ usagePercent || 0 }}%)</dt>
+            <dt class="calculator__term">Usage rights</dt>
             <dd class="calculator__value">{{ CurrencyUtil.format(usageRights) }}</dd>
           </div>
 
           <div class="calculator__row">
-            <dt class="calculator__term">Agency commission ({{ commissionPercent || 0 }}%)</dt>
+            <dt class="calculator__term">Agency commission</dt>
             <dd class="calculator__value">{{ CurrencyUtil.format(commission) }}</dd>
           </div>
 
