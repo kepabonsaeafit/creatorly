@@ -4,6 +4,7 @@
 // internal imports
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
 import { CurrencyUtil } from '~/utils/CurrencyUtil'
+import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
 
 // non-reactive variables
 const route = useRoute()
@@ -24,7 +25,7 @@ if (error.value || !creator.value) {
 
     <article v-if="creator" class="creator-detail__card">
       <div class="creator-detail__header">
-        <span class="creator-detail__badge">SSR</span>
+        <RenderingBadgeComponent rendering="SSR" />
         <span
           class="creator-detail__status"
           :class="
@@ -79,22 +80,12 @@ if (error.value || !creator.value) {
   background: var(--color-background-soft);
 }
 
+/* the rendering badge brings its own bottom margin, so the header adds none */
 .creator-detail__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.creator-detail__badge {
-  display: inline-block;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .creator-detail__status {

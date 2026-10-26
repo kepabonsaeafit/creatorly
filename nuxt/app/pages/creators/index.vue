@@ -4,6 +4,7 @@
 // internal imports
 import CreatorCardComponent from '~/components/CreatorCardComponent.vue'
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
+import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
 
 // reactive variables
 const { data: creators } = await useFetch<CreatorInterface[]>('/api/creators')
@@ -11,7 +12,7 @@ const { data: creators } = await useFetch<CreatorInterface[]>('/api/creators')
 
 <template>
   <main class="creators">
-    <span class="creators__badge">SSR</span>
+    <RenderingBadgeComponent rendering="SSR" />
     <h1>Creators</h1>
     <p class="creators__lead">
       The UGC talent in the agency catalog. This page is rendered on the server on every request.
@@ -28,17 +29,6 @@ const { data: creators } = await useFetch<CreatorInterface[]>('/api/creators')
 <style scoped>
 .creators {
   padding: 1rem 0;
-}
-
-.creators__badge {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .creators__lead {
