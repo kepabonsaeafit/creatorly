@@ -1,36 +1,33 @@
 <script setup lang="ts">
 // Author: Gerónimo Montes
 
-// external imports
-import { computed } from 'vue'
-import type { RouteLocationNormalized } from 'vue-router'
-
 // internal imports
-import { ARTICLES } from '~/data/ArticleData'
-import { ArticleUtil } from '~/utils/ArticleUtil'
+import type { ArticleInterface } from '~/interfaces/ArticleInterface'
+import { articles } from '~/data/ArticleData'
 import { DateUtil } from '~/utils/DateUtil'
-
-// an unknown id never reaches the template: validate rejects the route first
-// and Nuxt answers with its 404 page
-definePageMeta({
-  validate: (route: RouteLocationNormalized): boolean =>
-    ArticleUtil.findById(ARTICLES, String(route.params.id)) !== undefined,
-})
 
 // non-reactive variables
 const route = useRoute()
+const article = findArticle(String(route.params.id))
 
-// computed variables
-const article = computed(() => ArticleUtil.findById(ARTICLES, String(route.params.id)))
+// functions
+function findArticle(id: string): ArticleInterface {
+  const found = articles.find((candidate: ArticleInterface): boolean => candidate.id === id)
+  if (!found) {
+    throw createError({ statusCode: 404, statusMessage: 'Article: not found', fatal: true })
+  }
+
+  return found
+}
 
 // hooks
-useHead({ title: () => article.value?.title ?? 'Blog' })
+useHead({ title: article.title })
 </script>
 
 <template>
   <NuxtLink to="/blog" class="btn btn-outline-secondary btn-sm mb-4">← All articles</NuxtLink>
 
-  <article v-if="article" class="row justify-content-center">
+  <article class="row justify-content-center">
     <div class="col-12 col-lg-8">
       <h1 class="h2 fw-bold">{{ article.title }}</h1>
       <p class="text-body-secondary">

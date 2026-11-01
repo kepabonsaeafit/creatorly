@@ -4,7 +4,7 @@
 import type { FaqInterface } from '~/interfaces/FaqInterface'
 
 /** The questions brands ask the agency most often, hardcoded for this section. */
-export const FAQS: FaqInterface[] = [
+export const faqs: FaqInterface[] = [
   {
     id: '1',
     question: 'What is UGC and how is it different from influencer marketing?',

@@ -7,7 +7,7 @@ import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
  * The six creators from the backend seeder, kept in server memory for the SSR
  * catalog endpoints.
  */
-export const CREATORS: CreatorInterface[] = [
+export const creators: CreatorInterface[] = [
   {
     id: 1,
     name: 'Valentina Ríos',

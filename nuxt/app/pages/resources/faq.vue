@@ -5,7 +5,7 @@
 import { ref } from 'vue'
 
 // internal imports
-import { FAQS } from '~/data/FaqData'
+import { faqs } from '~/data/FaqData'
 
 // reactive variables
 // id of the open question, or null when every question is collapsed: only one
@@ -34,7 +34,7 @@ useHead({ title: 'FAQ' })
   </header>
 
   <div class="accordion">
-    <div v-for="faq in FAQS" :key="faq.id" class="accordion-item">
+    <div v-for="faq in faqs" :key="faq.id" class="accordion-item">
       <h2 class="accordion-header">
         <button
           type="button"

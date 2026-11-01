@@ -2,7 +2,7 @@
 
 // internal imports
 import type { ArticleInterface } from './app/interfaces/ArticleInterface'
-import { ARTICLES } from './app/data/ArticleData'
+import { articles } from './app/data/ArticleData'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       crawlLinks: false,
       routes: [
         '/blog',
-        ...ARTICLES.map((article: ArticleInterface): string => `/blog/${article.id}`),
+        ...articles.map((article: ArticleInterface): string => `/blog/${article.id}`),
       ],
     },
   },

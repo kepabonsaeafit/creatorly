@@ -9,7 +9,7 @@ interface ResourceCard {
 }
 
 // non-reactive variables
-const RESOURCES: ResourceCard[] = [
+const resources: ResourceCard[] = [
   {
     to: '/resources/budget-calculator',
     title: 'Budget calculator',
@@ -38,7 +38,7 @@ useHead({ title: 'Resources' })
   </header>
 
   <div class="row g-4">
-    <div v-for="resource in RESOURCES" :key="resource.to" class="col-12 col-md-6 d-flex">
+    <div v-for="resource in resources" :key="resource.to" class="col-12 col-md-6 d-flex">
       <div class="card w-100">
         <div class="card-body d-flex flex-column">
           <h2 class="h5 card-title">{{ resource.title }}</h2>

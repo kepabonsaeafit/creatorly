@@ -2,7 +2,7 @@
 // Author: Gerónimo Montes
 
 // internal imports
-import { ARTICLES } from '~/data/ArticleData'
+import { articles } from '~/data/ArticleData'
 import { DateUtil } from '~/utils/DateUtil'
 
 // hooks
@@ -20,7 +20,7 @@ useHead({ title: 'Blog' })
 
   <div class="list-group">
     <NuxtLink
-      v-for="article in ARTICLES"
+      v-for="article in articles"
       :key="article.id"
       :to="`/blog/${article.id}`"
       class="list-group-item list-group-item-action py-3"

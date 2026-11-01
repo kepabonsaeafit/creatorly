@@ -7,7 +7,7 @@ import type { ArticleInterface } from '~/interfaces/ArticleInterface'
  * The three blog articles, hardcoded: this section has no backend, and the
  * list is also what nuxt.config.ts reads to know which routes to prerender.
  */
-export const ARTICLES: ArticleInterface[] = [
+export const articles: ArticleInterface[] = [
   {
     id: '1',
     title: 'How to price a UGC order without guessing',
