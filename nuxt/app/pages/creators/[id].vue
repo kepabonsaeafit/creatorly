@@ -2,9 +2,10 @@
 // Author: Felipe Gómez
 
 // internal imports
+import { ColorUtil } from '~/utils/ColorUtil'
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
-import { CreatorUtil } from '~/utils/CreatorUtil'
 import { CurrencyUtil } from '~/utils/CurrencyUtil'
+import { LabelUtil } from '~/utils/LabelUtil'
 
 // non-reactive variables
 const route = useRoute()
@@ -33,8 +34,8 @@ useHead({ title: creator.name })
         <div class="card-body">
           <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
             <h1 class="h2 fw-bold mb-0">{{ creator.name }}</h1>
-            <span :class="`badge text-bg-${CreatorUtil.getAvailabilityColor(creator.available)}`">
-              {{ CreatorUtil.getAvailabilityLabel(creator.available) }}
+            <span :class="`badge text-bg-${ColorUtil.availability(creator.available)}`">
+              {{ LabelUtil.availability(creator.available) }}
             </span>
           </div>
 

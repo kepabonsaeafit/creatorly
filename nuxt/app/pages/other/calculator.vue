@@ -5,8 +5,8 @@
 import { ref } from 'vue'
 
 // internal imports
+import type { CalculatorOperator } from '~/types/CalculatorTypes'
 import { CalculatorUtil } from '~/utils/CalculatorUtil'
-import type { CalculatorOperator } from '~/utils/CalculatorUtil'
 
 // non-reactive variables
 const keys = ['7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '-', '0', '.', '=', '+']

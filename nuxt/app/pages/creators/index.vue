@@ -2,9 +2,10 @@
 // Author: Felipe Gómez
 
 // internal imports
+import { ColorUtil } from '~/utils/ColorUtil'
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
-import { CreatorUtil } from '~/utils/CreatorUtil'
 import { CurrencyUtil } from '~/utils/CurrencyUtil'
+import { LabelUtil } from '~/utils/LabelUtil'
 
 // reactive variables
 const { data: creators } = await useFetch<CreatorInterface[]>('/api/creators')
@@ -28,8 +29,8 @@ useHead({ title: 'Creators' })
         <div class="card-body d-flex flex-column">
           <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
             <h2 class="h5 card-title mb-0">{{ creator.name }}</h2>
-            <span :class="`badge text-bg-${CreatorUtil.getAvailabilityColor(creator.available)}`">
-              {{ CreatorUtil.getAvailabilityLabel(creator.available) }}
+            <span :class="`badge text-bg-${ColorUtil.availability(creator.available)}`">
+              {{ LabelUtil.availability(creator.available) }}
             </span>
           </div>
           <p class="card-text text-body-secondary text-capitalize">
