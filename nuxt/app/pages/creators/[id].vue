@@ -8,24 +8,26 @@ import { CurrencyUtil } from '~/utils/CurrencyUtil'
 
 // non-reactive variables
 const route = useRoute()
+const creator = await fetchCreator(Number(route.params.id))
 
-// reactive variables
-const { data: creator, error } = await useFetch<CreatorInterface>(
-  `/api/creators/${String(route.params.id)}`,
-)
+// functions
+async function fetchCreator(id: number): Promise<CreatorInterface> {
+  const { data } = await useFetch<CreatorInterface>(`/api/creators/${id}`)
+  if (!data.value) {
+    throw createError({ statusCode: 404, statusMessage: 'Creator: not found', fatal: true })
+  }
 
-if (error.value || !creator.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Creator: not found', fatal: true })
+  return data.value
 }
 
 // hooks
-useHead({ title: () => creator.value?.name ?? 'Creators' })
+useHead({ title: creator.name })
 </script>
 
 <template>
   <NuxtLink to="/creators" class="btn btn-outline-secondary btn-sm mb-4">← All creators</NuxtLink>
 
-  <div v-if="creator" class="row justify-content-center">
+  <div class="row justify-content-center">
     <div class="col-12 col-lg-8">
       <div class="card">
         <div class="card-body">

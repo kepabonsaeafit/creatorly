@@ -2,7 +2,7 @@
 
 // internal imports
 import type { ArticleInterface } from './app/interfaces/ArticleInterface'
-import { ARTICLES } from './app/data/ArticleData'
+import { articles } from './app/data/ArticleData'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -18,8 +18,8 @@ export default defineNuxtConfig({
     '/creators': { ssr: true },
     '/creators/**': { ssr: true },
     // CSR: rendered only in the browser
-    '/resources': { ssr: false },
-    '/resources/**': { ssr: false },
+    '/other': { ssr: false },
+    '/other/**': { ssr: false },
   },
   nitro: {
     prerender: {
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       crawlLinks: false,
       routes: [
         '/blog',
-        ...ARTICLES.map((article: ArticleInterface): string => `/blog/${article.id}`),
+        ...articles.map((article: ArticleInterface): string => `/blog/${article.id}`),
       ],
     },
   },

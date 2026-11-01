@@ -5,7 +5,7 @@
 import { ref } from 'vue'
 
 // internal imports
-import { FAQS } from '~/data/FaqData'
+import { faqs } from '~/data/FaqData'
 
 // reactive variables
 // id of the open question, or null when every question is collapsed: only one
@@ -22,9 +22,7 @@ useHead({ title: 'FAQ' })
 </script>
 
 <template>
-  <NuxtLink to="/resources" class="btn btn-outline-secondary btn-sm mb-4">
-    ← All resources
-  </NuxtLink>
+  <NuxtLink to="/other" class="btn btn-outline-secondary btn-sm mb-4"> ← Other </NuxtLink>
 
   <header class="mb-4">
     <h1 class="h2 fw-bold mb-1">Frequently asked questions</h1>
@@ -34,7 +32,7 @@ useHead({ title: 'FAQ' })
   </header>
 
   <div class="accordion">
-    <div v-for="faq in FAQS" :key="faq.id" class="accordion-item">
+    <div v-for="faq in faqs" :key="faq.id" class="accordion-item">
       <h2 class="accordion-header">
         <button
           type="button"

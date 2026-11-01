@@ -2,6 +2,6 @@
 
 // internal imports
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
-import { CREATORS } from '../../data/CreatorData'
+import { creators } from '../../data/CreatorData'
 
-export default defineEventHandler((): CreatorInterface[] => CREATORS)
+export default defineEventHandler((): CreatorInterface[] => creators)

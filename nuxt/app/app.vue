@@ -24,8 +24,8 @@ useHead({
             </NuxtLink>
           </li>
           <li class="nav-item">
-            <NuxtLink class="nav-link py-1 px-2" to="/resources" active-class="active">
-              Resources
+            <NuxtLink class="nav-link py-1 px-2" to="/other" active-class="active">
+              Other
             </NuxtLink>
           </li>
         </ul>
