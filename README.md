@@ -2,10 +2,11 @@
 
 Internal dashboard for a UGC content agency to manage its daily operation: the **Creators** catalog, the **Brands** that request content, and the **Orders** that connect both, with budget and status tracking.
 
-The repository holds two projects:
+The repository holds three projects:
 
 - **Frontend** — SPA in Vue 3 + Vite + TypeScript, in [`frontend/`](./frontend).
 - **Backend** — REST API in NestJS + TypeORM + SQLite, in [`backend/`](./backend). It owns the database, the seed data and the JWT login (ADR-0005).
+- **Nuxt** — a small hybrid Nuxt 4 version of Creatorly, in [`nuxt/`](./nuxt), with one section per rendering strategy (see [Nuxt app](#nuxt-app)).
 
 The frontend keeps no data of its own: it reads and writes everything through the backend API.
 
@@ -98,11 +99,33 @@ npm run format       # prettier over src/
 npm test             # vitest unit tests (login and role guard)
 ```
 
+## Nuxt app
+
+`nuxt/` is a mini version of Creatorly built with Nuxt 4. It does not call the NestJS API: its data is hardcoded, and each section uses a different rendering strategy, declared in `routeRules` in `nuxt/nuxt.config.ts`.
+
+| Route | Rendering | Data |
+|---|---|---|
+| `/blog`, `/blog/:id` | **SSG**: static HTML generated at build time | 3 articles in `app/data/` |
+| `/creators`, `/creators/:id` | **SSR**: rendered on the server on every request | `useFetch` to `/api/creators` and `/api/creators/:id`, served by `server/api/` from `server/data/` |
+| `/resources`, `/resources/faq`, `/resources/budget-calculator` | **CSR**: rendered only in the browser | FAQ in `app/data/`, budget calculator with `BudgetUtil` |
+
+```sh
+cd nuxt
+npm install
+npm run dev          # development server on http://localhost:3000
+npm run build        # production build; prerenders the blog into .output/public
+node .output/server/index.mjs   # serves the build (PORT changes the port)
+npm run lint         # oxlint with --fix
+npm run format       # prettier
+```
+
+The blog is only generated as static HTML by `npm run build`; `npm run dev` renders every route on demand. Run the Nuxt app and the backend on different ports, since both default to 3000.
+
 ## Deployment (GCP)
 
-The whole system runs on a GCP VM with Docker Compose (ADR-0006): `docker-compose.yml` builds the `backend` image (NestJS + SQLite in the `backend-data` volume, port 3000) and the `frontend` image (Vue compiled and served by nginx, port 80). Both Dockerfiles are multi-stage, so `dist/` is built inside Docker and is never committed.
+The whole system runs on a GCP VM with Docker Compose (ADR-0006): `docker-compose.yml` builds the `backend` image (NestJS + SQLite in the `backend-data` volume, port 3000), the `frontend` image (Vue compiled and served by nginx, port 80) and the `nuxt` image (the Nuxt server, port 3001). The three Dockerfiles are multi-stage, so `dist/` and `.output/` are built inside Docker and are never committed.
 
-VM requirements: machine type `e2-medium`, firewall rules for TCP ports 80 and 3000, and Docker with the Compose plugin.
+VM requirements: machine type `e2-medium`, firewall rules for TCP ports 80, 3000 and 3001, and Docker with the Compose plugin.
 
 ```sh
 git clone https://github.com/kepabonsaeafit/creatorly.git
@@ -110,7 +133,7 @@ cd creatorly
 sudo ./deploy.sh <VM_EXTERNAL_IP>
 ```
 
-`deploy.sh` sets the API URL and CORS for that IP, generates the `JWT_SECRET` once in `.env` (ignored by git) and runs `docker compose up -d --build`. Open `http://<VM_EXTERNAL_IP>` in the browser (HTTP, not HTTPS). To update the deployment, `git pull` and run `deploy.sh` again; the data in the volume is kept.
+`deploy.sh` sets the API URL and CORS for that IP, generates the `JWT_SECRET` once in `.env` (ignored by git) and runs `docker compose up -d --build`. Open `http://<VM_EXTERNAL_IP>` in the browser (HTTP, not HTTPS) for the Vue app, and `http://<VM_EXTERNAL_IP>:3001` for the Nuxt app. To update the deployment, `git pull` and run `deploy.sh` again; the data in the volume is kept.
 
 ## To go deeper
 
