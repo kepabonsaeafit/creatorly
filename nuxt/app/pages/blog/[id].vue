@@ -22,62 +22,26 @@ const route = useRoute()
 
 // computed variables
 const article = computed(() => ArticleUtil.findById(ARTICLES, String(route.params.id)))
+
+// hooks
+useHead({ title: () => article.value?.title ?? 'Blog' })
 </script>
 
 <template>
-  <main class="article">
-    <article v-if="article">
-      <NuxtLink to="/blog" class="article__back">← Back to the blog</NuxtLink>
+  <NuxtLink to="/blog" class="btn btn-outline-secondary btn-sm mb-4">← All articles</NuxtLink>
 
-      <h1 class="article__title">{{ article.title }}</h1>
-      <p class="article__meta">
-        {{ article.author }} · {{ DateUtil.format(article.date) }} ·
-        {{ article.readingMinutes }} min read
+  <article v-if="article" class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <h1 class="h2 fw-bold">{{ article.title }}</h1>
+      <p class="text-body-secondary">
+        <small>
+          {{ article.author }} · {{ DateUtil.format(article.date) }} ·
+          {{ article.readingMinutes }} min read
+        </small>
       </p>
-      <p class="article__summary">{{ article.summary }}</p>
-
-      <p v-for="(paragraph, index) in article.paragraphs" :key="index" class="article__paragraph">
-        {{ paragraph }}
-      </p>
-    </article>
-  </main>
+      <p class="lead">{{ article.summary }}</p>
+      <hr />
+      <p v-for="(paragraph, index) in article.paragraphs" :key="index">{{ paragraph }}</p>
+    </div>
+  </article>
 </template>
-
-<style scoped>
-.article {
-  padding: 1rem 0;
-  max-width: 70ch;
-}
-
-.article__back {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  color: var(--color-primary);
-  font-size: 0.9rem;
-}
-
-.article__title {
-  margin-bottom: 0.5rem;
-}
-
-.article__meta {
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-  opacity: 0.65;
-  font-size: 0.85rem;
-}
-
-.article__summary {
-  margin-bottom: 2rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--color-primary);
-  color: var(--color-heading);
-  font-size: 1.05rem;
-}
-
-.article__paragraph {
-  margin-bottom: 1.1rem;
-  color: var(--color-text);
-  line-height: 1.75;
-}
-</style>
