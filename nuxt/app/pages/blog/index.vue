@@ -4,78 +4,33 @@
 // internal imports
 import { ARTICLES } from '~/data/ArticleData'
 import { DateUtil } from '~/utils/DateUtil'
-import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
+
+// hooks
+useHead({ title: 'Blog' })
 </script>
 
 <template>
-  <main class="blog">
-    <RenderingBadgeComponent rendering="SSG" />
-    <h1>Blog</h1>
-    <p class="blog__lead">
-      Articles about running a UGC creator agency. These pages are rendered to static HTML at build
-      time.
+  <header class="mb-4">
+    <span class="badge text-bg-secondary mb-2">SSG</span>
+    <h1 class="h2 fw-bold mb-1">Blog</h1>
+    <p class="text-body-secondary mb-0">
+      Articles about running a UGC creator agency, rendered to static HTML at build time.
     </p>
+  </header>
 
-    <ul class="blog__list">
-      <li v-for="article in ARTICLES" :key="article.id" class="blog__item">
-        <NuxtLink :to="`/blog/${article.id}`" class="blog__link">
-          <h2 class="blog__title">{{ article.title }}</h2>
-          <p class="blog__summary">{{ article.summary }}</p>
-          <p class="blog__meta">
-            {{ DateUtil.format(article.date) }} · {{ article.readingMinutes }} min read
-          </p>
-        </NuxtLink>
-      </li>
-    </ul>
-  </main>
+  <div class="list-group">
+    <NuxtLink
+      v-for="article in ARTICLES"
+      :key="article.id"
+      :to="`/blog/${article.id}`"
+      class="list-group-item list-group-item-action py-3"
+    >
+      <h2 class="h5 mb-1">{{ article.title }}</h2>
+      <p class="mb-1 text-body-secondary">{{ article.summary }}</p>
+      <small class="text-body-secondary">
+        {{ article.author }} · {{ DateUtil.format(article.date) }} ·
+        {{ article.readingMinutes }} min read
+      </small>
+    </NuxtLink>
+  </div>
 </template>
-
-<style scoped>
-.blog {
-  padding: 1rem 0;
-}
-
-.blog__lead {
-  margin-bottom: 2rem;
-  color: var(--color-text);
-  opacity: 0.8;
-}
-
-.blog__list {
-  display: grid;
-  gap: 1.25rem;
-  list-style: none;
-  padding: 0;
-}
-
-.blog__link {
-  display: block;
-  padding: 1.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  background: var(--color-background-soft);
-  transition: border-color 0.2s ease;
-}
-
-.blog__link:hover {
-  border-color: var(--color-primary);
-}
-
-.blog__title {
-  margin-bottom: 0.4rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.blog__summary {
-  margin-bottom: 0.6rem;
-  color: var(--color-text);
-}
-
-.blog__meta {
-  color: var(--color-text);
-  opacity: 0.65;
-  font-size: 0.85rem;
-}
-</style>

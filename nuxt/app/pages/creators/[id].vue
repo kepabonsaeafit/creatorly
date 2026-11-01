@@ -2,10 +2,9 @@
 // Author: Felipe Gómez
 
 // internal imports
-import AvailabilityBadgeComponent from '~/components/AvailabilityBadgeComponent.vue'
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
+import { CreatorUtil } from '~/utils/CreatorUtil'
 import { CurrencyUtil } from '~/utils/CurrencyUtil'
-import RenderingBadgeComponent from '~/components/RenderingBadgeComponent.vue'
 
 // non-reactive variables
 const route = useRoute()
@@ -16,109 +15,43 @@ const { data: creator, error } = await useFetch<CreatorInterface>(
 )
 
 if (error.value || !creator.value) {
-  throw createError({ status: 404, statusText: 'Creator: not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: 'Creator: not found', fatal: true })
 }
+
+// hooks
+useHead({ title: () => creator.value?.name ?? 'Creators' })
 </script>
 
 <template>
-  <main class="creator-detail">
-    <NuxtLink to="/creators" class="creator-detail__back">← Back to creators</NuxtLink>
+  <NuxtLink to="/creators" class="btn btn-outline-secondary btn-sm mb-4">← All creators</NuxtLink>
 
-    <article v-if="creator" class="creator-detail__card">
-      <div class="creator-detail__header">
-        <RenderingBadgeComponent rendering="SSR" />
-        <AvailabilityBadgeComponent :available="creator.available" />
+  <div v-if="creator" class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <h1 class="h2 fw-bold mb-0">{{ creator.name }}</h1>
+            <span :class="`badge text-bg-${CreatorUtil.getAvailabilityColor(creator.available)}`">
+              {{ CreatorUtil.getAvailabilityLabel(creator.available) }}
+            </span>
+          </div>
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-body-secondary">Niche</span>
+              <span class="fw-semibold text-capitalize">{{ creator.niche }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-body-secondary">Content type</span>
+              <span class="fw-semibold">{{ creator.contentType }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-body-secondary">Rate per piece</span>
+              <span class="fw-semibold">{{ CurrencyUtil.format(creator.rate) }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
-
-      <h1 class="creator-detail__name">{{ creator.name }}</h1>
-
-      <dl class="creator-detail__list">
-        <div class="creator-detail__row">
-          <dt class="creator-detail__term">Niche</dt>
-          <dd class="creator-detail__value creator-detail__value--niche">{{ creator.niche }}</dd>
-        </div>
-
-        <div class="creator-detail__row">
-          <dt class="creator-detail__term">Content type</dt>
-          <dd class="creator-detail__value">{{ creator.contentType }}</dd>
-        </div>
-
-        <div class="creator-detail__row">
-          <dt class="creator-detail__term">Rate per piece</dt>
-          <dd class="creator-detail__value creator-detail__value--rate">
-            {{ CurrencyUtil.format(creator.rate) }}
-          </dd>
-        </div>
-      </dl>
-    </article>
-  </main>
+    </div>
+  </div>
 </template>
-
-<style scoped>
-.creator-detail {
-  padding: 1rem 0;
-  max-width: 60ch;
-}
-
-.creator-detail__back {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  color: var(--color-primary);
-  font-size: 0.9rem;
-}
-
-.creator-detail__card {
-  padding: 1.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  background: var(--color-background-soft);
-}
-
-/* the rendering badge brings its own bottom margin, so the header adds none */
-.creator-detail__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.creator-detail__name {
-  margin-bottom: 1.5rem;
-}
-
-.creator-detail__list {
-  display: grid;
-  gap: 0.85rem;
-}
-
-.creator-detail__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.creator-detail__row:last-child {
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.creator-detail__term {
-  color: var(--color-text);
-  opacity: 0.75;
-}
-
-.creator-detail__value {
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.creator-detail__value--niche {
-  text-transform: capitalize;
-}
-
-.creator-detail__value--rate {
-  color: var(--color-primary);
-}
-</style>

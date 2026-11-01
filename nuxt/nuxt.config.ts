@@ -8,7 +8,6 @@ import { ARTICLES } from './app/data/ArticleData'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
   // a section's root is declared apart from its /** rule, so its rendering
   // mode does not depend on whether /** also matches the root
   routeRules: {
@@ -34,9 +33,24 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Creatorly',
       htmlAttrs: { lang: 'en' },
-      link: [{ rel: 'icon', href: '/favicon.ico' }],
+      link: [
+        { rel: 'icon', href: '/favicon.ico' },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+          integrity: 'sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH',
+          crossorigin: 'anonymous',
+        },
+      ],
+      script: [
+        {
+          src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
+          integrity: 'sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz',
+          crossorigin: 'anonymous',
+          defer: true,
+        },
+      ],
     },
   },
 })

@@ -2,8 +2,6 @@
 
 // internal imports
 import type { CreatorInterface } from '#shared/interfaces/CreatorInterface'
-import { CreatorService } from '../../services/CreatorService'
+import { CREATORS } from '../../data/CreatorData'
 
-export default defineEventHandler((): CreatorInterface[] => {
-  return CreatorService.findAll()
-})
+export default defineEventHandler((): CreatorInterface[] => CREATORS)
