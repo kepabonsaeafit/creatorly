@@ -26,10 +26,9 @@ const sections: HomeSection[] = [
     rendering: 'SSR',
   },
   {
-    to: '/resources',
-    title: 'Resources',
-    description:
-      'A budget calculator for orders and frequently asked questions, rendered in the browser.',
+    to: '/other',
+    title: 'Other',
+    description: 'A calculator and the frequently asked questions, rendered in the browser.',
     rendering: 'CSR',
   },
 ]

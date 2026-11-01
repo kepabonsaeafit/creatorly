@@ -18,8 +18,8 @@ export default defineNuxtConfig({
     '/creators': { ssr: true },
     '/creators/**': { ssr: true },
     // CSR: rendered only in the browser
-    '/resources': { ssr: false },
-    '/resources/**': { ssr: false },
+    '/other': { ssr: false },
+    '/other/**': { ssr: false },
   },
   nitro: {
     prerender: {

@@ -107,7 +107,7 @@ npm test             # vitest unit tests (login and role guard)
 |---|---|---|
 | `/blog`, `/blog/:id` | **SSG**: static HTML generated at build time | 3 articles in `app/data/` |
 | `/creators`, `/creators/:id` | **SSR**: rendered on the server on every request | `useFetch` to `/api/creators` and `/api/creators/:id`, served by `server/api/` from `server/data/` |
-| `/resources`, `/resources/faq`, `/resources/budget-calculator` | **CSR**: rendered only in the browser | FAQ in `app/data/`, budget calculator with `BudgetUtil` |
+| `/other`, `/other/calculator`, `/other/faq` | **CSR**: rendered only in the browser | calculator with `CalculatorUtil`, FAQ in `app/data/` |
 
 ```sh
 cd nuxt

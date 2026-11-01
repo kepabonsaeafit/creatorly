@@ -22,9 +22,7 @@ useHead({ title: 'FAQ' })
 </script>
 
 <template>
-  <NuxtLink to="/resources" class="btn btn-outline-secondary btn-sm mb-4">
-    ← All resources
-  </NuxtLink>
+  <NuxtLink to="/other" class="btn btn-outline-secondary btn-sm mb-4"> ← Other </NuxtLink>
 
   <header class="mb-4">
     <h1 class="h2 fw-bold mb-1">Frequently asked questions</h1>
