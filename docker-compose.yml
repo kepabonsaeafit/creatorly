@@ -1,5 +1,6 @@
 # Author: Kevin Pabón
-# Full Creatorly deployment: backend (NestJS + SQLite) and frontend (nginx).
+# Full Creatorly deployment: backend (NestJS + SQLite), frontend (nginx) and
+# the Nuxt app.
 # Run it through deploy.sh, which sets the VM IP and the JWT secret.
 
 services:
@@ -29,6 +30,15 @@ services:
       - "80:80"
     depends_on:
       - backend
+
+  # its data lives in nuxt/server/data and it serves its own API, so it needs
+  # no environment; it uses 3001 because the backend already takes 3000
+  nuxt:
+    build:
+      context: ./nuxt
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
 
 volumes:
   backend-data:
